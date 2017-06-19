@@ -1,22 +1,23 @@
-package com.excilys.cdb.mapper;
+package com.excilys.cdb.persistence.mapper;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.excilys.cdb.model.Company;
+import com.excilys.cdb.persistence.MyException;
 
 public class CompanyMapper {
 
 	public static Company extractCompany(ResultSet resultSetCompany) {
-		
+
 		Company company = null;
 
 		try {
 			company = new Company(resultSetCompany.getLong("id"), resultSetCompany.getString("name"));
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new MyException("Mapper error in extractCompany method");
 		}
 		return company;
 	}
@@ -27,12 +28,11 @@ public class CompanyMapper {
 
 		try {
 			while (resultSetCompany.next()) {
-
 				company = extractCompany(resultSetCompany);
 			}
-		} catch (SQLException e) {
-
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new MyException("Mapper error in getCompany method");
 		}
 
 		return company;
@@ -47,8 +47,9 @@ public class CompanyMapper {
 			while (resultSetCompanies.next()) {
 				companiesList.add(extractCompany(resultSetCompanies));
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new MyException("Mapper error in getCompanies method");
 		}
 		return companiesList;
 	}

@@ -1,17 +1,18 @@
-package com.excilys.cdb.persistenceImpl;
+package com.excilys.cdb.persistence.persistenceImpl;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.excilys.cdb.mapper.CompanyMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.persistence.CompanyDao;
+import com.excilys.cdb.persistence.MyException;
+import com.excilys.cdb.persistence.mapper.CompanyMapper;
 
-public class CompanyDaoImpl implements CompanyDao {
+public enum CompanyDaoImpl implements CompanyDao {
+	INSTANCE;
 
 	@Override
 	public List<Company> listCompanies() {
@@ -24,8 +25,9 @@ public class CompanyDaoImpl implements CompanyDao {
 
 			companiesList = CompanyMapper.getCompanies(listCompaniesResult);
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new MyException("Company DAO error in listCompanies method)");
 		}
 		System.out.println("Companies list retrieved");
 		return companiesList;

@@ -1,4 +1,4 @@
-package com.excilys.cdb.persistenceImpl;
+package com.excilys.cdb.persistence.persistenceImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +10,13 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.persistence.ComputerDao;
+import com.excilys.cdb.persistence.MyException;
+import com.excilys.cdb.persistence.mapper.ComputerMapper;
 
-public class ComputerDaoImpl implements ComputerDao {
+public enum ComputerDaoImpl implements ComputerDao {
+	INSTANCE;
 
 	@Override
 	public List<Computer> listComputers() {
@@ -28,8 +30,9 @@ public class ComputerDaoImpl implements ComputerDao {
 
 			computersList = ComputerMapper.getComputers(listComputersResult);
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new MyException("Computer DAO error in listComputers method");
 		}
 		System.out.println("Computers list retrieved");
 		return computersList;
@@ -45,6 +48,7 @@ public class ComputerDaoImpl implements ComputerDao {
 		try (Connection connection = DataBaseConnector.connect();
 				PreparedStatement getComputerStatement = connection.prepareStatement(
 						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;");) {
+			
 
 			getComputerStatement.setLong(1, id);
 
@@ -52,8 +56,9 @@ public class ComputerDaoImpl implements ComputerDao {
 
 			computer = ComputerMapper.getComputer(getComputerResult);
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new MyException("Computer DAO error in getComputer method");
 		}
 		System.out.println("Computer retrieved");
 		return computer;
@@ -98,8 +103,9 @@ public class ComputerDaoImpl implements ComputerDao {
 			} else {
 				throw new SQLException("Could not create computer");
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new MyException("Computer DAO error in addComputer method");
 		}
 
 		System.out.println("Computer successfully added");
@@ -140,10 +146,9 @@ public class ComputerDaoImpl implements ComputerDao {
 
 			updateComputerStatement.executeUpdate();
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Computer could not be updated");
-			return false;
+			throw new MyException("Computer DAO error in updateComputer method");
 		}
 		System.out.println("Computer successfully updated");
 		return true;
@@ -161,10 +166,9 @@ public class ComputerDaoImpl implements ComputerDao {
 
 			removeComputerStatement.executeUpdate();
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Computer could not be removed");
-			return false;
+			throw new MyException("Computer DAO error in removeCOmputer method");
 		}
 		System.out.println("Computer successfully removed");
 		return true;

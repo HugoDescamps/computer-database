@@ -63,4 +63,10 @@ public class Computer {
 		this.company = company;
 	}
 
+	public String toString() {
+		return "\tComputer name : " + this.getName() + "\tIntroduced date : " + this.getIntroduced() + "\tDiscontinued date : " + this.getDiscontinued() + "\tCompany owner : " + this.getCompany().getName();
+	}
+	
+	
+
 }

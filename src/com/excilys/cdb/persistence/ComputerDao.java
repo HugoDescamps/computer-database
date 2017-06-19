@@ -15,4 +15,6 @@ public interface ComputerDao {
 	public boolean updateComputer(Computer computer);
 
 	public boolean removeComputer(long id);
+	
+	public String toString();
 }

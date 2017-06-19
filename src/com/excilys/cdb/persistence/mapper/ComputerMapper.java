@@ -1,13 +1,13 @@
-package com.excilys.cdb.mapper;
+package com.excilys.cdb.persistence.mapper;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.persistence.MyException;
 
 public class ComputerMapper {
 
@@ -17,7 +17,7 @@ public class ComputerMapper {
 		Computer computer = null;
 
 		try {
-			company = new Company(resultSetComputer.getLong("company.id"), resultSetComputer.getString("company.name"));
+			company = CompanyMapper.extractCompany(resultSetComputer);
 
 			LocalDate introducedDate = null;
 			LocalDate discontinuedDate = null;
@@ -33,8 +33,9 @@ public class ComputerMapper {
 
 			computer = new Computer(resultSetComputer.getLong("computer.id"),
 					resultSetComputer.getString("computer.name"), introducedDate, discontinuedDate, company);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new MyException("Mapper error in extractComputer method");
 		}
 		return computer;
 	}
@@ -44,13 +45,15 @@ public class ComputerMapper {
 		Computer computer = null;
 
 		try {
-			while (resultSetComputer.next()) {
-
+			if (resultSetComputer.next()) {
 				computer = extractComputer(resultSetComputer);
-			}
-		} catch (SQLException e) {
 
+			} else {
+				throw new MyException("No result found for this search");
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new MyException("Mapper error in getComputer method");
 		}
 
 		return computer;
@@ -64,9 +67,12 @@ public class ComputerMapper {
 			while (resultSetComputers.next()) {
 				computersList.add(extractComputer(resultSetComputers));
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new MyException("Mapper error in getComputers method");
 		}
 		return computersList;
 	}
+	
+	
 }
