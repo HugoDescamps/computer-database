@@ -6,6 +6,8 @@ config/checkstyle
 config/db
 bin/
 tmp/
+training-java-master/
+
 *.tmp
 *.bak
 *.swp
@@ -55,9 +57,9 @@ local.properties
 
 ### Eclipse Patch ###
 # Eclipse Core		
-#.project
+.project
 
 # JDT-specific (Eclipse Java Development Tools)		
-#.classpath
+.classpath
 
 # End of https://www.gitignore.io/api/eclipse
