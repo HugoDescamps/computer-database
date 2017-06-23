@@ -20,6 +20,11 @@ public enum ComputerServiceImpl implements ComputerService {
 	}
 
 	@Override
+	public int countComputers() {
+		return computerDaoImpl.countComputers();
+	}
+
+	@Override
 	public Computer getComputer(long id) {
 		return computerDaoImpl.getComputer(id);
 	}

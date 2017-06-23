@@ -14,7 +14,7 @@ public class CompanyMapper {
 		Company company = null;
 
 		try {
-			company = new Company(resultSetCompany.getLong("id"), resultSetCompany.getString("name"));
+			company = new Company(resultSetCompany.getLong("company.id"), resultSetCompany.getString("company.name"));
 		} catch (Exception e) {
 			throw new MyException("Mapper error in extractCompany method");
 		}

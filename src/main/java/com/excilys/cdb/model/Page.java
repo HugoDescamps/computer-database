@@ -9,6 +9,11 @@ public class Page<T> {
 	private int size;
 	
 	private int number;
+	
+	
+	
+	
+	
 
 	public List<T> getObjectsList() {
 		return objectsList;

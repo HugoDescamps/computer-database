@@ -14,4 +14,6 @@ public interface ComputerService {
 	public boolean updateComputer(Computer computer);
 
 	public boolean removeComputer(long id);
+	
+	public int countComputers();
 }

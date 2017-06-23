@@ -4,19 +4,26 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.ComputerDao;
 import com.excilys.cdb.persistence.MyException;
 import com.excilys.cdb.persistence.mapper.ComputerMapper;
+import com.excilys.cdb.ui.Main;
 
 public enum ComputerDaoImpl implements ComputerDao {
 	INSTANCE;
+
+	static final Logger logger = LoggerFactory.getLogger(Main.class);
 
 	@Override
 	public Page<Computer> listComputers(int pageNumber, int pageSize) {
@@ -44,8 +51,29 @@ public enum ComputerDaoImpl implements ComputerDao {
 		} catch (Exception e) {
 			throw new MyException("Computer DAO error in listComputers method");
 		}
-		System.out.println("Computers list retrieved");
+		logger.info("Computers list retrieved");
 		return computersPage;
+	}
+
+	@Override
+	public int countComputers() {
+
+		int computersCount = 0;
+
+		ResultSet countComputersResultset = null;
+
+		try (Connection connection = DataBaseConnector.connect();
+				Statement computersCountStatement = connection.createStatement();) {
+
+			countComputersResultset = computersCountStatement.executeQuery("SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id;");
+
+			computersCount = ComputerMapper.countComputers(countComputersResultset);
+
+		} catch (Exception e) {
+			throw new MyException("Computer DAO error in countComputers method");
+		}
+		logger.info("Computers list retrieved");
+		return computersCount;
 	}
 
 	@Override
@@ -69,7 +97,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 			throw new MyException("Computer DAO error in getComputer method");
 		}
 
-		System.out.println("Computer retrieved");
+		logger.info("Computer retrieved");
 		return computer;
 	}
 
@@ -113,10 +141,10 @@ public enum ComputerDaoImpl implements ComputerDao {
 				throw new SQLException("Could not create computer");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new MyException("Computer DAO error in addComputer method");
 		}
-
-		System.out.println("Computer successfully added");
+		logger.info("Computer successfully added");
 		return computer;
 	}
 
@@ -157,7 +185,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 		} catch (Exception e) {
 			throw new MyException("Computer DAO error in updateComputer method");
 		}
-		System.out.println("Computer successfully updated");
+		logger.info("Computer successfully updated");
 		return true;
 	}
 
@@ -175,8 +203,9 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		} catch (Exception e) {
 			throw new MyException("Computer DAO error in removeCOmputer method");
+
 		}
-		System.out.println("Computer successfully removed");
+		logger.info("Computer successfully removed");
 		return true;
 	}
 

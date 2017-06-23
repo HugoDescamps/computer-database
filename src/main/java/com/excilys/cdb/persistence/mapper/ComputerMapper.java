@@ -70,4 +70,17 @@ public class ComputerMapper {
 		return computersList;
 	}
 
+	public static int countComputers(ResultSet resultSetCount) {
+		int count = 0;
+
+		try {
+			if (resultSetCount.next()) {
+				count = resultSetCount.getInt(1);
+			}
+		} catch (Exception e) {
+			throw new MyException("Mapper error in countComputers method");
+		}
+		return count;
+	}
+
 }
