@@ -4,13 +4,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.persistence.MyException;
-import com.excilys.cdb.ui.Main;
 
 public class DataBaseConnector {
 
@@ -18,7 +18,7 @@ public class DataBaseConnector {
 	private static FileInputStream propertiesFile = null;
 	private static Connection connection = null;
 
-	static final Logger logger = LoggerFactory.getLogger(Main.class);
+	static final Logger logger = LoggerFactory.getLogger(DataBaseConnector.class);
 
 	private DataBaseConnector() {
 
@@ -37,8 +37,7 @@ public class DataBaseConnector {
 
 			logger.info("DB connection established");
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (SQLException | ClassNotFoundException e) {
 			throw new MyException("Database connection error in connect method");
 		}
 

@@ -15,8 +15,8 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="dashboard"> Application -
-				Computer Database </a>
+			<a class="navbar-brand" href="dashboard"> Application - Computer
+				Database </a>
 		</div>
 	</header>
 
@@ -70,15 +70,14 @@
 				</thead>
 				<!-- Browse attribute computers -->
 				<tbody id="results">
-					<c:forEach items="${computersPage.objectsList}" var="computer">
+					<c:forEach items="${computersDTO}" var="computerDTO">
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="0"></td>
-							<td><a href="editComputer?id=${computer.id}" onclick="">${computer.name}</a></td>
-							<td>${computer.introduced}</td>
-							<td>${computer.discontinued}</td>
-							<td>${computer.company.name}</td>
-
+							<td><a href="editComputer?id=${computerDTO.id}" onclick="">${computerDTO.name}</a></td>
+							<td>${computerDTO.introduced}</td>
+							<td>${computerDTO.discontinued}</td>
+							<td>${computerDTO.company.name}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -89,16 +88,19 @@
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
 			<ul class="pagination">
-				<li><a href="#" aria-label="Previous"> <span
-						aria-hidden="true">&laquo;</span>
-				</a></li>
-				<li><a href="#">1</a></li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">4</a></li>
-				<li><a href="#">5</a></li>
-				<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-				</a></li>
+				<c:if test="${numberOfPages > 1}">
+					<li><a href="dashboard?pageNumber=1" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+					</a></li>
+				</c:if>
+				<c:forEach items="${numberOfPagesArray}" var="numberofPage">
+					<li><a href="dashboard?pageNumber=${numberofPage}">${numberofPage}</a></li>
+				</c:forEach>
+				<c:if test="${numberOfPages > 1}">
+					<li><a href="dashboard?pageNumber=${numberOfPages}" aria-label="Next"> <span
+							aria-hidden="true">&raquo;</span>
+					</a></li>
+				</c:if>
 			</ul>
 		</div>
 

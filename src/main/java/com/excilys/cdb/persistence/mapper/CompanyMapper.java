@@ -1,6 +1,7 @@
 package com.excilys.cdb.persistence.mapper;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +30,9 @@ public class CompanyMapper {
 			if (resultSetCompany.next()) {
 				company = extractCompany(resultSetCompany);
 			} else {
-				throw new MyException("No company found for this id");
+				throw new SQLException("No company found for this id");
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			throw new MyException("Mapper error in getCompany method");
 		}
 
@@ -47,7 +48,7 @@ public class CompanyMapper {
 			while (resultSetCompanies.next()) {
 				companiesList.add(extractCompany(resultSetCompanies));
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			throw new MyException("Mapper error in getCompanies method");
 		}
 		return companiesList;

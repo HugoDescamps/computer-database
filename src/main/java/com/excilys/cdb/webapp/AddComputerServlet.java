@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.excilys.cdb.dto.mapper.CompanyDTOMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.serviceImpl.CompanyServiceImpl;
@@ -24,8 +25,8 @@ public class AddComputerServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-		req.setAttribute("companiesList", companyServiceImpl.getCompanies());
+		
+		req.setAttribute("companiesList", CompanyDTOMapper.createDTO(companyServiceImpl.getCompanies()));
 
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(req, resp);
 

@@ -1,5 +1,8 @@
 package com.excilys.cdb.service.serviceImpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.persistenceImpl.ComputerDaoImpl;
@@ -9,6 +12,8 @@ public enum ComputerServiceImpl implements ComputerService {
 	INSTANCE;
 
 	private ComputerDaoImpl computerDaoImpl;
+	
+	static final Logger logger = LoggerFactory.getLogger(ComputerServiceImpl.class);
 
 	private ComputerServiceImpl() {
 		computerDaoImpl = ComputerDaoImpl.INSTANCE;
@@ -21,6 +26,7 @@ public enum ComputerServiceImpl implements ComputerService {
 
 	@Override
 	public int countComputers() {
+		
 		return computerDaoImpl.countComputers();
 	}
 

@@ -8,7 +8,7 @@ import com.excilys.cdb.model.Page;
 public interface CompanyDao {
 
 	public Page<Company> listCompanies(int pageNumber, int pageSize);
-	
+
 	public List<Company> listCompanies();
 
 	public Company getCompany(long id);

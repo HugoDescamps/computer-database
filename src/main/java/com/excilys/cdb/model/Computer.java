@@ -28,7 +28,12 @@ public class Computer {
 	}
 
 	public void setId(long id) {
-		this.id = id;
+		if(id > 0) {
+			this.id = id;
+		} else {
+			throw new IllegalArgumentException("Negative id");
+		}
+		
 	}
 
 	public String getName() {

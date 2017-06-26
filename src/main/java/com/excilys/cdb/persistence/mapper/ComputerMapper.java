@@ -1,6 +1,7 @@
 package com.excilys.cdb.persistence.mapper;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ComputerMapper {
 
 			computer = new Computer(resultSetComputer.getLong("computer.id"),
 					resultSetComputer.getString("computer.name"), introducedDate, discontinuedDate, company);
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			throw new MyException("Mapper error in extractComputer method");
 		}
 		return computer;
@@ -49,7 +50,7 @@ public class ComputerMapper {
 			} else {
 				throw new MyException("No computer found for this id");
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			throw new MyException("Mapper error in getComputer method");
 		}
 
@@ -64,7 +65,7 @@ public class ComputerMapper {
 			while (resultSetComputers.next()) {
 				computersList.add(extractComputer(resultSetComputers));
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			throw new MyException("Mapper error in getComputers method");
 		}
 		return computersList;
@@ -77,7 +78,7 @@ public class ComputerMapper {
 			if (resultSetCount.next()) {
 				count = resultSetCount.getInt(1);
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			throw new MyException("Mapper error in countComputers method");
 		}
 		return count;

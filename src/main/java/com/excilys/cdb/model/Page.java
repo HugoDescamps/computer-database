@@ -11,9 +11,6 @@ public class Page<T> {
 	private int number;
 	
 	
-	
-	
-	
 
 	public List<T> getObjectsList() {
 		return objectsList;

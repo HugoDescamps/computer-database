@@ -1,8 +1,10 @@
 package com.excilys.cdb.persistence.persistenceImpl;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +17,11 @@ import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.CompanyDao;
 import com.excilys.cdb.persistence.MyException;
 import com.excilys.cdb.persistence.mapper.CompanyMapper;
-import com.excilys.cdb.ui.Main;
 
 public enum CompanyDaoImpl implements CompanyDao {
 	INSTANCE;
 
-	static final Logger logger = LoggerFactory.getLogger(Main.class);
+	static final Logger logger = LoggerFactory.getLogger(CompanyDaoImpl.class);
 
 	@Override
 	public Page<Company> listCompanies(int pageNumber, int pageSize) {
@@ -45,7 +46,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 			companiesPage.setNumber(pageNumber);
 			companiesPage.setSize(pageSize);
 
-		} catch (Exception e) {
+		} catch (SQLException | IOException e) {
 			throw new MyException("Company DAO error in listCompanies method");
 		}
 
@@ -69,7 +70,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 			company = CompanyMapper.getCompany(getCompanyResult);
 
-		} catch (Exception e) {
+		} catch (SQLException | IOException e) {
 			throw new MyException("Company DAO error in getCompany method");
 		}
 
@@ -81,18 +82,17 @@ public enum CompanyDaoImpl implements CompanyDao {
 	public List<Company> listCompanies() {
 
 		List<Company> companiesList = new ArrayList<Company>();
-		
+
 		ResultSet listCompaniesResult = null;
 
 		try (Connection connection = DataBaseConnector.connect();
-				Statement listCompaniesStatement = connection
-						.createStatement()) {
+				Statement listCompaniesStatement = connection.createStatement()) {
 
 			listCompaniesResult = listCompaniesStatement.executeQuery("SELECT * FROM company ORDER BY name;");
 
 			companiesList = CompanyMapper.getCompanies(listCompaniesResult);
 
-		} catch (Exception e) {
+		} catch (SQLException | IOException e) {
 			throw new MyException("Company DAO error in listCompanies method");
 		}
 

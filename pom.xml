@@ -19,6 +19,7 @@
 		<logbackVersion>1.0.7</logbackVersion>
 		<servletVersion>3.1.0</servletVersion>
 		<jstlVersion>1.2</jstlVersion>
+		<commonsLangVersion>3.0</commonsLangVersion>
 	</properties>
 
 	<dependencies>
@@ -66,6 +67,12 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>${jstlVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commonsLangVersion}</version>
 		</dependency>
 
 	</dependencies>

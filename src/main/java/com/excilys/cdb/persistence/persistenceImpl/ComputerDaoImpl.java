@@ -1,5 +1,6 @@
 package com.excilys.cdb.persistence.persistenceImpl;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,12 +19,11 @@ import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.ComputerDao;
 import com.excilys.cdb.persistence.MyException;
 import com.excilys.cdb.persistence.mapper.ComputerMapper;
-import com.excilys.cdb.ui.Main;
 
 public enum ComputerDaoImpl implements ComputerDao {
 	INSTANCE;
 
-	static final Logger logger = LoggerFactory.getLogger(Main.class);
+	static final Logger logger = LoggerFactory.getLogger(ComputerDaoImpl.class);
 
 	@Override
 	public Page<Computer> listComputers(int pageNumber, int pageSize) {
@@ -31,10 +31,10 @@ public enum ComputerDaoImpl implements ComputerDao {
 		Page<Computer> computersPage = new Page<Computer>();
 
 		List<Computer> computersList = new ArrayList<Computer>();
-
+		
 		try (Connection connection = DataBaseConnector.connect();
 				PreparedStatement listComputersStatement = connection.prepareStatement(
-						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id LIMIT ?,?;");) {
+						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id ORDER BY computer.name ASC LIMIT ?,?;");) {
 
 			listComputersStatement.setInt(1, (pageNumber - 1) * pageSize);
 
@@ -48,8 +48,8 @@ public enum ComputerDaoImpl implements ComputerDao {
 			computersPage.setNumber(pageNumber);
 			computersPage.setSize(pageSize);
 
-		} catch (Exception e) {
-			throw new MyException("Computer DAO error in listComputers method");
+		} catch (SQLException | IOException e) {
+			throw new MyException("Computer DAO error in listComputers method : ", e);
 		}
 		logger.info("Computers list retrieved");
 		return computersPage;
@@ -70,9 +70,9 @@ public enum ComputerDaoImpl implements ComputerDao {
 			computersCount = ComputerMapper.countComputers(countComputersResultset);
 
 		} catch (Exception e) {
-			throw new MyException("Computer DAO error in countComputers method");
+			throw new MyException("Computer DAO error in countComputers method : "+e.getMessage());
 		}
-		logger.info("Computers list retrieved");
+		logger.info("Computers count retrieved");
 		return computersCount;
 	}
 
@@ -202,7 +202,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 			removeComputerStatement.executeUpdate();
 
 		} catch (Exception e) {
-			throw new MyException("Computer DAO error in removeCOmputer method");
+			throw new MyException("Computer DAO error in removeComputer method");
 
 		}
 		logger.info("Computer successfully removed");
