@@ -4,22 +4,24 @@
 
 	<groupId>com.excilys</groupId>
 	<artifactId>cdb</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.2.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>cdb</name>
-	<url>http://maven.apache.org</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<junitVersion>3.8.1</junitVersion>
-		<mysqlVersion>5.0.8</mysqlVersion>
+		<junitVersion>4.12</junitVersion>
+		<mysqlVersion>6.0.6</mysqlVersion>
 		<slf4jVersion>1.7.25</slf4jVersion>
 		<logbackVersion>1.0.7</logbackVersion>
 		<servletVersion>3.1.0</servletVersion>
 		<jstlVersion>1.2</jstlVersion>
 		<commonsLangVersion>3.0</commonsLangVersion>
+		<mavenCompilerVersion>3.6.1</mavenCompilerVersion>
+		<mavenWarVersion>2.6</mavenWarVersion>
+		<mavenCheckstyleVersion>2.17</mavenCheckstyleVersion>
 	</properties>
 
 	<dependencies>
@@ -42,37 +44,42 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4jVersion}</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logbackVersion}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
 			<version>${logbackVersion}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${servletVersion}</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>${jstlVersion}</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>${commonsLangVersion}</version>
+			<scope>compile</scope>
 		</dependency>
 
 	</dependencies>
@@ -82,7 +89,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>${mavenCompilerVersion}</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -92,7 +99,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
+				<version>${mavenWarVersion}</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -102,7 +109,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.17</version>
+				<version>${mavenCheckstyleVersion}</version>
 				<configuration>
 					<configLocation>training-java-master/config/checkstyle/checkstyle.xml</configLocation>
 					<suppressionsLocation>training-java-master/config/checkstyle/suppressions.xml</suppressionsLocation>

@@ -10,29 +10,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.cdb.dto.mapper.CompanyDTOMapper;
+import com.excilys.cdb.dto.mapper.ComputerDTOMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.serviceImpl.CompanyServiceImpl;
 import com.excilys.cdb.service.serviceImpl.ComputerServiceImpl;
 
-@WebServlet("/addComputer")
-public class AddComputerServlet extends HttpServlet {
+@WebServlet("/editComputer")
+public class EditComputerServlet extends HttpServlet {
 
-	private CompanyServiceImpl companyServiceImpl = CompanyServiceImpl.INSTANCE;
-	private ComputerServiceImpl computerServiceImpl = ComputerServiceImpl.INSTANCE;
+	ComputerServiceImpl computerServiceImpl = ComputerServiceImpl.INSTANCE;
+	CompanyServiceImpl companyServiceImpl = CompanyServiceImpl.INSTANCE;
 
 	private static final long serialVersionUID = 1L;
 
-	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
+
 		req.setAttribute("companiesList", CompanyDTOMapper.createDTO(companyServiceImpl.getCompanies()));
 
-		this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(req, resp);
+		req.setAttribute("computer",
+				ComputerDTOMapper.createDTO(computerServiceImpl.getComputer(Integer.parseInt(req.getParameter("id")))));
 
+		this.getServletContext().getRequestDispatcher("/WEB-INF/views/editComputer.jsp").forward(req, resp);
 	}
 
-	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String computerName = req.getParameter("computerName");
@@ -67,9 +68,11 @@ public class AddComputerServlet extends HttpServlet {
 			this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(req, resp);
 
 		} else {
-			
+
 			Computer computer = new Computer();
 			
+			computer.setId(Integer.parseInt(req.getParameter("id")));
+
 			computer.setName(computerName);
 
 			if (introducedDate != null) {
@@ -83,11 +86,13 @@ public class AddComputerServlet extends HttpServlet {
 			if (companyId != null) {
 				computer.setCompany(new Company(companyId, null));
 			}
-			
-			computerServiceImpl.addComputer(computer);
+
+			computerServiceImpl.updateComputer(computer);
 
 			resp.sendRedirect(this.getServletContext().getContextPath() + "/dashboard");
+
 		}
+
 	}
 
 	private boolean datesValidation(LocalDate introducedDate, LocalDate discontinuedDate) {
