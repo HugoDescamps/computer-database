@@ -10,7 +10,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cdb.persistence.MyException;
+import com.excilys.cdb.persistence.DaoException;
 
 public class DataBaseConnector {
 
@@ -21,7 +21,6 @@ public class DataBaseConnector {
 	static final Logger logger = LoggerFactory.getLogger(DataBaseConnector.class);
 
 	private DataBaseConnector() {
-
 	}
 
 	public static Connection connect() throws IOException {
@@ -38,7 +37,7 @@ public class DataBaseConnector {
 			logger.info("DB connection established");
 
 		} catch (SQLException | ClassNotFoundException e) {
-			throw new MyException("Database connection error in connect method");
+			throw new DaoException("Database connection error in connect method");
 		}
 
 		return connection;

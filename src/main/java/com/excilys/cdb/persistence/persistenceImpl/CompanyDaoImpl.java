@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.CompanyDao;
-import com.excilys.cdb.persistence.MyException;
+import com.excilys.cdb.persistence.DaoException;
 import com.excilys.cdb.persistence.mapper.CompanyMapper;
 
 public enum CompanyDaoImpl implements CompanyDao {
@@ -47,7 +47,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 			companiesPage.setSize(pageSize);
 
 		} catch (SQLException | IOException e) {
-			throw new MyException("Company DAO error in listCompanies method");
+			throw new DaoException("Company DAO error in listCompanies method " + e.getMessage());
 		}
 
 		logger.info("Companies list retrieved");
@@ -71,7 +71,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 			company = CompanyMapper.getCompany(getCompanyResult);
 
 		} catch (SQLException | IOException e) {
-			throw new MyException("Company DAO error in getCompany method");
+			throw new DaoException("Company DAO error in getCompany method " + e.getMessage());
 		}
 
 		logger.info("Company retrieved");
@@ -93,7 +93,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 			companiesList = CompanyMapper.getCompanies(listCompaniesResult);
 
 		} catch (SQLException | IOException e) {
-			throw new MyException("Company DAO error in listCompanies method");
+			throw new DaoException("Company DAO error in listCompanies method " + e.getMessage());
 		}
 
 		logger.info("Companies list retrieved");

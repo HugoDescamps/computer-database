@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.excilys.cdb.dto.mapper.CompanyDTOMapper;
 import com.excilys.cdb.dto.mapper.ComputerDTOMapper;
 import com.excilys.cdb.model.Company;
@@ -36,10 +38,17 @@ public class EditComputerServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		String computerName = req.getParameter("computerName");
+		String computerName = null;
 		LocalDate introducedDate = null;
 		LocalDate discontinuedDate = null;
 		Integer companyId = null;
+		
+		boolean nameValidation = false;
+		
+		if(StringUtils.isNotBlank(req.getParameter("computerName"))) {
+			computerName = req.getParameter("computerName");
+			nameValidation = true;
+		}
 
 		if (!req.getParameter("introduced").equals("")) {
 			introducedDate = LocalDate.parse(req.getParameter("introduced"));
@@ -56,14 +65,19 @@ public class EditComputerServlet extends HttpServlet {
 
 		boolean datesValidation = datesValidation(introducedDate, discontinuedDate);
 
-		if (!datesValidation) {
-
-			req.setAttribute("datesError", "Discontinued date must be after introduced date");
+		if (!datesValidation || !nameValidation) {
+			
 			req.setAttribute("computerName", computerName);
 			req.setAttribute("introduced", req.getParameter("introduced"));
 			req.setAttribute("discontinued", req.getParameter("discontinued"));
 			req.setAttribute("companyId", req.getParameter("companyId"));
 			req.setAttribute("companiesList", CompanyDTOMapper.createDTO(companyServiceImpl.getCompanies()));
+			
+			if(!datesValidation) {
+				req.setAttribute("inputError", "Discontinued date must be after introduced date");
+			} else {
+				req.setAttribute("inputError", "You must enter a valid name");
+			}
 
 			this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(req, resp);
 

@@ -2,17 +2,19 @@ package com.excilys.cdb.persistence.persistenceImpl;
 
 import java.time.LocalDate;
 
+import org.junit.Test;
+import static org.junit.Assert.*;
+
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.persistence.MyException;
+import com.excilys.cdb.persistence.DaoException;
 
-import junit.framework.TestCase;
-
-public class ComputerDaoImplTest extends TestCase {
+public class ComputerDaoImplTest {
 
 	private ComputerDaoImpl computerDaoImpl = ComputerDaoImpl.INSTANCE;
 
-	public void testListComputers() {
+	@Test
+	public void testListComputersNormalBehaviour() {
 
 		assertEquals(3, computerDaoImpl.listComputers(3, 5).getNumber());
 		assertEquals(5, computerDaoImpl.listComputers(3, 5).getSize());
@@ -20,37 +22,50 @@ public class ComputerDaoImplTest extends TestCase {
 
 	}
 
-	public void testGetComputer() {
-
-		try {
-			computerDaoImpl.getComputer(0);
-			fail("0 id argument exception uncaught");
-		} catch (MyException e) {
-			// Exception caught
-		}
+	@Test
+	public void testGetComputerNormalBehaviour() {
 
 		assertNotNull(computerDaoImpl.getComputer(1));
 
 	}
 
-	public void testAddComputer() {
-		Computer computer = null;
+	@Test(expected = DaoException.class)
+	public void testAddComputerIncorrectInput() {
 
-		try {
-			computerDaoImpl.addComputer(computer);
-			fail("Null computer argument exception uncaught");
-		} catch (MyException e) {
-			// Exception caught
-		}
+		Computer computer = new Computer();
 		
-		Computer computer2 = computerDaoImpl.addComputer(new Computer(1, "test", null, null, null));
-
-		assertNotNull(computer2);
-		
-		computerDaoImpl.removeComputer(computer2.getId());
+		computerDaoImpl.addComputer(computer);
 
 	}
 
+	@Test
+	public void testAddComputerNormalBehaviour() {
+
+		Computer computer = computerDaoImpl.addComputer(new Computer(1, "test", null, null, null));
+
+		assertNotNull(computer);
+
+		computerDaoImpl.removeComputer(computer.getId());
+
+	}
+	
+	@Test(expected = DaoException.class)
+	public void testUpdateComputerIncorrectInput() {
+
+		Computer computer = new Computer(1, "test", null, null, null);
+		computer = computerDaoImpl.addComputer(computer);
+
+		computer.setName("");
+		computer.setIntroduced(LocalDate.parse("2012-09-01"));
+		computer.setDiscontinued(LocalDate.parse("2012-09-02"));
+		computer.setCompany(new Company(2, null));
+
+		computerDaoImpl.updateComputer(computer);
+
+		computerDaoImpl.removeComputer(computer.getId());
+	}
+
+	@Test
 	public void testUpdateComputer() {
 
 		Computer computer = new Computer(1, "test", null, null, null);
@@ -62,10 +77,11 @@ public class ComputerDaoImplTest extends TestCase {
 		computer.setCompany(new Company(2, null));
 
 		computerDaoImpl.updateComputer(computer);
-		
+
 		computerDaoImpl.removeComputer(computer.getId());
 	}
 
+	@Test
 	public void testRemoveComputer() {
 
 		assertTrue(computerDaoImpl

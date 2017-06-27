@@ -70,7 +70,7 @@
 					<div class="col-xs-8 box">
 
 						<h1>
-							<c:out value="${datesError}" />
+							<c:out value="${inputError}" />
 						</h1>
 					</div>
 				</div>

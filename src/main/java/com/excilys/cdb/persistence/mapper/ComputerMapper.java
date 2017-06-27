@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.persistence.MyException;
+import com.excilys.cdb.persistence.DaoException;
 
 public class ComputerMapper {
 
@@ -35,7 +35,7 @@ public class ComputerMapper {
 			computer = new Computer(resultSetComputer.getLong("computer.id"),
 					resultSetComputer.getString("computer.name"), introducedDate, discontinuedDate, company);
 		} catch (SQLException e) {
-			throw new MyException("Mapper error in extractComputer method");
+			throw new DaoException("Mapper error in extractComputer method " + e.getMessage());
 		}
 		return computer;
 	}
@@ -47,11 +47,9 @@ public class ComputerMapper {
 		try {
 			if (resultSetComputer.next()) {
 				computer = extractComputer(resultSetComputer);
-			} else {
-				throw new MyException("No computer found for this id");
 			}
 		} catch (SQLException e) {
-			throw new MyException("Mapper error in getComputer method");
+			throw new DaoException("Mapper error in getComputer method " + e.getMessage());
 		}
 
 		return computer;
@@ -66,7 +64,7 @@ public class ComputerMapper {
 				computersList.add(extractComputer(resultSetComputers));
 			}
 		} catch (SQLException e) {
-			throw new MyException("Mapper error in getComputers method");
+			throw new DaoException("Mapper error in getComputers method " + e.getMessage());
 		}
 		return computersList;
 	}
@@ -79,7 +77,7 @@ public class ComputerMapper {
 				count = resultSetCount.getInt(1);
 			}
 		} catch (SQLException e) {
-			throw new MyException("Mapper error in countComputers method");
+			throw new DaoException("Mapper error in countComputers method " + e.getMessage());
 		}
 		return count;
 	}

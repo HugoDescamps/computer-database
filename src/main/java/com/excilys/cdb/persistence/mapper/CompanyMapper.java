@@ -5,10 +5,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.model.Company;
-import com.excilys.cdb.persistence.MyException;
+import com.excilys.cdb.persistence.DaoException;
 
 public class CompanyMapper {
+
+	static final Logger logger = LoggerFactory.getLogger(CompanyMapper.class);
 
 	public static Company extractCompany(ResultSet resultSetCompany) {
 
@@ -16,8 +21,8 @@ public class CompanyMapper {
 
 		try {
 			company = new Company(resultSetCompany.getLong("company.id"), resultSetCompany.getString("company.name"));
-		} catch (Exception e) {
-			throw new MyException("Mapper error in extractCompany method");
+		} catch (SQLException e) {
+			throw new DaoException("Mapper error in extractCompany method " + e.getMessage());
 		}
 		return company;
 	}
@@ -29,11 +34,9 @@ public class CompanyMapper {
 		try {
 			if (resultSetCompany.next()) {
 				company = extractCompany(resultSetCompany);
-			} else {
-				throw new SQLException("No company found for this id");
 			}
 		} catch (SQLException e) {
-			throw new MyException("Mapper error in getCompany method");
+			throw new DaoException("Mapper error in getCompanies method " + e.getMessage());
 		}
 
 		return company;
@@ -49,7 +52,7 @@ public class CompanyMapper {
 				companiesList.add(extractCompany(resultSetCompanies));
 			}
 		} catch (SQLException e) {
-			throw new MyException("Mapper error in getCompanies method");
+			throw new DaoException("Mapper error in getCompanies method " + e.getMessage());
 		}
 		return companiesList;
 	}

@@ -1,14 +1,15 @@
 package com.excilys.cdb.persistence.persistenceImpl;
 
-import com.excilys.cdb.persistence.MyException;
+import static org.junit.Assert.*;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class CompanyDaoImplTest extends TestCase {
+public class CompanyDaoImplTest {
 
 	private CompanyDaoImpl companyDaoImpl = CompanyDaoImpl.INSTANCE;
 
-	public void testListCompanies() {
+	@Test
+	public void testListCompaniesNormalBehaviour() {
 
 		assertEquals(3, companyDaoImpl.listCompanies(3, 5).getNumber());
 		assertEquals(5, companyDaoImpl.listCompanies(3, 5).getSize());
@@ -16,17 +17,10 @@ public class CompanyDaoImplTest extends TestCase {
 
 	}
 
-	public void testGetCompanies() {
-
-		try {
-			companyDaoImpl.getCompany(0);
-			fail("0 argument exception uncaught");
-		} catch (MyException e) {
-			// Exception caught
-		}
+	@Test
+	public void testGetCompaniesNormalBehaviour() {
 
 		assertNotNull(companyDaoImpl.getCompany(1));
-
 	}
 
 }

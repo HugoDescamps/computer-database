@@ -10,15 +10,15 @@
     </encoder>
   </appender>
 
-	<!-- Send debug messages to a file at "c:/jcg.log" -->
+<!-- Send debug messages to a file at "c:/jcg.log" -->
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-	<file>/home/excilys/workspace_cdb/cdb/src/logs/test.log</file>
+	<file>/home/excilys/workspace_cdb/cdb/logs/logger.log</file>
 	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 		<Pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
 	</encoder>
  
 	<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-		<FileNamePattern>/home/excilys/workspace_cdb/cdb/src/logs/test.%i.log.zip</FileNamePattern>
+		<FileNamePattern>/home/excilys/workspace_cdb/cdb/logs/logger.%i.log.zip</FileNamePattern>
 		<MinIndex>1</MinIndex>
 		<MaxIndex>10</MaxIndex>
 	</rollingPolicy>

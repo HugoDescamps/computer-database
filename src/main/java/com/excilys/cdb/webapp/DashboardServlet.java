@@ -17,13 +17,13 @@ import com.excilys.cdb.service.serviceImpl.ComputerServiceImpl;
 
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
+	
+	ComputerServiceImpl computerServiceImpl = ComputerServiceImpl.INSTANCE;
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-		ComputerServiceImpl computerServiceImpl = ComputerServiceImpl.INSTANCE;
 
 		int pageNumber = 1;
 
@@ -37,11 +37,28 @@ public class DashboardServlet extends HttpServlet {
 		int computersCount = computerServiceImpl.countComputers();
 		req.setAttribute("computersCount", computersCount);
 
+		int numberOfPages = countPages(computersCount);
+
+		req.setAttribute("numberOfPages", numberOfPages);
+		req.setAttribute("numberOfPagesArray", storePagesNumbers(numberOfPages));
+
+		this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
+
+	}
+
+	private int countPages(int computersCount) {
+
 		int numberOfPages = computersCount / 50;
 
 		if (computersCount % 50 != 0) {
 			numberOfPages++;
 		}
+
+		return numberOfPages;
+
+	}
+
+	private List<Integer> storePagesNumbers(int numberOfPages) {
 
 		List<Integer> numberOfPagesArray = new ArrayList<>();
 
@@ -49,10 +66,7 @@ public class DashboardServlet extends HttpServlet {
 			numberOfPagesArray.add(i + 1);
 		}
 
-		req.setAttribute("numberOfPages", numberOfPages);
-		req.setAttribute("numberOfPagesArray", numberOfPagesArray);
-
-		this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
+		return numberOfPagesArray;
 
 	}
 
