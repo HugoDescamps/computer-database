@@ -12,5 +12,9 @@ public interface CompanyService {
 	public List<Company> getCompanies();
 
 	public Company getCompany(long id);
+	
+	public Company addCompany(Company company);
+	
+	public boolean removeCompany(long id);
 
 }

@@ -32,9 +32,14 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		List<Computer> computersList = new ArrayList<Computer>();
 
-		try (Connection connection = DataBaseConnector.connect();
-				PreparedStatement listComputersStatement = connection.prepareStatement(
-						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id ORDER BY computer.name ASC LIMIT ?,?;");) {
+		Connection connection = null;
+		PreparedStatement listComputersStatement = null;
+
+		try {
+			connection = DataBaseConnector.connect();
+
+			listComputersStatement = connection.prepareStatement(
+					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id ORDER BY computer.name ASC LIMIT ?,?;");
 
 			listComputersStatement.setInt(1, (pageNumber - 1) * pageSize);
 
@@ -48,6 +53,8 @@ public enum ComputerDaoImpl implements ComputerDao {
 			computersPage.setNumber(pageNumber);
 			computersPage.setSize(pageSize);
 
+			connection.close();
+
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in listComputers method " + e.getMessage());
 		}
@@ -56,19 +63,54 @@ public enum ComputerDaoImpl implements ComputerDao {
 	}
 
 	@Override
+	public List<Computer> listComputers(long company_id) {
+
+		List<Computer> computersList = new ArrayList<Computer>();
+
+		Connection connection = null;
+		PreparedStatement listComputersStatement = null;
+
+		try {
+
+			connection = DataBaseConnector.connect();
+
+			listComputersStatement = connection.prepareStatement(
+					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE company.id = ?;");
+
+			listComputersStatement.setLong(1, company_id);
+
+			ResultSet listComputersResult = listComputersStatement.executeQuery();
+
+			computersList = ComputerMapper.getComputers(listComputersResult);
+
+			connection.close();
+
+		} catch (SQLException e) {
+			throw new DaoException("Computer DAO error in listComputers method " + e.getMessage());
+		}
+		logger.info("Computers list retrieved");
+		return computersList;
+	}
+
+	@Override
 	public int countComputers() {
 
 		int computersCount = 0;
 
 		ResultSet countComputersResultset = null;
+		Connection connection = null;
+		Statement computersCountStatement = null;
 
-		try (Connection connection = DataBaseConnector.connect();
-				Statement computersCountStatement = connection.createStatement();) {
+		try {
+			connection = DataBaseConnector.connect();
+			computersCountStatement = connection.createStatement();
 
 			countComputersResultset = computersCountStatement.executeQuery(
 					"SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id;");
 
 			computersCount = ComputerMapper.countComputers(countComputersResultset);
+
+			connection.close();
 
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in countComputers method " + e.getMessage());
@@ -83,16 +125,22 @@ public enum ComputerDaoImpl implements ComputerDao {
 		Computer computer = null;
 
 		ResultSet getComputerResult = null;
+		Connection connection = null;
+		PreparedStatement getComputerStatement = null;
 
-		try (Connection connection = DataBaseConnector.connect();
-				PreparedStatement getComputerStatement = connection.prepareStatement(
-						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;");) {
+		try {
+
+			connection = DataBaseConnector.connect();
+			getComputerStatement = connection.prepareStatement(
+					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;");
 
 			getComputerStatement.setLong(1, id);
 
 			getComputerResult = getComputerStatement.executeQuery();
 
 			computer = ComputerMapper.getComputer(getComputerResult);
+
+			connection.close();
 
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in getComputer method " + e.getMessage());
@@ -106,11 +154,15 @@ public enum ComputerDaoImpl implements ComputerDao {
 	public Computer addComputer(Computer computer) {
 
 		ResultSet addComputerResult = null;
+		Connection connection = null;
+		PreparedStatement addComputerStatement = null;
 
-		try (Connection connection = DataBaseConnector.connect();
-				PreparedStatement addComputerStatement = connection.prepareStatement(
-						"INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);",
-						Statement.RETURN_GENERATED_KEYS);) {
+		try {
+
+			connection = DataBaseConnector.connect();
+			addComputerStatement = connection.prepareStatement(
+					"INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);",
+					Statement.RETURN_GENERATED_KEYS);
 
 			if (computer != null && StringUtils.isNotBlank(computer.getName())) {
 				addComputerStatement.setString(1, computer.getName());
@@ -144,6 +196,9 @@ public enum ComputerDaoImpl implements ComputerDao {
 			if (addComputerResult.next()) {
 				computer.setId(addComputerResult.getLong(1));
 			}
+
+			connection.close();
+			
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in addComputer method " + e.getMessage());
 		}
@@ -155,8 +210,12 @@ public enum ComputerDaoImpl implements ComputerDao {
 	public boolean updateComputer(Computer computer) {
 
 		PreparedStatement updateComputerStatement = null;
+		Connection connection = null;
 
-		try (Connection connection = DataBaseConnector.connect();) {
+		try {
+
+			connection = DataBaseConnector.connect();
+
 			updateComputerStatement = connection.prepareStatement(
 					"UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?;");
 
@@ -189,6 +248,8 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 			updateComputerStatement.executeUpdate();
 
+			connection.close();
+
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in updateComputer method " + e.getMessage());
 		}
@@ -200,13 +261,18 @@ public enum ComputerDaoImpl implements ComputerDao {
 	public boolean removeComputer(long id) {
 
 		PreparedStatement removeComputerStatement = null;
+		Connection connection = null;
 
-		try (Connection connection = DataBaseConnector.connect();) {
+		try {
+			connection = DataBaseConnector.connect();
+			
 			removeComputerStatement = connection.prepareStatement("DELETE FROM computer WHERE id = ?;");
 
 			removeComputerStatement.setLong(1, id);
 
 			removeComputerStatement.executeUpdate();
+			
+			connection.close();
 
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in removeComputer method " + e.getMessage());

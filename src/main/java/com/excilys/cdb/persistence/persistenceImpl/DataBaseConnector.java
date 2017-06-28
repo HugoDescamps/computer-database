@@ -13,21 +13,22 @@ import com.zaxxer.hikari.HikariDataSource;
 public class DataBaseConnector {
 
 	static final Logger logger = LoggerFactory.getLogger(DataBaseConnector.class);
+	private static HikariDataSource hikariDataSource;
+	private static HikariConfig hikariConfig;
 
-
-	@SuppressWarnings("resource")
 	public static Connection connect() {
 
 		Connection connection;
 
 		try {
-
-			HikariConfig hikariConfig = new HikariConfig("/hikari.properties");
-			HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
+			hikariConfig = new HikariConfig("/hikari.properties");
+			hikariDataSource = new HikariDataSource(hikariConfig);
 
 			connection = hikariDataSource.getConnection();
 		} catch (SQLException e) {
 			throw new DaoException("Cannot establish database connection " + e.getMessage());
+		} finally {
+			
 		}
 
 		logger.info("DB connection established");

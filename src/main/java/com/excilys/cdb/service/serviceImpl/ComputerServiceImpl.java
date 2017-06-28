@@ -1,5 +1,7 @@
 package com.excilys.cdb.service.serviceImpl;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +14,7 @@ public enum ComputerServiceImpl implements ComputerService {
 	INSTANCE;
 
 	private ComputerDaoImpl computerDaoImpl;
-	
+
 	static final Logger logger = LoggerFactory.getLogger(ComputerServiceImpl.class);
 
 	private ComputerServiceImpl() {
@@ -26,7 +28,7 @@ public enum ComputerServiceImpl implements ComputerService {
 
 	@Override
 	public int countComputers() {
-		
+
 		return computerDaoImpl.countComputers();
 	}
 
@@ -48,6 +50,11 @@ public enum ComputerServiceImpl implements ComputerService {
 	@Override
 	public boolean removeComputer(long id) {
 		return computerDaoImpl.removeComputer(id);
+	}
+
+	@Override
+	public List<Computer> getComputers(long company_id) {
+		return computerDaoImpl.listComputers(company_id);
 	}
 
 }

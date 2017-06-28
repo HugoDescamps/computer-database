@@ -13,6 +13,10 @@ public interface CompanyDao {
 
 	public Company getCompany(long id);
 
+	public Company addCompany(Company company);
+	
+	public boolean removeCompany(long id);
+
 	public String toString();
 
 }

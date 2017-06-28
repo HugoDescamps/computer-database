@@ -32,6 +32,7 @@ public class Commands {
 		System.out.println("\t4 - Create a computer\n");
 		System.out.println("\t5 - Update a computer\n");
 		System.out.println("\t6 - Delete a computer\n");
+		System.out.println("\t7 - Delete a company\n");
 	}
 
 	public void waitForInput() {
@@ -42,13 +43,13 @@ public class Commands {
 		do {
 			System.out.println("\nTo display all the available commands, enter h");
 			System.out.println("To shut down the application, enter q\n");
-			System.out.println("Please enter a valid command (1-6) : ");
+			System.out.println("Please enter a valid command (1-7) : ");
 
 			if (scanner.hasNextInt()) {
 				userInput = scanner.nextInt();
 				scanner.nextLine();
 
-				if (userInput >= 1 && userInput <= 6) {
+				if (userInput >= 1 && userInput <= 7) {
 					validInput = true;
 					this.executeCommand(userInput);
 					System.out.println(userInput);
@@ -93,6 +94,9 @@ public class Commands {
 		case 6:
 			command6();
 			break;
+		case 7:
+			command7();
+			break;
 		default:
 			System.out.println("Command unknown");
 			break;
@@ -101,14 +105,14 @@ public class Commands {
 	}
 
 	public void command1() {
-		
+
 		boolean validInputCompanyNumber = false;
 		int userInputCompanyNumber = 0;
 		String displayNextPage = "";
 		int pageNumber = 1;
-		
+
 		boolean endOfCommand = false;
-		
+
 		do {
 			System.out.println("Enter how many companies you want to display");
 
@@ -118,8 +122,8 @@ public class Commands {
 
 				if (userInputCompanyNumber >= 0) {
 					validInputCompanyNumber = true;
-					
-					System.out.println(companyService.getCompanies(pageNumber, userInputCompanyNumber).toString());		
+
+					System.out.println(companyService.getCompanies(pageNumber, userInputCompanyNumber).toString());
 				} else {
 					System.out.println("Wrong input : integer must be positive\n");
 				}
@@ -130,7 +134,7 @@ public class Commands {
 
 			}
 		} while (!validInputCompanyNumber);
-		
+
 		do {
 			System.out.println("Press n to display next page, p to display previous page or q to quit");
 
@@ -138,35 +142,33 @@ public class Commands {
 
 			if (displayNextPage.equals("n")) {
 				pageNumber++;
-				System.out.println(companyService.getCompanies(pageNumber, userInputCompanyNumber).toString());	
-			} else if(displayNextPage.equals("p")){
-				if(pageNumber == 1) {
+				System.out.println(companyService.getCompanies(pageNumber, userInputCompanyNumber).toString());
+			} else if (displayNextPage.equals("p")) {
+				if (pageNumber == 1) {
 					System.out.println("Error : this is already the first page");
 				} else {
 					pageNumber--;
-					System.out.println(companyService.getCompanies(pageNumber, userInputCompanyNumber).toString());	
+					System.out.println(companyService.getCompanies(pageNumber, userInputCompanyNumber).toString());
 				}
-			} else if(displayNextPage.equals("q")) {
+			} else if (displayNextPage.equals("q")) {
 				endOfCommand = true;
 				this.waitForInput();
 			} else {
 				System.out.println("Wront input");
 			}
 		} while (!endOfCommand);
-		
-		
 
 	}
 
 	public void command2() {
-		
+
 		boolean validInputComputerNumber = false;
 		int userInputComputerNumber = 0;
 		String displayNextPage = "";
 		int pageNumber = 1;
-		
+
 		boolean endOfCommand = false;
-		
+
 		do {
 			System.out.println("Enter how many computers you want to display");
 
@@ -176,8 +178,8 @@ public class Commands {
 
 				if (userInputComputerNumber >= 0) {
 					validInputComputerNumber = true;
-					
-					System.out.println(computerService.getComputers(pageNumber, userInputComputerNumber).toString());		
+
+					System.out.println(computerService.getComputers(pageNumber, userInputComputerNumber).toString());
 				} else {
 					System.out.println("Wrong input : integer must be positive\n");
 				}
@@ -188,7 +190,7 @@ public class Commands {
 
 			}
 		} while (!validInputComputerNumber);
-		
+
 		do {
 			System.out.println("Press n to display next page, p to display previous page or q to quit");
 
@@ -196,15 +198,15 @@ public class Commands {
 
 			if (displayNextPage.equals("n")) {
 				pageNumber++;
-				System.out.println(computerService.getComputers(pageNumber, userInputComputerNumber).toString());	
-			} else if(displayNextPage.equals("p")){
-				if(pageNumber == 1) {
+				System.out.println(computerService.getComputers(pageNumber, userInputComputerNumber).toString());
+			} else if (displayNextPage.equals("p")) {
+				if (pageNumber == 1) {
 					System.out.println("Error : this is already the first page");
 				} else {
 					pageNumber--;
-					System.out.println(computerService.getComputers(pageNumber, userInputComputerNumber).toString());	
+					System.out.println(computerService.getComputers(pageNumber, userInputComputerNumber).toString());
 				}
-			} else if(displayNextPage.equals("q")) {
+			} else if (displayNextPage.equals("q")) {
 				endOfCommand = true;
 				this.waitForInput();
 			} else {
@@ -540,7 +542,7 @@ public class Commands {
 	}
 
 	public void command6() {
-		
+
 		Computer computer;
 
 		boolean validInputComputerId = false;
@@ -554,7 +556,7 @@ public class Commands {
 				scanner.nextLine();
 				if (userInputComputerId >= 1) {
 					computer = computerService.getComputer(userInputComputerId);
-					if(computer == null) {
+					if (computer == null) {
 						System.out.println("Wrong input : this computer doesn't exist\n");
 					} else {
 						validInputComputerId = true;
@@ -570,9 +572,47 @@ public class Commands {
 
 			}
 		} while (!validInputComputerId);
-		
-		System.out.println("The computer of id "+userInputComputerId+" has been removed");
-		
+
+		System.out.println("The computer of id " + userInputComputerId + " has been removed");
+
+		this.waitForInput();
+
+	}
+
+	public void command7() {
+
+		Company company;
+
+		boolean validInputCompanyId = false;
+		int userInputCompanyId = 0;
+
+		do {
+			System.out.println("Enter the company's id you want to remove");
+
+			if (scanner.hasNextInt()) {
+				userInputCompanyId = scanner.nextInt();
+				scanner.nextLine();
+				if (userInputCompanyId >= 1) {
+					company = companyService.getCompany(userInputCompanyId);
+					if (company == null) {
+						System.out.println("Wrong input : this company doesn't exist\n");
+					} else {
+						validInputCompanyId = true;
+						companyService.removeCompany(userInputCompanyId);
+					}
+				} else {
+					System.out.println("Wrong input : integer must be greater than 0\n");
+				}
+			} else {
+				scanner.nextLine();
+
+				System.out.println("Wrong input : must be an integer\n");
+
+			}
+		} while (!validInputCompanyId);
+
+		System.out.println("The company of id " + userInputCompanyId + " and its computers have been removed");
+
 		this.waitForInput();
 
 	}

@@ -21,6 +21,13 @@ public class ComputerDaoImplTest {
 		assertEquals(0, computerDaoImpl.listComputers(1, 0).getObjectsList().size());
 
 	}
+	
+	@Test
+	public void testListComputersCompanyNormalBehaviour() {
+
+		assertNotEquals(0, computerDaoImpl.listComputers(1).size());
+		assertEquals(0, computerDaoImpl.listComputers(-20).size());
+	}
 
 	@Test
 	public void testGetComputerNormalBehaviour() {
@@ -47,22 +54,6 @@ public class ComputerDaoImplTest {
 
 		computerDaoImpl.removeComputer(computer.getId());
 
-	}
-	
-	@Test(expected = DaoException.class)
-	public void testUpdateComputerIncorrectInput() {
-
-		Computer computer = new Computer(1, "test", null, null, null);
-		computer = computerDaoImpl.addComputer(computer);
-
-		computer.setName("");
-		computer.setIntroduced(LocalDate.parse("2012-09-01"));
-		computer.setDiscontinued(LocalDate.parse("2012-09-02"));
-		computer.setCompany(new Company(2, null));
-
-		computerDaoImpl.updateComputer(computer);
-
-		computerDaoImpl.removeComputer(computer.getId());
 	}
 
 	@Test

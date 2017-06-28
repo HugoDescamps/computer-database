@@ -31,4 +31,14 @@ public enum CompanyServiceImpl implements CompanyService {
 		return companyDaoImpl.listCompanies();
 	}
 
+	@Override
+	public Company addCompany(Company company) {
+		return companyDaoImpl.addCompany(company);
+	}
+
+	@Override
+	public boolean removeCompany(long id) {
+		return companyDaoImpl.removeCompany(id);
+	}
+
 }

@@ -9,6 +9,7 @@ import com.excilys.cdb.model.Company;
 public class CompanyDTOMapper {
 
 	public static CompanyDTO createDTO(Company company) {
+		
 		CompanyDTO companyDTO = new CompanyDTO();
 
 		companyDTO.setId(company.getId());
