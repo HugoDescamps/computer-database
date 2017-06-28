@@ -1,6 +1,5 @@
 package com.excilys.cdb.persistence.persistenceImpl;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,7 +45,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 			companiesPage.setNumber(pageNumber);
 			companiesPage.setSize(pageSize);
 
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DaoException("Company DAO error in listCompanies method " + e.getMessage());
 		}
 
@@ -70,7 +69,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 			company = CompanyMapper.getCompany(getCompanyResult);
 
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DaoException("Company DAO error in getCompany method " + e.getMessage());
 		}
 
@@ -92,7 +91,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 			companiesList = CompanyMapper.getCompanies(listCompaniesResult);
 
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DaoException("Company DAO error in listCompanies method " + e.getMessage());
 		}
 

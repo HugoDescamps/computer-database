@@ -1,6 +1,5 @@
 package com.excilys.cdb.persistence.persistenceImpl;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,7 +48,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 			computersPage.setNumber(pageNumber);
 			computersPage.setSize(pageSize);
 
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in listComputers method " + e.getMessage());
 		}
 		logger.info("Computers list retrieved");
@@ -71,7 +70,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 			computersCount = ComputerMapper.countComputers(countComputersResultset);
 
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in countComputers method " + e.getMessage());
 		}
 		logger.info("Computers count retrieved");
@@ -95,7 +94,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 			computer = ComputerMapper.getComputer(getComputerResult);
 
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in getComputer method " + e.getMessage());
 		}
 
@@ -113,7 +112,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 						"INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);",
 						Statement.RETURN_GENERATED_KEYS);) {
 
-			if(computer != null && StringUtils.isNotBlank(computer.getName())) {
+			if (computer != null && StringUtils.isNotBlank(computer.getName())) {
 				addComputerStatement.setString(1, computer.getName());
 			} else {
 				throw new DaoException("Computer DAO error in addComputer method, name is mandatory");
@@ -145,7 +144,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 			if (addComputerResult.next()) {
 				computer.setId(addComputerResult.getLong(1));
 			}
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in addComputer method " + e.getMessage());
 		}
 		logger.info("Computer successfully added");
@@ -160,8 +159,8 @@ public enum ComputerDaoImpl implements ComputerDao {
 		try (Connection connection = DataBaseConnector.connect();) {
 			updateComputerStatement = connection.prepareStatement(
 					"UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?;");
-			
-			if(computer != null && StringUtils.isNotBlank(computer.getName())) {
+
+			if (computer != null && StringUtils.isNotBlank(computer.getName())) {
 				updateComputerStatement.setString(1, computer.getName());
 			} else {
 				throw new DaoException("Computer DAO error in addComputer method, name is mandatory");
@@ -190,7 +189,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 			updateComputerStatement.executeUpdate();
 
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in updateComputer method " + e.getMessage());
 		}
 		logger.info("Computer successfully updated");
@@ -209,7 +208,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 			removeComputerStatement.executeUpdate();
 
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in removeComputer method " + e.getMessage());
 
 		}

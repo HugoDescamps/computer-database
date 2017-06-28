@@ -20,8 +20,10 @@
 		<jstlVersion>1.2</jstlVersion>
 		<commonsLangVersion>3.0</commonsLangVersion>
 		<mavenCompilerVersion>3.6.1</mavenCompilerVersion>
+		<mavenCompilerConfiguration>1.8</mavenCompilerConfiguration>
 		<mavenWarVersion>2.6</mavenWarVersion>
 		<mavenCheckstyleVersion>2.17</mavenCheckstyleVersion>
+		<hikariCPVersion>2.6.1</hikariCPVersion>
 	</properties>
 
 	<dependencies>
@@ -82,6 +84,13 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>${hikariCPVersion}</version>
+			<scope>compile</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -91,8 +100,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${mavenCompilerVersion}</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${mavenCompilerConfiguration}</source>
+					<target>${mavenCompilerConfiguration}</target>
 				</configuration>
 			</plugin>
 
