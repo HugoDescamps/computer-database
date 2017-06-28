@@ -1,6 +1,6 @@
 package com.excilys.cdb.persistence;
 
-import java.util.List;
+import java.sql.Connection;
 
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -8,8 +8,6 @@ import com.excilys.cdb.model.Page;
 public interface ComputerDao {
 
 	public Page<Computer> listComputers(int pageNumber, int pageSize);
-	
-	public List<Computer> listComputers (long company_id);
 
 	public int countComputers();
 
@@ -19,7 +17,9 @@ public interface ComputerDao {
 
 	public boolean updateComputer(Computer computer);
 
-	public boolean removeComputer(long id);
+	public void removeComputer(long id);
+	
+	public void removeComputers(Connection connection, long company_id);
 
 	public String toString();
 

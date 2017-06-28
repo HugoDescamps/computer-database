@@ -63,36 +63,6 @@ public enum ComputerDaoImpl implements ComputerDao {
 	}
 
 	@Override
-	public List<Computer> listComputers(long company_id) {
-
-		List<Computer> computersList = new ArrayList<Computer>();
-
-		Connection connection = null;
-		PreparedStatement listComputersStatement = null;
-
-		try {
-
-			connection = DataBaseConnector.connect();
-
-			listComputersStatement = connection.prepareStatement(
-					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE company.id = ?;");
-
-			listComputersStatement.setLong(1, company_id);
-
-			ResultSet listComputersResult = listComputersStatement.executeQuery();
-
-			computersList = ComputerMapper.getComputers(listComputersResult);
-
-			connection.close();
-
-		} catch (SQLException e) {
-			throw new DaoException("Computer DAO error in listComputers method " + e.getMessage());
-		}
-		logger.info("Computers list retrieved");
-		return computersList;
-	}
-
-	@Override
 	public int countComputers() {
 
 		int computersCount = 0;
@@ -198,7 +168,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 			}
 
 			connection.close();
-			
+
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in addComputer method " + e.getMessage());
 		}
@@ -258,20 +228,20 @@ public enum ComputerDaoImpl implements ComputerDao {
 	}
 
 	@Override
-	public boolean removeComputer(long id) {
+	public void removeComputer(long id) {
 
 		PreparedStatement removeComputerStatement = null;
 		Connection connection = null;
 
 		try {
 			connection = DataBaseConnector.connect();
-			
+
 			removeComputerStatement = connection.prepareStatement("DELETE FROM computer WHERE id = ?;");
 
 			removeComputerStatement.setLong(1, id);
 
 			removeComputerStatement.executeUpdate();
-			
+
 			connection.close();
 
 		} catch (SQLException e) {
@@ -279,7 +249,26 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		}
 		logger.info("Computer successfully removed");
-		return true;
+	}
+
+	@Override
+	public void removeComputers(Connection connection, long company_id) {
+
+		PreparedStatement removeComputersStatement = null;
+
+		try {
+
+			removeComputersStatement = connection.prepareStatement("DELETE FROM computer WHERE company_id = ?;");
+
+			removeComputersStatement.setLong(1, company_id);
+
+			removeComputersStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			
+			throw new DaoException("Computer DAO error in removeComputers method " + e.getMessage());
+		}
+		logger.info("Company's computers removed");
 	}
 
 }

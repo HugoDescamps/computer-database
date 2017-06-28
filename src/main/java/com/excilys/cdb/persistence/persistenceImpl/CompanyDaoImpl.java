@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.model.Company;
-import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.CompanyDao;
 import com.excilys.cdb.persistence.DaoException;
@@ -160,34 +159,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 	}
 
 	@Override
-	public boolean removeCompany(long id) {
-
-		ComputerDaoImpl computerDaoImpl = ComputerDaoImpl.INSTANCE;
-
-		List<Computer> listComputers = computerDaoImpl.listComputers(id);
-
-		Connection connection = null;
-
-		connection = DataBaseConnector.connect();
-
-		for (Computer computer : listComputers) {
-
-			PreparedStatement removeComputerStatement = null;
-
-			try {
-
-				removeComputerStatement = connection.prepareStatement("DELETE FROM computer WHERE id = ?;");
-
-				removeComputerStatement.setLong(1, computer.getId());
-
-				removeComputerStatement.executeUpdate();
-
-			} catch (SQLException e) {
-				throw new DaoException("Computer DAO error in removeComputer method " + e.getMessage());
-
-			}
-
-		}
+	public void removeCompany(Connection connection, long id) {
 
 		PreparedStatement removeCompanyStatement = null;
 
@@ -199,16 +171,12 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 			removeCompanyStatement.executeUpdate();
 
-			connection.close();
-
 		} catch (SQLException e) {
 			throw new DaoException("Company DAO error in removeCompany method " + e.getMessage());
 
 		}
 
-		logger.info("Company and its computers successfully removed");
-
-		return true;
+		logger.info("Company successfully removed");
 	}
 
 }

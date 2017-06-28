@@ -1,6 +1,6 @@
 package com.excilys.cdb.service.serviceImpl;
 
-import java.util.List;
+import java.sql.Connection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,13 +48,13 @@ public enum ComputerServiceImpl implements ComputerService {
 	}
 
 	@Override
-	public boolean removeComputer(long id) {
-		return computerDaoImpl.removeComputer(id);
+	public void removeComputer(long id) {
+		computerDaoImpl.removeComputer(id);
 	}
 
 	@Override
-	public List<Computer> getComputers(long company_id) {
-		return computerDaoImpl.listComputers(company_id);
+	public void removeComputers(Connection connection, long company_id) {
+		computerDaoImpl.removeComputers(connection, company_id);
 	}
 
 }

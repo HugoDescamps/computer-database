@@ -2,13 +2,15 @@ package com.excilys.cdb.persistence.persistenceImpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.junit.Test;
 
 import com.excilys.cdb.model.Company;
-import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.persistence.DaoException;
+import com.excilys.cdb.service.ServiceException;
 
 public class CompanyDaoImplTest {
 
@@ -45,24 +47,36 @@ public class CompanyDaoImplTest {
 
 		assertNotNull(company);
 
-		companyDaoImpl.removeCompany(company.getId());
+		Connection connection = DataBaseConnector.connect();
+
+		companyDaoImpl.removeCompany(connection, company.getId());
+
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			throw new ServiceException(
+					"CompanyDaoImplTest error in testAddCompanyNormalBehaviour method, could not close connection "
+							+ e.getMessage());
+		}
 
 	}
 
 	@Test
 	public void testRemoveCompanyNormalBehaviour() {
 
-		ComputerDaoImpl computerDaoImpl = ComputerDaoImpl.INSTANCE;
-
 		Company company = companyDaoImpl.addCompany(new Company(1, "test"));
 
-		computerDaoImpl.addComputer(new Computer(1, "test1", null, null, company));
-		computerDaoImpl.addComputer(new Computer(2, "test2", null, null, company));
-		computerDaoImpl.addComputer(new Computer(3, "test3", null, null, company));
-		computerDaoImpl.addComputer(new Computer(4, "test4", null, null, company));
-		computerDaoImpl.addComputer(new Computer(5, "test5", null, null, company));
+		Connection connection = DataBaseConnector.connect();
 
-		assertTrue(companyDaoImpl.removeCompany(company.getId()));
+		companyDaoImpl.removeCompany(connection, company.getId());
+
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			throw new ServiceException(
+					"CompanyDaoImplTest error in testRemoveCompanyNormalBehaviour method, could not close connection "
+							+ e.getMessage());
+		}
 
 	}
 
