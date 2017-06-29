@@ -51,7 +51,6 @@ public class EditComputerServlet extends HttpServlet {
 
 		if (!req.getParameter("companyId").equals("0")) {
 			companyId = Integer.parseInt(req.getParameter("companyId"));
-
 		}
 
 		boolean nameValidator = Validator.nameValidator(req.getParameter("computerName"));

@@ -26,24 +26,31 @@ public class DashboardServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		int pageNumber = 1;
+		int page = 1;
 
-		if (StringUtils.isNotBlank(req.getParameter("pageNumber"))) {
-			pageNumber = Integer.parseInt(req.getParameter("pageNumber"));
+		if (StringUtils.isNotBlank(req.getParameter("page"))) {
+			page = Integer.parseInt(req.getParameter("page"));
 		}
 
 		List<ComputerDTO> computersList;
 
 		String search = "";
+		String order = "";
 
 		if (StringUtils.isNotBlank(req.getParameter("search"))) {
 			search = req.getParameter("search").trim();
 		}
 		
-		req.setAttribute("search", req.getParameter("search"));
+		if (StringUtils.isNotBlank(req.getParameter("order"))) {
+			order = req.getParameter("order").trim();
+		}
+		
+		req.setAttribute("page", page);
+		req.setAttribute("search", search);
+		req.setAttribute("order", order);
 
 		computersList = ComputerDTOMapper
-				.createDTO(computerServiceImpl.getComputers(pageNumber, 50, search).getObjectsList());
+				.createDTO(computerServiceImpl.getComputers(page, 50, search, order).getObjectsList());
 
 		req.setAttribute("computersDTO", computersList);
 

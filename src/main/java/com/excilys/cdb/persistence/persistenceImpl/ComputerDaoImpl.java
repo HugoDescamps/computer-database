@@ -26,7 +26,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 	static final Logger logger = LoggerFactory.getLogger(ComputerDaoImpl.class);
 
 	@Override
-	public Page<Computer> listComputers(int pageNumber, int pageSize, String search) {
+	public Page<Computer> listComputers(int pageNumber, int pageSize, String search, String order) {
 
 		Page<Computer> computersPage = new Page<Computer>();
 
@@ -38,19 +38,41 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		try {
 			connection = DataBaseConnector.connect();
-
-			listComputersStatement = connection.prepareStatement(
-					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.name ASC LIMIT ?,?;");
+			
+			switch(order) {
+			case "computerAsc" : 
+				listComputersStatement = connection.prepareStatement(
+						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.name ASC LIMIT ?,?;");
+				break;
+			case "computerDesc" :
+				listComputersStatement = connection.prepareStatement(
+						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.name DESC LIMIT ?,?;");
+				break;
+			case "companyAsc" : 
+				listComputersStatement = connection.prepareStatement(
+						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY CASE WHEN company.name is null then 1 else 0 end, company.name ASC LIMIT ?,?;");
+				break;
+			case "companyDesc" :
+				listComputersStatement = connection.prepareStatement(
+						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY CASE WHEN company.name is null then 0 else 1 end, company.name DESC LIMIT ?,?;");
+				break;
+			default :
+				listComputersStatement = connection.prepareStatement(
+						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? LIMIT ?,?;");
+				break;
+			}
 
 			listComputersStatement.setString(1, "%" + search + "%");
 
 			listComputersStatement.setString(2, "%" + search + "%");
-
+			
 			listComputersStatement.setInt(3, (pageNumber - 1) * pageSize);
 
 			listComputersStatement.setInt(4, pageSize);
 
 			listComputersResult = listComputersStatement.executeQuery();
+			
+			System.out.println("Ma requête : "+listComputersStatement);
 
 			computersList = ComputerMapper.getComputers(listComputersResult);
 

@@ -7,7 +7,7 @@ import com.excilys.cdb.model.Page;
 
 public interface ComputerDao {
 
-	public Page<Computer> listComputers(int pageNumber, int pageSize, String search);
+	public Page<Computer> listComputers(int pageNumber, int pageSize, String search, String order);
 
 	public int countComputers(String search);
 

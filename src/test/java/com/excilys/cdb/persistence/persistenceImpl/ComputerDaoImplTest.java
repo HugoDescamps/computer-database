@@ -21,9 +21,9 @@ public class ComputerDaoImplTest {
 	@Test
 	public void testListComputersNormalBehaviour() {
 
-		assertEquals(3, computerDaoImpl.listComputers(3, 5).getNumber());
-		assertEquals(5, computerDaoImpl.listComputers(3, 5).getSize());
-		assertEquals(0, computerDaoImpl.listComputers(1, 0).getObjectsList().size());
+		assertEquals(3, computerDaoImpl.listComputers(3, 5, "", "").getNumber());
+		assertEquals(5, computerDaoImpl.listComputers(3, 5, "", "").getSize());
+		assertEquals(0, computerDaoImpl.listComputers(1, 0, "", "").getObjectsList().size());
 
 	}
 
