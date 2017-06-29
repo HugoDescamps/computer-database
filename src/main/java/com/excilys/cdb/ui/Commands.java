@@ -180,7 +180,7 @@ public class Commands {
 					validInputComputerNumber = true;
 
 					System.out
-							.println(computerService.getComputers(pageNumber, userInputComputerNumber, "").toString());
+							.println(computerService.getComputers(pageNumber, userInputComputerNumber, "", "").toString());
 				} else {
 					System.out.println("Wrong input : integer must be positive\n");
 				}
@@ -199,14 +199,14 @@ public class Commands {
 
 			if (displayNextPage.equals("n")) {
 				pageNumber++;
-				System.out.println(computerService.getComputers(pageNumber, userInputComputerNumber, "").toString());
+				System.out.println(computerService.getComputers(pageNumber, userInputComputerNumber, "", "").toString());
 			} else if (displayNextPage.equals("p")) {
 				if (pageNumber == 1) {
 					System.out.println("Error : this is already the first page");
 				} else {
 					pageNumber--;
 					System.out
-							.println(computerService.getComputers(pageNumber, userInputComputerNumber, "").toString());
+							.println(computerService.getComputers(pageNumber, userInputComputerNumber, "", "").toString());
 				}
 			} else if (displayNextPage.equals("q")) {
 				endOfCommand = true;

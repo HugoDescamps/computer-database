@@ -7,7 +7,7 @@ import com.excilys.cdb.model.Page;
 
 public interface ComputerService {
 
-	public Page<Computer> getComputers(int pageNumber, int pageSize, String search);
+	public Page<Computer> getComputers(int pageNumber, int pageSize, String search, String order);
 
 	public int countComputers(String search);
 

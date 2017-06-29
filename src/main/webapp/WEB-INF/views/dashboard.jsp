@@ -28,7 +28,8 @@
 					<form id="searchForm" action="#" method="GET" class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="Search name" value="<c:out value="${search}"></c:out>"/> <input
+							class="form-control" placeholder="Search name"
+							value="<c:out value="${search}"></c:out>" /> <input
 							type="submit" id="searchsubmit" value="Filter by name"
 							class="btn btn-primary" />
 					</form>
@@ -59,13 +60,65 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>Computer name</th>
+						<c:choose>
+							<c:when test="${order != 'computerAsc'}">
+								<c:choose>
+									<c:when test="${empty search}">
+										<th><a href="dashboard?order=computerAsc"
+											title="Order by computer name">Computer name</a></th>
+									</c:when>
+									<c:otherwise>
+										<th><a
+											href="dashboard?order=computerAsc&search=${search}"
+											title="Order by computer name">Computer name</a></th>
+									</c:otherwise>
+								</c:choose>
+							</c:when>
+							<c:otherwise>
+								<c:choose>
+									<c:when test="${empty search}">
+										<th><a href="dashboard?order=computerDesc"
+											title="Order by computer name">Computer name</a></th>
+									</c:when>
+									<c:otherwise>
+										<th><a
+											href="dashboard?order=computerDesc&search=${search}"
+											title="Order by computer name">Computer name</a></th>
+									</c:otherwise>
+								</c:choose>
+							</c:otherwise>
+						</c:choose>
 						<th>Introduced date</th>
 						<!-- Table header for Discontinued Date -->
 						<th>Discontinued date</th>
 						<!-- Table header for Company -->
-						<th>Company</th>
-
+						<c:choose>
+							<c:when test="${order != 'companyAsc'}">
+								<c:choose>
+									<c:when test="${empty search}">
+										<th><a href="dashboard?order=companyAsc"
+											title="Order by company">Company</a></th>
+									</c:when>
+									<c:otherwise>
+										<th><a href="dashboard?order=companyAsc&search=${search}"
+											title="Order by company">Company</a></th>
+									</c:otherwise>
+								</c:choose>
+							</c:when>
+							<c:otherwise>
+								<c:choose>
+									<c:when test="${empty search}">
+										<th><a href="dashboard?order=companyDesc"
+											title="Order by company">Company</a></th>
+									</c:when>
+									<c:otherwise>
+										<th><a
+											href="dashboard?order=companyDesc&search=${search}"
+											title="Order by company">Company</a></th>
+									</c:otherwise>
+								</c:choose>
+							</c:otherwise>
+						</c:choose>
 					</tr>
 				</thead>
 				<!-- Browse attribute computers -->
@@ -89,17 +142,76 @@
 		<div class="container text-center">
 			<ul class="pagination">
 				<c:if test="${numberOfPages > 1}">
-					<li><a href="dashboard?search=${search}&pageNumber=1" aria-label="Previous">
-							<span aria-hidden="true">&laquo;</span>
-					</a></li>
+					<c:choose>
+						<c:when test="${empty search && empty order}">
+							<li><a href="dashboard?page=1" aria-label="Previous"> <span
+									aria-hidden="true">&laquo;</span>
+							</a></li>
+						</c:when>
+						<c:when test="${empty search && !empty order}">
+							<li><a href="dashboard?page=1&order=${order}"
+								aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+							</a></li>
+						</c:when>
+						<c:when test="${!empty search && empty order}">
+							<li><a href="dashboard?page=1&search=${search}"
+								aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+							</a></li>
+						</c:when>
+						<c:otherwise>
+							<li><a
+								href="dashboard?page=1&order=${order}&search=${search}"
+								aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+							</a></li>
+						</c:otherwise>
+					</c:choose>
 				</c:if>
+
 				<c:forEach items="${numberOfPagesArray}" var="numberofPage">
-					<li><a href="dashboard?search=${search}&pageNumber=${numberofPage}">${numberofPage}</a></li>
+					<c:choose>
+						<c:when test="${empty search && empty order}">
+							<li><a href="dashboard?page=${numberofPage}">${numberofPage}</a></li>
+						</c:when>
+						<c:when test="${empty search && !empty order}">
+							<li><a href="dashboard?page=${numberofPage}&order=${order}">${numberofPage}</a></li>
+						</c:when>
+						<c:when test="${!empty search && empty order}">
+							<li><a
+								href="dashboard?page=${numberofPage}&search=${search}">${numberofPage}</a></li>
+						</c:when>
+						<c:otherwise>
+							<li><a
+								href="dashboard?page=${numberofPage}&order=${order}&search=${search}">${numberofPage}</a></li>
+						</c:otherwise>
+					</c:choose>
+
 				</c:forEach>
+
 				<c:if test="${numberOfPages > 1}">
-					<li><a href="dashboard?search=${search}&pageNumber=${numberOfPages}&" aria-label="Next"> <span
-							aria-hidden="true">&raquo;</span>
-					</a></li>
+					<c:choose>
+						<c:when test="${empty search && empty order}">
+							<li><a href="dashboard?page=${numberOfPages}"
+								aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+							</a></li>
+						</c:when>
+						<c:when test="${empty search && !empty order}">
+							<li><a href="dashboard?page=${numberOfPages}&order=${order}"
+								aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+							</a></li>
+						</c:when>
+						<c:when test="${!empty search && empty order}">
+							<li><a
+								href="dashboard?page=${numberOfPages}&search=${search}"
+								aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+							</a></li>
+						</c:when>
+						<c:otherwise>
+							<li><a
+								href="dashboard?page=${numberOfPages}&order=${order}&search=${search}"
+								aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+							</a></li>
+						</c:otherwise>
+					</c:choose>
 				</c:if>
 			</ul>
 		</div>
