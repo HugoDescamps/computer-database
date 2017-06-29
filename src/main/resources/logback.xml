@@ -3,14 +3,12 @@
 <configuration>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <!-- encoders are assigned the type
-         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
     </encoder>
   </appender>
 
-<!-- Send debug messages to a file at "c:/jcg.log" -->
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	<file>/home/excilys/workspace_cdb/cdb/logs/logger.log</file>
 	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -33,10 +31,9 @@
    <appender-ref ref="FILE" />
   </logger>
 
-  <!-- Strictly speaking, the level attribute is not necessary since -->
-  <!-- the level of the root level is set to DEBUG by default.       -->
-  <root level="INFO">          
+   <root level="INFO">          
     <appender-ref ref="STDOUT" />
   </root>  
-  
+ 
+ 
 </configuration>

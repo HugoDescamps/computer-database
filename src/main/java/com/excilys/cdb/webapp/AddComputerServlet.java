@@ -38,9 +38,7 @@ public class AddComputerServlet extends HttpServlet {
 
 		LocalDate introducedDate = null;
 		LocalDate discontinuedDate = null;
-		Integer companyId = null;
-
-		
+		Integer companyId = null;		
 
 		if (!req.getParameter("introduced").equals("")) {
 			introducedDate = LocalDate.parse(req.getParameter("introduced"));
