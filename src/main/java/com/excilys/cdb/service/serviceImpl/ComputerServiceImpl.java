@@ -22,14 +22,14 @@ public enum ComputerServiceImpl implements ComputerService {
 	}
 
 	@Override
-	public Page<Computer> getComputers(int pageNumber, int pageSize) {
-		return computerDaoImpl.listComputers(pageNumber, pageSize);
+	public Page<Computer> getComputers(int pageNumber, int pageSize, String search) {
+		return computerDaoImpl.listComputers(pageNumber, pageSize, search);
 	}
 
 	@Override
-	public int countComputers() {
+	public int countComputers(String search) {
 
-		return computerDaoImpl.countComputers();
+		return computerDaoImpl.countComputers(search);
 	}
 
 	@Override

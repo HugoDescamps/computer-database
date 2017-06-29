@@ -28,7 +28,7 @@
 					<form id="searchForm" action="#" method="GET" class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="Search name" /> <input
+							class="form-control" placeholder="Search name" value="<c:out value="${search}"></c:out>"/> <input
 							type="submit" id="searchsubmit" value="Filter by name"
 							class="btn btn-primary" />
 					</form>
@@ -73,7 +73,7 @@
 					<c:forEach items="${computersDTO}" var="computerDTO">
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
-								class="cb" value="0"></td>
+								class="cb" value="<c:out value="${computerDTO.id}"></c:out>"></td>
 							<td><a href="editComputer?id=${computerDTO.id}" onclick="">${computerDTO.name}</a></td>
 							<td>${computerDTO.introduced}</td>
 							<td>${computerDTO.discontinued}</td>
@@ -89,15 +89,15 @@
 		<div class="container text-center">
 			<ul class="pagination">
 				<c:if test="${numberOfPages > 1}">
-					<li><a href="dashboard?pageNumber=1" aria-label="Previous">
+					<li><a href="dashboard?search=${search}&pageNumber=1" aria-label="Previous">
 							<span aria-hidden="true">&laquo;</span>
 					</a></li>
 				</c:if>
 				<c:forEach items="${numberOfPagesArray}" var="numberofPage">
-					<li><a href="dashboard?pageNumber=${numberofPage}">${numberofPage}</a></li>
+					<li><a href="dashboard?search=${search}&pageNumber=${numberofPage}">${numberofPage}</a></li>
 				</c:forEach>
 				<c:if test="${numberOfPages > 1}">
-					<li><a href="dashboard?pageNumber=${numberOfPages}" aria-label="Next"> <span
+					<li><a href="dashboard?search=${search}&pageNumber=${numberOfPages}&" aria-label="Next"> <span
 							aria-hidden="true">&raquo;</span>
 					</a></li>
 				</c:if>

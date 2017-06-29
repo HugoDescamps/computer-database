@@ -12,12 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.dto.mapper.ComputerDTOMapper;
 import com.excilys.cdb.service.serviceImpl.ComputerServiceImpl;
 
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
-	
+
 	ComputerServiceImpl computerServiceImpl = ComputerServiceImpl.INSTANCE;
 
 	private static final long serialVersionUID = 1L;
@@ -31,10 +32,22 @@ public class DashboardServlet extends HttpServlet {
 			pageNumber = Integer.parseInt(req.getParameter("pageNumber"));
 		}
 
-		req.setAttribute("computersDTO",
-				ComputerDTOMapper.createDTO(computerServiceImpl.getComputers(pageNumber, 50).getObjectsList()));
+		List<ComputerDTO> computersList;
 
-		int computersCount = computerServiceImpl.countComputers();
+		String search = "";
+
+		if (StringUtils.isNotBlank(req.getParameter("search"))) {
+			search = req.getParameter("search").trim();
+		}
+		
+		req.setAttribute("search", req.getParameter("search"));
+
+		computersList = ComputerDTOMapper
+				.createDTO(computerServiceImpl.getComputers(pageNumber, 50, search).getObjectsList());
+
+		req.setAttribute("computersDTO", computersList);
+
+		int computersCount = computerServiceImpl.countComputers(search);
 		req.setAttribute("computersCount", computersCount);
 
 		int numberOfPages = countPages(computersCount);
@@ -43,6 +56,19 @@ public class DashboardServlet extends HttpServlet {
 		req.setAttribute("numberOfPagesArray", storePagesNumbers(numberOfPages));
 
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
+
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		String selectedComputersList = req.getParameter("selection");
+
+		for (String id : selectedComputersList.split(",")) {
+			computerServiceImpl.removeComputer(Integer.parseInt(id));
+		}
+
+		resp.sendRedirect(this.getServletContext().getContextPath() + "/dashboard");
 
 	}
 

@@ -7,9 +7,9 @@ import com.excilys.cdb.model.Page;
 
 public interface ComputerDao {
 
-	public Page<Computer> listComputers(int pageNumber, int pageSize);
+	public Page<Computer> listComputers(int pageNumber, int pageSize, String search);
 
-	public int countComputers();
+	public int countComputers(String search);
 
 	public Computer getComputer(long id);
 
@@ -18,7 +18,7 @@ public interface ComputerDao {
 	public boolean updateComputer(Computer computer);
 
 	public void removeComputer(long id);
-	
+
 	public void removeComputers(Connection connection, long company_id);
 
 	public String toString();

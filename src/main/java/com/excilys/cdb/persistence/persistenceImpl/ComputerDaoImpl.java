@@ -26,7 +26,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 	static final Logger logger = LoggerFactory.getLogger(ComputerDaoImpl.class);
 
 	@Override
-	public Page<Computer> listComputers(int pageNumber, int pageSize) {
+	public Page<Computer> listComputers(int pageNumber, int pageSize, String search) {
 
 		Page<Computer> computersPage = new Page<Computer>();
 
@@ -34,18 +34,23 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		Connection connection = null;
 		PreparedStatement listComputersStatement = null;
+		ResultSet listComputersResult = null;
 
 		try {
 			connection = DataBaseConnector.connect();
 
 			listComputersStatement = connection.prepareStatement(
-					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id ORDER BY computer.name ASC LIMIT ?,?;");
+					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.name ASC LIMIT ?,?;");
 
-			listComputersStatement.setInt(1, (pageNumber - 1) * pageSize);
+			listComputersStatement.setString(1, "%" + search + "%");
 
-			listComputersStatement.setInt(2, pageSize);
+			listComputersStatement.setString(2, "%" + search + "%");
 
-			ResultSet listComputersResult = listComputersStatement.executeQuery();
+			listComputersStatement.setInt(3, (pageNumber - 1) * pageSize);
+
+			listComputersStatement.setInt(4, pageSize);
+
+			listComputersResult = listComputersStatement.executeQuery();
 
 			computersList = ComputerMapper.getComputers(listComputersResult);
 
@@ -56,27 +61,33 @@ public enum ComputerDaoImpl implements ComputerDao {
 			connection.close();
 
 		} catch (SQLException e) {
-			throw new DaoException("Computer DAO error in listComputers method " + e.getMessage());
+			throw new DaoException("Computer DAO error in listComputersSearch method " + e.getMessage());
 		}
 		logger.info("Computers list retrieved");
 		return computersPage;
 	}
 
 	@Override
-	public int countComputers() {
+	public int countComputers(String search) {
 
 		int computersCount = 0;
 
-		ResultSet countComputersResultset = null;
+		
 		Connection connection = null;
-		Statement computersCountStatement = null;
+		PreparedStatement computersCountStatement = null;
+		ResultSet countComputersResultset = null;
 
 		try {
 			connection = DataBaseConnector.connect();
-			computersCountStatement = connection.createStatement();
 
-			countComputersResultset = computersCountStatement.executeQuery(
-					"SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id;");
+			computersCountStatement = connection.prepareStatement(
+					"SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;");
+			
+			computersCountStatement.setString(1, "%" + search + "%");
+
+			computersCountStatement.setString(2, "%" + search + "%");
+			
+			countComputersResultset = computersCountStatement.executeQuery();
 
 			computersCount = ComputerMapper.countComputers(countComputersResultset);
 
@@ -265,7 +276,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 			removeComputersStatement.executeUpdate();
 
 		} catch (SQLException e) {
-			
+
 			throw new DaoException("Computer DAO error in removeComputers method " + e.getMessage());
 		}
 		logger.info("Company's computers removed");

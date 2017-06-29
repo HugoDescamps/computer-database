@@ -32,6 +32,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 		Connection connection = null;
 		PreparedStatement listCompaniesStatement = null;
+		ResultSet listCompaniesResult = null;
 
 		try {
 
@@ -43,7 +44,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 			listCompaniesStatement.setInt(2, pageSize);
 
-			ResultSet listCompaniesResult = listCompaniesStatement.executeQuery();
+			listCompaniesResult = listCompaniesStatement.executeQuery();
 
 			companiesList = CompanyMapper.getCompanies(listCompaniesResult);
 
