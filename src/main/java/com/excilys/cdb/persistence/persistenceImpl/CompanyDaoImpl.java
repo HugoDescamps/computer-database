@@ -30,15 +30,11 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 		List<Company> companiesList = new ArrayList<Company>();
 
-		Connection connection = null;
-		PreparedStatement listCompaniesStatement = null;
 		ResultSet listCompaniesResult = null;
 
-		try {
-
-			connection = DataBaseConnector.connect();
-
-			listCompaniesStatement = connection.prepareStatement("SELECT * FROM company LIMIT ?,?;");
+		try (Connection connection = DataBaseConnector.connect();
+				PreparedStatement listCompaniesStatement = connection
+						.prepareStatement("SELECT * FROM company LIMIT ?,?;");) {
 
 			listCompaniesStatement.setInt(1, (pageNumber - 1) * pageSize);
 
@@ -51,8 +47,6 @@ public enum CompanyDaoImpl implements CompanyDao {
 			companiesPage.setObjectsList(companiesList);
 			companiesPage.setNumber(pageNumber);
 			companiesPage.setSize(pageSize);
-
-			connection.close();
 
 		} catch (SQLException e) {
 			throw new DaoException("Company DAO error in listCompanies method " + e.getMessage());
@@ -67,22 +61,16 @@ public enum CompanyDaoImpl implements CompanyDao {
 		Company company = null;
 
 		ResultSet getCompanyResult = null;
-		Connection connection = null;
-		PreparedStatement getCompanyStatement = null;
 
-		try {
-
-			connection = DataBaseConnector.connect();
-
-			getCompanyStatement = connection.prepareStatement("SELECT * FROM company WHERE id = ?;");
+		try (Connection connection = DataBaseConnector.connect();
+				PreparedStatement getCompanyStatement = connection
+						.prepareStatement("SELECT * FROM company WHERE id = ?;");) {
 
 			getCompanyStatement.setLong(1, id);
 
 			getCompanyResult = getCompanyStatement.executeQuery();
 
 			company = CompanyMapper.getCompany(getCompanyResult);
-
-			connection.close();
 
 		} catch (SQLException e) {
 			throw new DaoException("Company DAO error in getCompany method " + e.getMessage());
@@ -96,15 +84,10 @@ public enum CompanyDaoImpl implements CompanyDao {
 	public Company addCompany(Company company) {
 
 		ResultSet addCompanyResult = null;
-		Connection connection = null;
-		PreparedStatement addCompanyStatement = null;
 
-		try {
-
-			connection = DataBaseConnector.connect();
-
-			addCompanyStatement = connection.prepareStatement("INSERT INTO company(name) VALUES (?);",
-					Statement.RETURN_GENERATED_KEYS);
+		try (Connection connection = DataBaseConnector.connect();
+				PreparedStatement addCompanyStatement = connection
+						.prepareStatement("INSERT INTO company(name) VALUES (?);", Statement.RETURN_GENERATED_KEYS);) {
 
 			if (company != null && StringUtils.isNotBlank(company.getName())) {
 				addCompanyStatement.setString(1, company.getName());
@@ -120,8 +103,6 @@ public enum CompanyDaoImpl implements CompanyDao {
 				company.setId(addCompanyResult.getLong(1));
 			}
 
-			connection.close();
-
 		} catch (SQLException e) {
 			throw new DaoException("Company DAO error in addCompany method " + e.getMessage());
 		}
@@ -136,19 +117,13 @@ public enum CompanyDaoImpl implements CompanyDao {
 		List<Company> companiesList = new ArrayList<Company>();
 
 		ResultSet listCompaniesResult = null;
-		Connection connection = null;
-		Statement listCompaniesStatement = null;
 
-		try {
-
-			connection = DataBaseConnector.connect();
-			listCompaniesStatement = connection.createStatement();
+		try (Connection connection = DataBaseConnector.connect();
+				Statement listCompaniesStatement = connection.createStatement();) {
 
 			listCompaniesResult = listCompaniesStatement.executeQuery("SELECT * FROM company ORDER BY name;");
 
 			companiesList = CompanyMapper.getCompanies(listCompaniesResult);
-
-			connection.close();
 
 		} catch (SQLException e) {
 			throw new DaoException("Company DAO error in listCompanies method " + e.getMessage());

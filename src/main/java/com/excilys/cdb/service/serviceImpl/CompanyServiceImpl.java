@@ -47,6 +47,7 @@ public enum CompanyServiceImpl implements CompanyService {
 		ComputerDaoImpl computerDaoImpl = ComputerDaoImpl.INSTANCE;
 
 		Connection connection = DataBaseConnector.connect();
+
 		try {
 			connection.setAutoCommit(false);
 
@@ -63,7 +64,7 @@ public enum CompanyServiceImpl implements CompanyService {
 						"CompanyService error in removeCompany method, could not execute rollback " + e2.getMessage());
 			}
 			throw new ServiceException("CompanyService error in removeCompany method " + e1.getMessage());
-			
+
 		} finally {
 
 			try {
@@ -71,7 +72,8 @@ public enum CompanyServiceImpl implements CompanyService {
 				connection.close();
 			} catch (SQLException e3) {
 				throw new ServiceException(
-						"CompanyService error in removeCompany method, could not set AutoCommit & close connection " + e3.getMessage());
+						"CompanyService error in removeCompany method, could not set AutoCommit & close connection "
+								+ e3.getMessage());
 			}
 
 		}

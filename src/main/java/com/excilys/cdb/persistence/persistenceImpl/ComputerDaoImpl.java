@@ -32,31 +32,29 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		List<Computer> computersList = new ArrayList<Computer>();
 
-		Connection connection = null;
 		PreparedStatement listComputersStatement = null;
 		ResultSet listComputersResult = null;
 
-		try {
-			connection = DataBaseConnector.connect();
-			
-			switch(order) {
-			case "computerAsc" : 
+		try (Connection connection = DataBaseConnector.connect();) {
+
+			switch (order) {
+			case "computerAsc":
 				listComputersStatement = connection.prepareStatement(
 						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.name ASC LIMIT ?,?;");
 				break;
-			case "computerDesc" :
+			case "computerDesc":
 				listComputersStatement = connection.prepareStatement(
 						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.name DESC LIMIT ?,?;");
 				break;
-			case "companyAsc" : 
+			case "companyAsc":
 				listComputersStatement = connection.prepareStatement(
 						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY CASE WHEN company.name is null then 1 else 0 end, company.name ASC LIMIT ?,?;");
 				break;
-			case "companyDesc" :
+			case "companyDesc":
 				listComputersStatement = connection.prepareStatement(
 						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY CASE WHEN company.name is null then 0 else 1 end, company.name DESC LIMIT ?,?;");
 				break;
-			default :
+			default:
 				listComputersStatement = connection.prepareStatement(
 						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? LIMIT ?,?;");
 				break;
@@ -65,14 +63,12 @@ public enum ComputerDaoImpl implements ComputerDao {
 			listComputersStatement.setString(1, "%" + search + "%");
 
 			listComputersStatement.setString(2, "%" + search + "%");
-			
+
 			listComputersStatement.setInt(3, (pageNumber - 1) * pageSize);
 
 			listComputersStatement.setInt(4, pageSize);
 
 			listComputersResult = listComputersStatement.executeQuery();
-			
-			System.out.println("Ma requête : "+listComputersStatement);
 
 			computersList = ComputerMapper.getComputers(listComputersResult);
 
@@ -94,21 +90,16 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		int computersCount = 0;
 
-		
-		Connection connection = null;
-		PreparedStatement computersCountStatement = null;
 		ResultSet countComputersResultset = null;
 
-		try {
-			connection = DataBaseConnector.connect();
+		try (Connection connection = DataBaseConnector.connect();
+				PreparedStatement computersCountStatement = connection.prepareStatement(
+						"SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;");) {
 
-			computersCountStatement = connection.prepareStatement(
-					"SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;");
-			
 			computersCountStatement.setString(1, "%" + search + "%");
 
 			computersCountStatement.setString(2, "%" + search + "%");
-			
+
 			countComputersResultset = computersCountStatement.executeQuery();
 
 			computersCount = ComputerMapper.countComputers(countComputersResultset);
@@ -128,14 +119,10 @@ public enum ComputerDaoImpl implements ComputerDao {
 		Computer computer = null;
 
 		ResultSet getComputerResult = null;
-		Connection connection = null;
-		PreparedStatement getComputerStatement = null;
 
-		try {
-
-			connection = DataBaseConnector.connect();
-			getComputerStatement = connection.prepareStatement(
-					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;");
+		try (Connection connection = DataBaseConnector.connect();
+				PreparedStatement getComputerStatement = connection.prepareStatement(
+						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;");) {
 
 			getComputerStatement.setLong(1, id);
 
@@ -157,15 +144,11 @@ public enum ComputerDaoImpl implements ComputerDao {
 	public Computer addComputer(Computer computer) {
 
 		ResultSet addComputerResult = null;
-		Connection connection = null;
-		PreparedStatement addComputerStatement = null;
 
-		try {
-
-			connection = DataBaseConnector.connect();
-			addComputerStatement = connection.prepareStatement(
-					"INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);",
-					Statement.RETURN_GENERATED_KEYS);
+		try (Connection connection = DataBaseConnector.connect();
+				PreparedStatement addComputerStatement = connection.prepareStatement(
+						"INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);",
+						Statement.RETURN_GENERATED_KEYS);) {
 
 			if (computer != null && StringUtils.isNotBlank(computer.getName())) {
 				addComputerStatement.setString(1, computer.getName());
@@ -212,15 +195,9 @@ public enum ComputerDaoImpl implements ComputerDao {
 	@Override
 	public boolean updateComputer(Computer computer) {
 
-		PreparedStatement updateComputerStatement = null;
-		Connection connection = null;
-
-		try {
-
-			connection = DataBaseConnector.connect();
-
-			updateComputerStatement = connection.prepareStatement(
-					"UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?;");
+		try (Connection connection = DataBaseConnector.connect();
+				PreparedStatement updateComputerStatement = connection.prepareStatement(
+						"UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?;");) {
 
 			if (computer != null && StringUtils.isNotBlank(computer.getName())) {
 				updateComputerStatement.setString(1, computer.getName());
@@ -263,13 +240,9 @@ public enum ComputerDaoImpl implements ComputerDao {
 	@Override
 	public void removeComputer(long id) {
 
-		PreparedStatement removeComputerStatement = null;
-		Connection connection = null;
-
-		try {
-			connection = DataBaseConnector.connect();
-
-			removeComputerStatement = connection.prepareStatement("DELETE FROM computer WHERE id = ?;");
+		try (Connection connection = DataBaseConnector.connect();
+				PreparedStatement removeComputerStatement = connection
+						.prepareStatement("DELETE FROM computer WHERE id = ?;");) {
 
 			removeComputerStatement.setLong(1, id);
 
@@ -287,11 +260,8 @@ public enum ComputerDaoImpl implements ComputerDao {
 	@Override
 	public void removeComputers(Connection connection, long company_id) {
 
-		PreparedStatement removeComputersStatement = null;
-
-		try {
-
-			removeComputersStatement = connection.prepareStatement("DELETE FROM computer WHERE company_id = ?;");
+		try (PreparedStatement removeComputersStatement = connection
+				.prepareStatement("DELETE FROM computer WHERE company_id = ?;");) {
 
 			removeComputersStatement.setLong(1, company_id);
 
