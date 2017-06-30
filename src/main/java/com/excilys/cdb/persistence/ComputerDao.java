@@ -7,7 +7,15 @@ import com.excilys.cdb.model.Page;
 
 public interface ComputerDao {
 
-	public Page<Computer> listComputers(int pageNumber, int pageSize, String search, String order);
+	public enum OrderColumn {
+		COMPUTER, COMPANY, NULL;
+	}
+
+	public enum OrderWay {
+		ASC, DESC;
+	}
+
+	public Page<Computer> listComputers(int pageNumber, int pageSize, String search, OrderColumn column, OrderWay way);
 
 	public int countComputers(String search);
 
@@ -22,5 +30,4 @@ public interface ComputerDao {
 	public void removeComputers(Connection connection, long company_id);
 
 	public String toString();
-
 }

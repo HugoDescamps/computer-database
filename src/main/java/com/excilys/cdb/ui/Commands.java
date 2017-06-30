@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
+import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 import com.excilys.cdb.service.serviceImpl.CompanyServiceImpl;
 import com.excilys.cdb.service.serviceImpl.ComputerServiceImpl;
 
@@ -179,8 +181,9 @@ public class Commands {
 				if (userInputComputerNumber >= 0) {
 					validInputComputerNumber = true;
 
-					System.out
-							.println(computerService.getComputers(pageNumber, userInputComputerNumber, "", "").toString());
+					System.out.println(computerService
+							.getComputers(pageNumber, userInputComputerNumber, "", OrderColumn.NULL, OrderWay.ASC)
+							.toString());
 				} else {
 					System.out.println("Wrong input : integer must be positive\n");
 				}
@@ -199,14 +202,17 @@ public class Commands {
 
 			if (displayNextPage.equals("n")) {
 				pageNumber++;
-				System.out.println(computerService.getComputers(pageNumber, userInputComputerNumber, "", "").toString());
+				System.out.println(computerService
+						.getComputers(pageNumber, userInputComputerNumber, "", OrderColumn.NULL, OrderWay.ASC)
+						.toString());
 			} else if (displayNextPage.equals("p")) {
 				if (pageNumber == 1) {
 					System.out.println("Error : this is already the first page");
 				} else {
 					pageNumber--;
-					System.out
-							.println(computerService.getComputers(pageNumber, userInputComputerNumber, "", "").toString());
+					System.out.println(computerService
+							.getComputers(pageNumber, userInputComputerNumber, "", OrderColumn.NULL, OrderWay.ASC)
+							.toString());
 				}
 			} else if (displayNextPage.equals("q")) {
 				endOfCommand = true;

@@ -26,7 +26,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 	static final Logger logger = LoggerFactory.getLogger(ComputerDaoImpl.class);
 
 	@Override
-	public Page<Computer> listComputers(int pageNumber, int pageSize, String search, String order) {
+	public Page<Computer> listComputers(int pageNumber, int pageSize, String search, OrderColumn column, OrderWay way) {
 
 		Page<Computer> computersPage = new Page<Computer>();
 
@@ -37,28 +37,25 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		try (Connection connection = DataBaseConnector.connect();) {
 
-			switch (order) {
-			case "computerAsc":
-				listComputersStatement = connection.prepareStatement(
-						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.name ASC LIMIT ?,?;");
+			String requestColumn = "";
+
+			switch (column) {
+			case COMPUTER:
+				requestColumn = "computer.name";
 				break;
-			case "computerDesc":
-				listComputersStatement = connection.prepareStatement(
-						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.name DESC LIMIT ?,?;");
-				break;
-			case "companyAsc":
-				listComputersStatement = connection.prepareStatement(
-						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY CASE WHEN company.name is null then 1 else 0 end, company.name ASC LIMIT ?,?;");
-				break;
-			case "companyDesc":
-				listComputersStatement = connection.prepareStatement(
-						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY CASE WHEN company.name is null then 0 else 1 end, company.name DESC LIMIT ?,?;");
+			case COMPANY:
+				requestColumn = "company.name";
 				break;
 			default:
-				listComputersStatement = connection.prepareStatement(
-						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? LIMIT ?,?;");
+				requestColumn = "computer.id";
 				break;
 			}
+			
+			
+
+			listComputersStatement = connection.prepareStatement(
+					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY "
+							+ requestColumn + " " + way + " LIMIT ?,?;");
 
 			listComputersStatement.setString(1, "%" + search + "%");
 
@@ -67,7 +64,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 			listComputersStatement.setInt(3, (pageNumber - 1) * pageSize);
 
 			listComputersStatement.setInt(4, pageSize);
-
+			
 			listComputersResult = listComputersStatement.executeQuery();
 
 			computersList = ComputerMapper.getComputers(listComputersResult);
@@ -104,8 +101,6 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 			computersCount = ComputerMapper.countComputers(countComputersResultset);
 
-			connection.close();
-
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in countComputers method " + e.getMessage());
 		}
@@ -129,8 +124,6 @@ public enum ComputerDaoImpl implements ComputerDao {
 			getComputerResult = getComputerStatement.executeQuery();
 
 			computer = ComputerMapper.getComputer(getComputerResult);
-
-			connection.close();
 
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in getComputer method " + e.getMessage());
@@ -183,8 +176,6 @@ public enum ComputerDaoImpl implements ComputerDao {
 				computer.setId(addComputerResult.getLong(1));
 			}
 
-			connection.close();
-
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in addComputer method " + e.getMessage());
 		}
@@ -228,8 +219,6 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 			updateComputerStatement.executeUpdate();
 
-			connection.close();
-
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in updateComputer method " + e.getMessage());
 		}
@@ -247,8 +236,6 @@ public enum ComputerDaoImpl implements ComputerDao {
 			removeComputerStatement.setLong(1, id);
 
 			removeComputerStatement.executeUpdate();
-
-			connection.close();
 
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in removeComputer method " + e.getMessage());

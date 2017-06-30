@@ -14,6 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.dto.mapper.ComputerDTOMapper;
+import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
+import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 import com.excilys.cdb.service.serviceImpl.ComputerServiceImpl;
 
 @WebServlet("/dashboard")
@@ -40,17 +42,41 @@ public class DashboardServlet extends HttpServlet {
 		if (StringUtils.isNotBlank(req.getParameter("search"))) {
 			search = req.getParameter("search").trim();
 		}
-		
+
 		if (StringUtils.isNotBlank(req.getParameter("order"))) {
 			order = req.getParameter("order").trim();
 		}
-		
+
 		req.setAttribute("page", page);
 		req.setAttribute("search", search);
 		req.setAttribute("order", order);
 
+		OrderColumn orderColumn = OrderColumn.NULL;
+		OrderWay orderWay = OrderWay.ASC;
+
+		switch (order) {
+		case "computerAsc":
+			orderColumn = OrderColumn.COMPUTER;
+			orderWay = OrderWay.ASC;
+			break;
+		case "computerDesc":
+			orderColumn = OrderColumn.COMPUTER;
+			orderWay = OrderWay.DESC;
+			break;
+		case "companyAsc":
+			orderColumn = OrderColumn.COMPANY;
+			orderWay = OrderWay.ASC;
+			break;
+		case "companyDesc":
+			orderColumn = OrderColumn.COMPANY;
+			orderWay = OrderWay.DESC;
+			break;
+		default:
+			break;
+		}
+
 		computersList = ComputerDTOMapper
-				.createDTO(computerServiceImpl.getComputers(page, 50, search, order).getObjectsList());
+				.createDTO(computerServiceImpl.getComputers(page, 50, search, orderColumn, orderWay).getObjectsList());
 
 		req.setAttribute("computersDTO", computersList);
 

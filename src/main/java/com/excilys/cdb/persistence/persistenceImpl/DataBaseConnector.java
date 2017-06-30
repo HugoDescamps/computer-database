@@ -13,27 +13,39 @@ import com.zaxxer.hikari.HikariDataSource;
 public class DataBaseConnector {
 
 	static final Logger logger = LoggerFactory.getLogger(DataBaseConnector.class);
+	public static Connection connection;
 	private static HikariDataSource hikariDataSource;
 	private static HikariConfig hikariConfig;
+	private static ThreadLocal<Connection> connectionThread = new ThreadLocal<>();
 
 	public static Connection connect() {
-
-		Connection connection;
 
 		try {
 			hikariConfig = new HikariConfig("/hikari.properties");
 			hikariDataSource = new HikariDataSource(hikariConfig);
 
 			connection = hikariDataSource.getConnection();
+			connectionThread.set(connection);
 		} catch (SQLException e) {
-			throw new DaoException("Cannot establish database connection " + e.getMessage());
-		} finally {
-			
+			throw new DaoException("Cannot establish database connection thread " + e.getMessage());
 		}
 
-		logger.info("DB connection established");
+		logger.info("DB connection thread established");
 
-		return connection;
+		return connectionThread.get();
 
+	}
+
+	public static void close() {
+
+		if (connectionThread.get() != null) {
+			try {
+				connectionThread.get().close();
+				connectionThread.remove();
+			} catch (SQLException e) {
+				throw new DaoException("Cannot close database connection thread " + e.getMessage());
+			}
+		}
+		logger.info("DB connection thread closed");
 	}
 }
