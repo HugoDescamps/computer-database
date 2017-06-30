@@ -11,8 +11,9 @@ import org.junit.Test;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
+import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 import com.excilys.cdb.persistence.DaoException;
-import com.excilys.cdb.service.ServiceException;
 
 public class ComputerDaoImplTest {
 
@@ -21,9 +22,12 @@ public class ComputerDaoImplTest {
 	@Test
 	public void testListComputersNormalBehaviour() {
 
-		assertEquals(3, computerDaoImpl.listComputers(3, 5, "", "").getNumber());
-		assertEquals(5, computerDaoImpl.listComputers(3, 5, "", "").getSize());
-		assertEquals(0, computerDaoImpl.listComputers(1, 0, "", "").getObjectsList().size());
+		System.out.println(computerDaoImpl.countComputers("") + " ordinateurs listés");
+
+		assertEquals(3, computerDaoImpl.listComputers(3, 5, "", OrderColumn.NULL, OrderWay.ASC).getNumber());
+		assertEquals(5, computerDaoImpl.listComputers(3, 5, "", OrderColumn.NULL, OrderWay.ASC).getSize());
+		assertEquals(0,
+				computerDaoImpl.listComputers(1, 0, "", OrderColumn.NULL, OrderWay.ASC).getObjectsList().size());
 
 	}
 
@@ -95,7 +99,7 @@ public class ComputerDaoImplTest {
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			throw new ServiceException(
+			throw new DaoException(
 					"ComputerDaoImplTest error in testRemoveComputersNormalBehaviour method, could not close connection "
 							+ e.getMessage());
 		}

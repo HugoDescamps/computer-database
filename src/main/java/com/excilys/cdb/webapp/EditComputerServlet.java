@@ -68,8 +68,8 @@ public class EditComputerServlet extends HttpServlet {
 
 			req.setAttribute("computer", ComputerDTOMapper
 					.createDTO(computerServiceImpl.getComputer(Integer.parseInt(req.getParameter("computerId")))));
-
-			this.getServletContext().getRequestDispatcher("/WEB-INF/views/editComputer.jsp").forward(req, resp);
+			
+			resp.sendRedirect(this.getServletContext().getContextPath() + "/editComputer");
 
 		} else {
 

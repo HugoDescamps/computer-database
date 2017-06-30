@@ -29,7 +29,7 @@
 
 						<input type="search" id="searchbox" name="search"
 							class="form-control" placeholder="Search name"
-							value="<c:out value="${search}"></c:out>" /> <input
+							value="${search}" /> <input
 							type="submit" id="searchsubmit" value="Filter by name"
 							class="btn btn-primary" />
 					</form>
@@ -126,7 +126,7 @@
 					<c:forEach items="${computersDTO}" var="computerDTO">
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
-								class="cb" value="<c:out value="${computerDTO.id}"></c:out>"></td>
+								class="cb" value="${computerDTO.id}"></td>
 							<td><a href="editComputer?id=${computerDTO.id}" onclick="">${computerDTO.name}</a></td>
 							<td>${computerDTO.introduced}</td>
 							<td>${computerDTO.discontinued}</td>

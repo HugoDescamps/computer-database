@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
+import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
+import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 import com.excilys.cdb.persistence.persistenceImpl.ComputerDaoImpl;
 import com.excilys.cdb.service.ComputerService;
 
@@ -22,8 +24,8 @@ public enum ComputerServiceImpl implements ComputerService {
 	}
 
 	@Override
-	public Page<Computer> getComputers(int pageNumber, int pageSize, String search, String order) {
-		return computerDaoImpl.listComputers(pageNumber, pageSize, search, order);
+	public Page<Computer> getComputers(int pageNumber, int pageSize, String search, OrderColumn column, OrderWay way) {
+		return computerDaoImpl.listComputers(pageNumber, pageSize, search, column, way);
 	}
 
 	@Override

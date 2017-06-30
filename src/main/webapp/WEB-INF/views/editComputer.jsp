@@ -20,24 +20,24 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <div class="label label-default pull-right">
-                        id: <c:out value="${computer.id}"></c:out>
+                        id: ${computer.id}
                     </div>
                     <h1>Edit Computer</h1>
 
                     <form action="editComputer" method="POST">
-                        <input type="hidden" name="computerId" value="<c:out value="${computer.id}"></c:out>" id="id"/>
+                        <input type="hidden" name="computerId" value="${computer.id}" id="id"/>
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="<c:out value="${computer.name}"></c:out>" required>
+                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="${computer.name}" required>
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:out value="${computer.introduced}"></c:out>">
+                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="${computer.introduced}">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:out value="${computer.discontinued}"></c:out>">
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="${computer.discontinued}">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
@@ -63,10 +63,7 @@
                         </div>
                     </form>
                     <div class="col-xs-8 box">
-
-						<h1>
-							<c:out value="${inputError}" />
-						</h1>
+						<h1>${inputError}</h1>
 					</div>
                 </div>
             </div>

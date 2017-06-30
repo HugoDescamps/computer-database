@@ -30,19 +30,19 @@
 								<label for="computerName">Computer name</label> <input
 									type="text" class="form-control" id="computerName"
 									name="computerName" placeholder="Computer name"
-									value="<c:out value = "${computerName}"/>" required>
+									value="${computerName}" required>
 							</div>
 							<div class="form-group">
 								<label for="introduced">Introduced date</label> <input
 									type="date" class="form-control" id="introduced"
 									name="introduced" placeholder="Introduced date"
-									value="<c:out value = "${introduced}"/>">
+									value="${introduced}">
 							</div>
 							<div class="form-group">
 								<label for="discontinued">Discontinued date</label> <input
 									type="date" class="form-control" id="discontinued"
 									name="discontinued" placeholder="Discontinued date"
-									value="<c:out value = "${discontinued}"/>">
+									value="${discontinued}">
 							</div>
 							<div class="form-group">
 								<label for="companyId">Company</label> <select
@@ -68,10 +68,7 @@
 						</div>
 					</form>
 					<div class="col-xs-8 box">
-
-						<h1>
-							<c:out value="${inputError}" />
-						</h1>
+						<h1>${inputError}</h1>
 					</div>
 				</div>
 			</div>

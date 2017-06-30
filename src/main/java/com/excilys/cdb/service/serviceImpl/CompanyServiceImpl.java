@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
+import com.excilys.cdb.persistence.DaoException;
 import com.excilys.cdb.persistence.persistenceImpl.CompanyDaoImpl;
 import com.excilys.cdb.persistence.persistenceImpl.ComputerDaoImpl;
 import com.excilys.cdb.persistence.persistenceImpl.DataBaseConnector;
@@ -47,6 +48,7 @@ public enum CompanyServiceImpl implements CompanyService {
 		ComputerDaoImpl computerDaoImpl = ComputerDaoImpl.INSTANCE;
 
 		Connection connection = DataBaseConnector.connect();
+
 		try {
 			connection.setAutoCommit(false);
 
@@ -62,18 +64,10 @@ public enum CompanyServiceImpl implements CompanyService {
 				throw new ServiceException(
 						"CompanyService error in removeCompany method, could not execute rollback " + e2.getMessage());
 			}
-			throw new ServiceException("CompanyService error in removeCompany method " + e1.getMessage());
-			
+			throw new DaoException("CompanyService error in removeCompany method " + e1.getMessage());
+
 		} finally {
-
-			try {
-				connection.setAutoCommit(true);
-				connection.close();
-			} catch (SQLException e3) {
-				throw new ServiceException(
-						"CompanyService error in removeCompany method, could not set AutoCommit & close connection " + e3.getMessage());
-			}
-
+			DataBaseConnector.close();
 		}
 
 	}
