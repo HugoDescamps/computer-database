@@ -23,7 +23,12 @@ import com.excilys.cdb.persistence.mapper.ComputerMapper;
 public enum ComputerDaoImpl implements ComputerDao {
 	INSTANCE;
 
+	private DataBaseConnector dataBaseConnection;
 	static final Logger logger = LoggerFactory.getLogger(ComputerDaoImpl.class);
+
+	private ComputerDaoImpl() {
+		dataBaseConnection = DataBaseConnector.INSTANCE;
+	}
 
 	@Override
 	public Page<Computer> listComputers(int pageNumber, int pageSize, String search, OrderColumn column, OrderWay way) {
@@ -35,7 +40,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 		PreparedStatement listComputersStatement = null;
 		ResultSet listComputersResult = null;
 
-		try (Connection connection = DataBaseConnector.connect();) {
+		try (Connection connection = dataBaseConnection.connect();) {
 
 			String requestColumn = "";
 
@@ -50,8 +55,6 @@ public enum ComputerDaoImpl implements ComputerDao {
 				requestColumn = "computer.id";
 				break;
 			}
-			
-			
 
 			listComputersStatement = connection.prepareStatement(
 					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY "
@@ -64,7 +67,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 			listComputersStatement.setInt(3, (pageNumber - 1) * pageSize);
 
 			listComputersStatement.setInt(4, pageSize);
-			
+
 			listComputersResult = listComputersStatement.executeQuery();
 
 			computersList = ComputerMapper.getComputers(listComputersResult);
@@ -72,8 +75,6 @@ public enum ComputerDaoImpl implements ComputerDao {
 			computersPage.setObjectsList(computersList);
 			computersPage.setNumber(pageNumber);
 			computersPage.setSize(pageSize);
-
-			connection.close();
 
 		} catch (SQLException e) {
 			throw new DaoException("Computer DAO error in listComputersSearch method " + e.getMessage());
@@ -89,7 +90,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		ResultSet countComputersResultset = null;
 
-		try (Connection connection = DataBaseConnector.connect();
+		try (Connection connection = dataBaseConnection.connect();
 				PreparedStatement computersCountStatement = connection.prepareStatement(
 						"SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;");) {
 
@@ -115,7 +116,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		ResultSet getComputerResult = null;
 
-		try (Connection connection = DataBaseConnector.connect();
+		try (Connection connection = dataBaseConnection.connect();
 				PreparedStatement getComputerStatement = connection.prepareStatement(
 						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;");) {
 
@@ -138,7 +139,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		ResultSet addComputerResult = null;
 
-		try (Connection connection = DataBaseConnector.connect();
+		try (Connection connection = dataBaseConnection.connect();
 				PreparedStatement addComputerStatement = connection.prepareStatement(
 						"INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);",
 						Statement.RETURN_GENERATED_KEYS);) {
@@ -186,7 +187,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 	@Override
 	public boolean updateComputer(Computer computer) {
 
-		try (Connection connection = DataBaseConnector.connect();
+		try (Connection connection = dataBaseConnection.connect();
 				PreparedStatement updateComputerStatement = connection.prepareStatement(
 						"UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?;");) {
 
@@ -229,7 +230,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 	@Override
 	public void removeComputer(long id) {
 
-		try (Connection connection = DataBaseConnector.connect();
+		try (Connection connection = dataBaseConnection.connect();
 				PreparedStatement removeComputerStatement = connection
 						.prepareStatement("DELETE FROM computer WHERE id = ?;");) {
 

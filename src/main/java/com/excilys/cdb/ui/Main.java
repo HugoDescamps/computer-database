@@ -9,5 +9,6 @@ public class Main {
 		commands.displayCommands();
 
 		commands.waitForInput();
+
 	}
 }

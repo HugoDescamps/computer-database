@@ -21,7 +21,12 @@ import com.excilys.cdb.persistence.mapper.CompanyMapper;
 public enum CompanyDaoImpl implements CompanyDao {
 	INSTANCE;
 
+	private DataBaseConnector dataBaseConnection;
 	static final Logger logger = LoggerFactory.getLogger(CompanyDaoImpl.class);
+
+	private CompanyDaoImpl() {
+		dataBaseConnection = DataBaseConnector.INSTANCE;
+	}
 
 	@Override
 	public Page<Company> listCompanies(int pageNumber, int pageSize) {
@@ -32,7 +37,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 		ResultSet listCompaniesResult = null;
 
-		try (Connection connection = DataBaseConnector.connect();
+		try (Connection connection = dataBaseConnection.connect();
 				PreparedStatement listCompaniesStatement = connection
 						.prepareStatement("SELECT * FROM company LIMIT ?,?;");) {
 
@@ -62,7 +67,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 		ResultSet getCompanyResult = null;
 
-		try (Connection connection = DataBaseConnector.connect();
+		try (Connection connection = dataBaseConnection.connect();
 				PreparedStatement getCompanyStatement = connection
 						.prepareStatement("SELECT * FROM company WHERE id = ?;");) {
 
@@ -85,7 +90,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 		ResultSet addCompanyResult = null;
 
-		try (Connection connection = DataBaseConnector.connect();
+		try (Connection connection = dataBaseConnection.connect();
 				PreparedStatement addCompanyStatement = connection
 						.prepareStatement("INSERT INTO company(name) VALUES (?);", Statement.RETURN_GENERATED_KEYS);) {
 
@@ -118,7 +123,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 		ResultSet listCompaniesResult = null;
 
-		try (Connection connection = DataBaseConnector.connect();
+		try (Connection connection = dataBaseConnection.connect();
 				Statement listCompaniesStatement = connection.createStatement();) {
 
 			listCompaniesResult = listCompaniesStatement.executeQuery("SELECT * FROM company ORDER BY name;");

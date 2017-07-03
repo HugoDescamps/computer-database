@@ -14,6 +14,7 @@ import com.excilys.cdb.service.ServiceException;
 
 public class CompanyDaoImplTest {
 
+	private DataBaseConnector dataBaseConnection = DataBaseConnector.INSTANCE;
 	private CompanyDaoImpl companyDaoImpl = CompanyDaoImpl.INSTANCE;
 
 	@Test
@@ -47,7 +48,7 @@ public class CompanyDaoImplTest {
 
 		assertNotNull(company);
 
-		Connection connection = DataBaseConnector.connect();
+		Connection connection = dataBaseConnection.connect();
 
 		companyDaoImpl.removeCompany(connection, company.getId());
 
@@ -66,7 +67,7 @@ public class CompanyDaoImplTest {
 
 		Company company = companyDaoImpl.addCompany(new Company(1, "test"));
 
-		Connection connection = DataBaseConnector.connect();
+		Connection connection = dataBaseConnection.connect();
 
 		companyDaoImpl.removeCompany(connection, company.getId());
 
