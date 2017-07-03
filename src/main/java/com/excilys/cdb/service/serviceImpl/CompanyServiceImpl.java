@@ -16,9 +16,11 @@ import com.excilys.cdb.service.ServiceException;
 public enum CompanyServiceImpl implements CompanyService {
 	INSTANCE;
 
+	private DataBaseConnector dataBaseConnection;
 	private CompanyDaoImpl companyDaoImpl;
 
 	private CompanyServiceImpl() {
+		dataBaseConnection = DataBaseConnector.INSTANCE;
 		companyDaoImpl = CompanyDaoImpl.INSTANCE;
 	}
 
@@ -47,7 +49,7 @@ public enum CompanyServiceImpl implements CompanyService {
 
 		ComputerDaoImpl computerDaoImpl = ComputerDaoImpl.INSTANCE;
 
-		Connection connection = DataBaseConnector.connect();
+		Connection connection = dataBaseConnection.connect();
 
 		try {
 			connection.setAutoCommit(false);
@@ -67,7 +69,7 @@ public enum CompanyServiceImpl implements CompanyService {
 			throw new DaoException("CompanyService error in removeCompany method " + e1.getMessage());
 
 		} finally {
-			DataBaseConnector.close();
+			dataBaseConnection.close();
 		}
 
 	}

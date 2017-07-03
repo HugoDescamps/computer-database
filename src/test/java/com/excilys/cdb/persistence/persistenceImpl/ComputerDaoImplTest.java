@@ -17,6 +17,7 @@ import com.excilys.cdb.persistence.DaoException;
 
 public class ComputerDaoImplTest {
 
+	private DataBaseConnector dataBaseConnector = DataBaseConnector.INSTANCE;
 	private ComputerDaoImpl computerDaoImpl = ComputerDaoImpl.INSTANCE;
 
 	@Test
@@ -91,7 +92,7 @@ public class ComputerDaoImplTest {
 		computerDaoImpl.addComputer(new Computer(1, "test1", null, null, company));
 		computerDaoImpl.addComputer(new Computer(2, "test2", null, null, company));
 
-		Connection connection = DataBaseConnector.connect();
+		Connection connection = dataBaseConnector.connect();
 
 		computerDaoImpl.removeComputers(connection, company.getId());
 		companyDaoImpl.removeCompany(connection, company.getId());

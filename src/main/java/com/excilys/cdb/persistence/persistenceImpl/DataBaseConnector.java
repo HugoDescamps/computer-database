@@ -10,20 +10,22 @@ import com.excilys.cdb.persistence.DaoException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-public class DataBaseConnector {
+public enum DataBaseConnector {
+	INSTANCE;
 
-	static final Logger logger = LoggerFactory.getLogger(DataBaseConnector.class);
-	public static Connection connection;
-	private static HikariDataSource hikariDataSource;
-	private static HikariConfig hikariConfig;
+	private static final Logger logger = LoggerFactory.getLogger(DataBaseConnector.class);
+	private HikariDataSource hikariDataSource;
 	private static ThreadLocal<Connection> connectionThread = new ThreadLocal<>();
 
-	public static Connection connect() {
+	private DataBaseConnector() {
+		HikariConfig hikariConfig = new HikariConfig("/hikari.properties");
+		hikariDataSource = new HikariDataSource(hikariConfig);
+	}
+
+	public Connection connect() {
+		Connection connection = null;
 
 		try {
-			hikariConfig = new HikariConfig("/hikari.properties");
-			hikariDataSource = new HikariDataSource(hikariConfig);
-
 			connection = hikariDataSource.getConnection();
 			connectionThread.set(connection);
 		} catch (SQLException e) {
@@ -36,12 +38,14 @@ public class DataBaseConnector {
 
 	}
 
-	public static void close() {
+	public void close() {
 
 		if (connectionThread.get() != null) {
 			try {
-				connectionThread.get().close();
-				connectionThread.remove();
+				if (!connectionThread.get().isClosed()) {
+					connectionThread.get().close();
+					connectionThread.remove();
+				}
 			} catch (SQLException e) {
 				throw new DaoException("Cannot close database connection thread " + e.getMessage());
 			}
