@@ -29,9 +29,14 @@ public class DashboardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		int page = 1;
+		int size = 50;
 
 		if (StringUtils.isNotBlank(req.getParameter("page"))) {
 			page = Integer.parseInt(req.getParameter("page"));
+		}
+		
+		if (StringUtils.isNotBlank(req.getParameter("size"))) {
+			size = Integer.parseInt(req.getParameter("size"));
 		}
 
 		List<ComputerDTO> computersList;
@@ -48,6 +53,7 @@ public class DashboardServlet extends HttpServlet {
 		}
 
 		req.setAttribute("page", page);
+		req.setAttribute("size", size);
 		req.setAttribute("search", search);
 		req.setAttribute("order", order);
 
@@ -76,17 +82,17 @@ public class DashboardServlet extends HttpServlet {
 		}
 
 		computersList = ComputerDTOMapper
-				.createDTO(computerServiceImpl.getComputers(page, 50, search, orderColumn, orderWay).getObjectsList());
+				.createDTO(computerServiceImpl.getComputers(page, size, search, orderColumn, orderWay).getObjectsList());
 
 		req.setAttribute("computersDTO", computersList);
 
 		int computersCount = computerServiceImpl.countComputers(search);
 		req.setAttribute("computersCount", computersCount);
 
-		int numberOfPages = countPages(computersCount);
+		int numberOfPages = countPages(computersCount, size);
 
 		req.setAttribute("numberOfPages", numberOfPages);
-		req.setAttribute("numberOfPagesArray", storePagesNumbers(numberOfPages));
+		req.setAttribute("numberOfPagesArray", storePagesNumbers(page, numberOfPages));
 
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
 
@@ -105,11 +111,11 @@ public class DashboardServlet extends HttpServlet {
 
 	}
 
-	private int countPages(int computersCount) {
+	private int countPages(int computersCount, int size) {
 
-		int numberOfPages = computersCount / 50;
+		int numberOfPages = computersCount / size;
 
-		if (computersCount % 50 != 0) {
+		if (computersCount % size != 0) {
 			numberOfPages++;
 		}
 
@@ -117,12 +123,24 @@ public class DashboardServlet extends HttpServlet {
 
 	}
 
-	private List<Integer> storePagesNumbers(int numberOfPages) {
+	private List<Integer> storePagesNumbers(int page, int numberOfPages) {
 
 		List<Integer> numberOfPagesArray = new ArrayList<>();
-
-		for (int i = 0; i < numberOfPages; i++) {
-			numberOfPagesArray.add(i + 1);
+		
+		if(page - 2 > 0) {
+			numberOfPagesArray.add(page - 2);
+			numberOfPagesArray.add(page - 1);
+		} else if(page - 1 > 0) {
+			numberOfPagesArray.add(page - 1 );
+		}
+		
+		numberOfPagesArray.add(page);
+		
+		if(page + 2 <= numberOfPages) {
+			numberOfPagesArray.add(page + 1);
+			numberOfPagesArray.add(page + 2);
+		} else if(page + 1 <= numberOfPages) {
+			numberOfPagesArray.add(page + 1 );
 		}
 
 		return numberOfPagesArray;
