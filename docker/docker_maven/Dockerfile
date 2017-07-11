@@ -1,6 +1,15 @@
-FROM maven:3.5-jdk-8
+FROM java:8 
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+# Install maven
+RUN apt-get update
+RUN apt-get install -y maven
 
-CMD mvn test
+#/workspace is a volume shared by jenkins container
+WORKDIR /workspace
+
+# Prepare by downloading dependencies
+ENTRYPOINT ["mvn", "dependency:resolve"]
+ENTRYPOINT ["mvn", "verify"]
+
+#Tests and build
+ENTRYPOINT ["mvn","clean","package"]
