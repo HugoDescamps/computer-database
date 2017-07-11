@@ -26,7 +26,6 @@ public enum ComputerServiceImpl implements ComputerService {
 	@Override
 	public Page<Computer> getComputers(int pageNumber, int pageSize, String search, OrderColumn column, OrderWay way) {
 		return computerDaoImpl.listComputers(pageNumber, pageSize, search, column, way);
-	}
 
 	@Override
 	public int countComputers(String search) {

@@ -83,6 +83,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 		return computersPage;
 	}
 
+
 	@Override
 	public int countComputers(String search) {
 
