@@ -1,24 +1,14 @@
 package com.excilys.cdb.ui;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.excilys.cdb.persistence.ComputerDao;
-
 public class Main {
-
-	@Autowired
-	static ComputerDao test;
 
 	public static void main(String[] args) {
 
-		/*
-		 * Commands commands = new Commands();
-		 * 
-		 * commands.displayCommands();
-		 * 
-		 * commands.waitForInput();
-		 */
+		Commands commands = new Commands();
 
-		System.out.println(test.countComputers(""));
+		commands.displayCommands();
+
+		commands.waitForInput();
+
 	}
 }
