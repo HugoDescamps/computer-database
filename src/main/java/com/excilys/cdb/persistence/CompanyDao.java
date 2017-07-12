@@ -1,6 +1,5 @@
 package com.excilys.cdb.persistence;
 
-import java.sql.Connection;
 import java.util.List;
 
 import com.excilys.cdb.model.Company;
@@ -16,7 +15,7 @@ public interface CompanyDao {
 
 	public Company addCompany(Company company);
 
-	public void removeCompany(Connection connection, long id);
+	public void removeCompany(long id);
 
 	public String toString();
 

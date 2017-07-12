@@ -11,21 +11,25 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.CompanyDao;
 import com.excilys.cdb.persistence.DaoException;
 import com.excilys.cdb.persistence.mapper.CompanyMapper;
+import com.zaxxer.hikari.HikariDataSource;
 
-public enum CompanyDaoImpl implements CompanyDao {
-	INSTANCE;
+@Repository("companyDao")
+public class CompanyDaoImpl implements CompanyDao {
 
-	private DataBaseConnector dataBaseConnection;
-	static final Logger logger = LoggerFactory.getLogger(CompanyDaoImpl.class);
+	@Autowired
+	private HikariDataSource dataBaseConnection;
+
+	private static final Logger logger = LoggerFactory.getLogger(CompanyDaoImpl.class);
 
 	private CompanyDaoImpl() {
-		dataBaseConnection = DataBaseConnector.INSTANCE;
 	}
 
 	@Override
@@ -37,7 +41,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 		ResultSet listCompaniesResult = null;
 
-		try (Connection connection = dataBaseConnection.connect();
+		try (Connection connection = dataBaseConnection.getConnection();
 				PreparedStatement listCompaniesStatement = connection
 						.prepareStatement("SELECT * FROM company LIMIT ?,?;");) {
 
@@ -67,7 +71,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 		ResultSet getCompanyResult = null;
 
-		try (Connection connection = dataBaseConnection.connect();
+		try (Connection connection = dataBaseConnection.getConnection();
 				PreparedStatement getCompanyStatement = connection
 						.prepareStatement("SELECT * FROM company WHERE id = ?;");) {
 
@@ -90,7 +94,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 		ResultSet addCompanyResult = null;
 
-		try (Connection connection = dataBaseConnection.connect();
+		try (Connection connection = dataBaseConnection.getConnection();
 				PreparedStatement addCompanyStatement = connection
 						.prepareStatement("INSERT INTO company(name) VALUES (?);", Statement.RETURN_GENERATED_KEYS);) {
 
@@ -123,7 +127,7 @@ public enum CompanyDaoImpl implements CompanyDao {
 
 		ResultSet listCompaniesResult = null;
 
-		try (Connection connection = dataBaseConnection.connect();
+		try (Connection connection = dataBaseConnection.getConnection();
 				Statement listCompaniesStatement = connection.createStatement();) {
 
 			listCompaniesResult = listCompaniesStatement.executeQuery("SELECT * FROM company ORDER BY name;");
@@ -140,13 +144,11 @@ public enum CompanyDaoImpl implements CompanyDao {
 	}
 
 	@Override
-	public void removeCompany(Connection connection, long id) {
+	public void removeCompany(long id) {
 
-		PreparedStatement removeCompanyStatement = null;
-
-		try {
-
-			removeCompanyStatement = connection.prepareStatement("DELETE FROM company WHERE id = ?;");
+		try (Connection connection = dataBaseConnection.getConnection();
+				PreparedStatement removeCompanyStatement = connection
+						.prepareStatement("DELETE FROM company WHERE id = ?;");) {
 
 			removeCompanyStatement.setLong(1, id);
 

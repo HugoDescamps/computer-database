@@ -1,9 +1,7 @@
 package com.excilys.cdb.service.serviceImpl;
 
-import java.sql.Connection;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -12,20 +10,19 @@ import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 import com.excilys.cdb.persistence.persistenceImpl.ComputerDaoImpl;
 import com.excilys.cdb.service.ComputerService;
 
-public enum ComputerServiceImpl implements ComputerService {
-	INSTANCE;
+@Service("computerService")
+public class ComputerServiceImpl implements ComputerService {
 
-	private ComputerDaoImpl computerDaoImpl;
+	@Autowired
+	ComputerDaoImpl computerDaoImpl;
 
-	static final Logger logger = LoggerFactory.getLogger(ComputerServiceImpl.class);
-
-	private ComputerServiceImpl() {
-		computerDaoImpl = ComputerDaoImpl.INSTANCE;
+	public ComputerServiceImpl() {
 	}
 
 	@Override
 	public Page<Computer> getComputers(int pageNumber, int pageSize, String search, OrderColumn column, OrderWay way) {
 		return computerDaoImpl.listComputers(pageNumber, pageSize, search, column, way);
+	}
 
 	@Override
 	public int countComputers(String search) {
@@ -54,8 +51,8 @@ public enum ComputerServiceImpl implements ComputerService {
 	}
 
 	@Override
-	public void removeComputers(Connection connection, long company_id) {
-		computerDaoImpl.removeComputers(connection, company_id);
+	public void removeComputers(long company_id) {
+		computerDaoImpl.removeComputers(company_id);
 	}
 
 }

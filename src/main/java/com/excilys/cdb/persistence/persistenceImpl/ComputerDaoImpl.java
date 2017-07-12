@@ -13,21 +13,25 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.ComputerDao;
 import com.excilys.cdb.persistence.DaoException;
 import com.excilys.cdb.persistence.mapper.ComputerMapper;
+import com.zaxxer.hikari.HikariDataSource;
 
-public enum ComputerDaoImpl implements ComputerDao {
-	INSTANCE;
+@Repository("computerDao")
+public class ComputerDaoImpl implements ComputerDao {
 
-	private DataBaseConnector dataBaseConnection;
-	static final Logger logger = LoggerFactory.getLogger(ComputerDaoImpl.class);
+	@Autowired
+	private HikariDataSource dataBaseConnection;
+
+	private static final Logger logger = LoggerFactory.getLogger(ComputerDaoImpl.class);
 
 	private ComputerDaoImpl() {
-		dataBaseConnection = DataBaseConnector.INSTANCE;
 	}
 
 	@Override
@@ -40,7 +44,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 		PreparedStatement listComputersStatement = null;
 		ResultSet listComputersResult = null;
 
-		try (Connection connection = dataBaseConnection.connect();) {
+		try (Connection connection = dataBaseConnection.getConnection();) {
 
 			String requestColumn = "";
 
@@ -83,7 +87,6 @@ public enum ComputerDaoImpl implements ComputerDao {
 		return computersPage;
 	}
 
-
 	@Override
 	public int countComputers(String search) {
 
@@ -91,7 +94,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		ResultSet countComputersResultset = null;
 
-		try (Connection connection = dataBaseConnection.connect();
+		try (Connection connection = dataBaseConnection.getConnection();
 				PreparedStatement computersCountStatement = connection.prepareStatement(
 						"SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;");) {
 
@@ -117,7 +120,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		ResultSet getComputerResult = null;
 
-		try (Connection connection = dataBaseConnection.connect();
+		try (Connection connection = dataBaseConnection.getConnection();
 				PreparedStatement getComputerStatement = connection.prepareStatement(
 						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;");) {
 
@@ -140,7 +143,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 
 		ResultSet addComputerResult = null;
 
-		try (Connection connection = dataBaseConnection.connect();
+		try (Connection connection = dataBaseConnection.getConnection();
 				PreparedStatement addComputerStatement = connection.prepareStatement(
 						"INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);",
 						Statement.RETURN_GENERATED_KEYS);) {
@@ -188,7 +191,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 	@Override
 	public boolean updateComputer(Computer computer) {
 
-		try (Connection connection = dataBaseConnection.connect();
+		try (Connection connection = dataBaseConnection.getConnection();
 				PreparedStatement updateComputerStatement = connection.prepareStatement(
 						"UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?;");) {
 
@@ -231,7 +234,7 @@ public enum ComputerDaoImpl implements ComputerDao {
 	@Override
 	public void removeComputer(long id) {
 
-		try (Connection connection = dataBaseConnection.connect();
+		try (Connection connection = dataBaseConnection.getConnection();
 				PreparedStatement removeComputerStatement = connection
 						.prepareStatement("DELETE FROM computer WHERE id = ?;");) {
 
@@ -247,10 +250,11 @@ public enum ComputerDaoImpl implements ComputerDao {
 	}
 
 	@Override
-	public void removeComputers(Connection connection, long company_id) {
+	public void removeComputers(long company_id) {
 
-		try (PreparedStatement removeComputersStatement = connection
-				.prepareStatement("DELETE FROM computer WHERE company_id = ?;");) {
+		try (Connection connection = dataBaseConnection.getConnection();
+				PreparedStatement removeComputersStatement = connection
+						.prepareStatement("DELETE FROM computer WHERE company_id = ?;");) {
 
 			removeComputersStatement.setLong(1, company_id);
 

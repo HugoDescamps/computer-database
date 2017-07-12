@@ -1,7 +1,5 @@
 package com.excilys.cdb.service;
 
-import java.sql.Connection;
-
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
@@ -21,5 +19,5 @@ public interface ComputerService {
 
 	public void removeComputer(long id);
 
-	public void removeComputers(Connection connection, long company_id);
+	public void removeComputers(long company_id);
 }

@@ -3,34 +3,50 @@ package com.excilys.cdb.webapp;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import com.excilys.cdb.dto.mapper.CompanyDTOMapper;
 import com.excilys.cdb.dto.mapper.ComputerDTOMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.service.serviceImpl.CompanyServiceImpl;
-import com.excilys.cdb.service.serviceImpl.ComputerServiceImpl;
+import com.excilys.cdb.service.CompanyService;
+import com.excilys.cdb.service.ComputerService;
 import com.excilys.cdb.webapp.validator.Validator;
 
 @WebServlet("/editComputer")
 public class EditComputerServlet extends HttpServlet {
 
-	ComputerServiceImpl computerServiceImpl = ComputerServiceImpl.INSTANCE;
-	CompanyServiceImpl companyServiceImpl = CompanyServiceImpl.INSTANCE;
+	@Autowired
+	@Qualifier("computerService")
+	private ComputerService computerService;
+
+	@Autowired
+	@Qualifier("companyService")
+	private CompanyService companyService;
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+	}
+
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		req.setAttribute("companiesList", CompanyDTOMapper.createDTO(companyServiceImpl.getCompanies()));
+		req.setAttribute("companiesList", CompanyDTOMapper.createDTO(companyService.getCompanies()));
 
 		req.setAttribute("computer",
-				ComputerDTOMapper.createDTO(computerServiceImpl.getComputer(Integer.parseInt(req.getParameter("id")))));
+				ComputerDTOMapper.createDTO(computerService.getComputer(Integer.parseInt(req.getParameter("id")))));
 
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/editComputer.jsp").forward(req, resp);
 	}
@@ -63,18 +79,18 @@ public class EditComputerServlet extends HttpServlet {
 			} else {
 				req.setAttribute("inputError", "Discontinued date must be after introduced date");
 			}
-			
-			req.setAttribute("companiesList", CompanyDTOMapper.createDTO(companyServiceImpl.getCompanies()));
+
+			req.setAttribute("companiesList", CompanyDTOMapper.createDTO(companyService.getCompanies()));
 
 			req.setAttribute("computer", ComputerDTOMapper
-					.createDTO(computerServiceImpl.getComputer(Integer.parseInt(req.getParameter("computerId")))));
-			
+					.createDTO(computerService.getComputer(Integer.parseInt(req.getParameter("computerId")))));
+
 			resp.sendRedirect(this.getServletContext().getContextPath() + "/editComputer");
 
 		} else {
 
 			Computer computer = new Computer();
-			
+
 			computer.setId(Integer.parseInt(req.getParameter("computerId")));
 
 			computer.setName(req.getParameter("computerName"));
@@ -91,7 +107,7 @@ public class EditComputerServlet extends HttpServlet {
 				computer.setCompany(new Company(companyId, null));
 			}
 
-			computerServiceImpl.updateComputer(computer);
+			computerService.updateComputer(computer);
 
 			resp.sendRedirect(this.getServletContext().getContextPath() + "/dashboard");
 		}
