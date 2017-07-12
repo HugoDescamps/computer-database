@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.excilys.cdb.config.Config;
+import com.excilys.cdb.config.WebAppConfig;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.persistence.CompanyDao;
@@ -23,7 +23,7 @@ import com.excilys.cdb.persistence.DaoException;
 
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {Config.class})
+@ContextConfiguration(classes = { WebAppConfig.class })
 
 public class ComputerDaoImplTest {
 

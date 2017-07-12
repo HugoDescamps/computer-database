@@ -26,6 +26,22 @@ public class Commands {
 	@Autowired
 	@Qualifier("companyService")
 	private CompanyService companyService;
+	
+	public ComputerService getComputerService() {
+		return computerService;
+	}
+
+	public void setComputerService(ComputerService computerService) {
+		this.computerService = computerService;
+	}
+
+	public CompanyService getCompanyService() {
+		return companyService;
+	}
+
+	public void setCompanyService(CompanyService companyService) {
+		this.companyService = companyService;
+	}
 
 	public Commands() {
 

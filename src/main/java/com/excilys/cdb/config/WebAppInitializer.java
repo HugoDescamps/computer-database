@@ -15,10 +15,10 @@ public class WebAppInitializer implements WebApplicationInitializer {
 	public void onStartup(ServletContext context) throws ServletException {
 
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-		rootContext.register(Config.class);
+		rootContext.register(WebAppConfig.class);
 
 		AnnotationConfigWebApplicationContext dispatcherContext = new AnnotationConfigWebApplicationContext();
-		dispatcherContext.register(Config.class);
+		dispatcherContext.register(WebAppConfig.class);
 
 		DispatcherServlet dispatcherServlet = new DispatcherServlet(dispatcherContext);
 		dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);

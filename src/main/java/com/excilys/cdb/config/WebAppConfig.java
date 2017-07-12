@@ -23,14 +23,20 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan("com.excilys.cdb")
-public class Config extends WebMvcConfigurerAdapter {
+public class WebAppConfig extends WebMvcConfigurerAdapter {
 
-	private static final Logger logger = LoggerFactory.getLogger(Config.class);
+	private static final Logger logger = LoggerFactory.getLogger(WebAppConfig.class);
 
 	@Bean
 	public HikariDataSource dataBaseConnector() {
 		logger.info("Initializing dataSource");
 		return new HikariDataSource(new HikariConfig("/hikari.properties"));
+	}
+
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+		logger.info("Initializing data source");
+		return new DataSourceTransactionManager(dataBaseConnector());
 	}
 
 	@Bean
@@ -40,12 +46,6 @@ public class Config extends WebMvcConfigurerAdapter {
 		resolver.setViewClass(JstlView.class);
 		resolver.setSuffix(".jsp");
 		return resolver;
-	}
-
-	@Bean
-	public PlatformTransactionManager transactionManager() {
-		logger.info("Initializing data source");
-		return new DataSourceTransactionManager(dataBaseConnector());
 	}
 
 	@Override
