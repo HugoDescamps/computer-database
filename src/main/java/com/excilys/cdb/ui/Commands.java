@@ -5,24 +5,47 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
 import com.excilys.cdb.persistence.ComputerDao.OrderWay;
-import com.excilys.cdb.service.serviceImpl.CompanyServiceImpl;
-import com.excilys.cdb.service.serviceImpl.ComputerServiceImpl;
+import com.excilys.cdb.service.CompanyService;
+import com.excilys.cdb.service.ComputerService;
 
 public class Commands {
 
 	Scanner scanner;
-	CompanyServiceImpl companyService;
-	ComputerServiceImpl computerService;
+
+	@Autowired
+	@Qualifier("computerService")
+	private ComputerService computerService;
+
+	@Autowired
+	@Qualifier("companyService")
+	private CompanyService companyService;
+	
+	public ComputerService getComputerService() {
+		return computerService;
+	}
+
+	public void setComputerService(ComputerService computerService) {
+		this.computerService = computerService;
+	}
+
+	public CompanyService getCompanyService() {
+		return companyService;
+	}
+
+	public void setCompanyService(CompanyService companyService) {
+		this.companyService = companyService;
+	}
 
 	public Commands() {
 
 		scanner = new Scanner(System.in);
-		companyService = CompanyServiceImpl.INSTANCE;
-		computerService = ComputerServiceImpl.INSTANCE;
 	}
 
 	public void displayCommands() {

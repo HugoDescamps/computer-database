@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,19 +12,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.dto.mapper.ComputerDTOMapper;
 import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
 import com.excilys.cdb.persistence.ComputerDao.OrderWay;
-import com.excilys.cdb.service.serviceImpl.ComputerServiceImpl;
+import com.excilys.cdb.service.ComputerService;
 
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
 
-	ComputerServiceImpl computerServiceImpl = ComputerServiceImpl.INSTANCE;
+	@Autowired
+	@Qualifier("computerService")
+	private ComputerService computerService;
 
 	private static final long serialVersionUID = 1L;
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,7 +46,7 @@ public class DashboardServlet extends HttpServlet {
 		if (StringUtils.isNotBlank(req.getParameter("page"))) {
 			page = Integer.parseInt(req.getParameter("page"));
 		}
-		
+
 		if (StringUtils.isNotBlank(req.getParameter("size"))) {
 			size = Integer.parseInt(req.getParameter("size"));
 		}
@@ -82,11 +94,11 @@ public class DashboardServlet extends HttpServlet {
 		}
 
 		computersList = ComputerDTOMapper
-				.createDTO(computerServiceImpl.getComputers(page, size, search, orderColumn, orderWay).getObjectsList());
+				.createDTO(computerService.getComputers(page, size, search, orderColumn, orderWay).getObjectsList());
 
 		req.setAttribute("computersDTO", computersList);
 
-		int computersCount = computerServiceImpl.countComputers(search);
+		int computersCount = computerService.countComputers(search);
 		req.setAttribute("computersCount", computersCount);
 
 		int numberOfPages = countPages(computersCount, size);
@@ -104,7 +116,7 @@ public class DashboardServlet extends HttpServlet {
 		String selectedComputersList = req.getParameter("selection");
 
 		for (String id : selectedComputersList.split(",")) {
-			computerServiceImpl.removeComputer(Integer.parseInt(id));
+			computerService.removeComputer(Integer.parseInt(id));
 		}
 
 		resp.sendRedirect(this.getServletContext().getContextPath() + "/dashboard");
@@ -126,21 +138,21 @@ public class DashboardServlet extends HttpServlet {
 	private List<Integer> storePagesNumbers(int page, int numberOfPages) {
 
 		List<Integer> numberOfPagesArray = new ArrayList<>();
-		
-		if(page - 2 > 0) {
+
+		if (page - 2 > 0) {
 			numberOfPagesArray.add(page - 2);
 			numberOfPagesArray.add(page - 1);
-		} else if(page - 1 > 0) {
-			numberOfPagesArray.add(page - 1 );
+		} else if (page - 1 > 0) {
+			numberOfPagesArray.add(page - 1);
 		}
-		
+
 		numberOfPagesArray.add(page);
-		
-		if(page + 2 <= numberOfPages) {
+
+		if (page + 2 <= numberOfPages) {
 			numberOfPagesArray.add(page + 1);
 			numberOfPagesArray.add(page + 2);
-		} else if(page + 1 <= numberOfPages) {
-			numberOfPagesArray.add(page + 1 );
+		} else if (page + 1 <= numberOfPages) {
+			numberOfPagesArray.add(page + 1);
 		}
 
 		return numberOfPagesArray;

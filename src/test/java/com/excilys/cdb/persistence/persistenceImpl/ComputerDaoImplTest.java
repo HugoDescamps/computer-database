@@ -3,39 +3,51 @@ package com.excilys.cdb.persistence.persistenceImpl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.LocalDate;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.excilys.cdb.config.WebAppConfig;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.persistence.CompanyDao;
+import com.excilys.cdb.persistence.ComputerDao;
 import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
 import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 import com.excilys.cdb.persistence.DaoException;
 
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = { WebAppConfig.class })
+
 public class ComputerDaoImplTest {
 
-	private DataBaseConnector dataBaseConnector = DataBaseConnector.INSTANCE;
-	private ComputerDaoImpl computerDaoImpl = ComputerDaoImpl.INSTANCE;
+	@Autowired
+	ComputerDao computerDao;
+
+	@Autowired
+	CompanyDao companyDao;
 
 	@Test
 	public void testListComputersNormalBehaviour() {
 
-		System.out.println(computerDaoImpl.countComputers("") + " ordinateurs listés");
+		System.out.println(computerDao.countComputers("") + " ordinateurs listés");
 
-		assertEquals(3, computerDaoImpl.listComputers(3, 5, "", OrderColumn.NULL, OrderWay.ASC).getNumber());
-		assertEquals(5, computerDaoImpl.listComputers(3, 5, "", OrderColumn.NULL, OrderWay.ASC).getSize());
-		assertEquals(0,
-				computerDaoImpl.listComputers(1, 0, "", OrderColumn.NULL, OrderWay.ASC).getObjectsList().size());
+		assertEquals(3, computerDao.listComputers(3, 5, "", OrderColumn.NULL, OrderWay.ASC).getNumber());
+		assertEquals(5, computerDao.listComputers(3, 5, "", OrderColumn.NULL, OrderWay.ASC).getSize());
+		assertEquals(0, computerDao.listComputers(1, 0, "", OrderColumn.NULL, OrderWay.ASC).getObjectsList().size());
 
 	}
 
 	@Test
 	public void testGetComputerNormalBehaviour() {
 
-		assertNotNull(computerDaoImpl.getComputer(1));
+		assertNotNull(computerDao.getComputer(1));
 
 	}
 
@@ -44,18 +56,18 @@ public class ComputerDaoImplTest {
 
 		Computer computer = new Computer();
 
-		computerDaoImpl.addComputer(computer);
+		computerDao.addComputer(computer);
 
 	}
 
 	@Test
 	public void testAddComputerNormalBehaviour() {
 
-		Computer computer = computerDaoImpl.addComputer(new Computer(1, "test", null, null, null));
+		Computer computer = computerDao.addComputer(new Computer(1, "test", null, null, null));
 
 		assertNotNull(computer);
 
-		computerDaoImpl.removeComputer(computer.getId());
+		computerDao.removeComputer(computer.getId());
 
 	}
 
@@ -63,47 +75,35 @@ public class ComputerDaoImplTest {
 	public void testUpdateComputer() {
 
 		Computer computer = new Computer(1, "test", null, null, null);
-		computer = computerDaoImpl.addComputer(computer);
+		computer = computerDao.addComputer(computer);
 
 		computer.setName("updateTest");
 		computer.setIntroduced(LocalDate.parse("2012-09-01"));
 		computer.setDiscontinued(LocalDate.parse("2012-09-02"));
 		computer.setCompany(new Company(2, null));
 
-		computerDaoImpl.updateComputer(computer);
+		computerDao.updateComputer(computer);
 
-		computerDaoImpl.removeComputer(computer.getId());
+		computerDao.removeComputer(computer.getId());
 	}
 
 	@Test
 	public void testRemoveComputer() {
 
-		computerDaoImpl.removeComputer(computerDaoImpl.addComputer(new Computer(1, "test", null, null, null)).getId());
+		computerDao.removeComputer(computerDao.addComputer(new Computer(1, "test", null, null, null)).getId());
 
 	}
 
 	@Test
 	public void testRemoveComputersNormalBehaviour() {
 
-		CompanyDaoImpl companyDaoImpl = CompanyDaoImpl.INSTANCE;
+		Company company = companyDao.addCompany(new Company(1, "test"));
 
-		Company company = companyDaoImpl.addCompany(new Company(1, "test"));
+		computerDao.addComputer(new Computer(1, "test1", null, null, company));
+		computerDao.addComputer(new Computer(2, "test2", null, null, company));
 
-		computerDaoImpl.addComputer(new Computer(1, "test1", null, null, company));
-		computerDaoImpl.addComputer(new Computer(2, "test2", null, null, company));
-
-		Connection connection = dataBaseConnector.connect();
-
-		computerDaoImpl.removeComputers(connection, company.getId());
-		companyDaoImpl.removeCompany(connection, company.getId());
-
-		try {
-			connection.close();
-		} catch (SQLException e) {
-			throw new DaoException(
-					"ComputerDaoImplTest error in testRemoveComputersNormalBehaviour method, could not close connection "
-							+ e.getMessage());
-		}
+		computerDao.removeComputers(company.getId());
+		companyDao.removeCompany(company.getId());
 	}
 
 }
