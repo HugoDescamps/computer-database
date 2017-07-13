@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.cdb.dto.mapper.CompanyDTOMapper;
@@ -26,11 +25,9 @@ import com.excilys.cdb.webapp.validator.Validator;
 public class EditComputerServlet extends HttpServlet {
 
 	@Autowired
-	@Qualifier("computerService")
 	private ComputerService computerService;
 
 	@Autowired
-	@Qualifier("companyService")
 	private CompanyService companyService;
 
 	private static final long serialVersionUID = 1L;

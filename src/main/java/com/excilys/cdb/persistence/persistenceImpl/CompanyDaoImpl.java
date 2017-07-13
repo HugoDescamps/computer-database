@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.model.Company;
@@ -23,7 +22,6 @@ import com.excilys.cdb.persistence.mapper.CompanyMapper;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Repository("companyDao")
-@Component
 public class CompanyDaoImpl implements CompanyDao {
 
 	@Autowired
@@ -157,11 +155,12 @@ public class CompanyDaoImpl implements CompanyDao {
 			removeCompanyStatement.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new DaoException("Company DAO error in removeCompany method " + e.getMessage());
 
+			throw new DaoException("Company DAO error in removeCompany method " + e.getMessage());
 		}
 
 		logger.info("Company successfully removed");
+
 	}
 
 }

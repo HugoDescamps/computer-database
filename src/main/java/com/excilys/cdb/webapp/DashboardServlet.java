@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.cdb.dto.ComputerDTO;
@@ -26,7 +25,6 @@ import com.excilys.cdb.service.ComputerService;
 public class DashboardServlet extends HttpServlet {
 
 	@Autowired
-	@Qualifier("computerService")
 	private ComputerService computerService;
 
 	private static final long serialVersionUID = 1L;
