@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.cdb.model.Company;
@@ -49,9 +48,9 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
+	@Transactional
 	public void removeCompany(long id) {
-		
+
 		computerDao.removeComputers(id);
 		companyDao.removeCompany(id);
 	}

@@ -175,7 +175,7 @@ public class ComputerDaoImpl implements ComputerDao {
 	public void removeComputer(long id) {
 
 		jdbcTemplate.update("DELETE FROM computer WHERE id = ?;", id);
-
+		
 		logger.info("Computer successfully removed");
 	}
 
