@@ -1,19 +1,18 @@
 package com.excilys.cdb.webapp;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.dto.mapper.ComputerDTOMapper;
@@ -21,32 +20,27 @@ import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
 import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 import com.excilys.cdb.service.ComputerService;
 
-@WebServlet("/dashboard")
-public class DashboardServlet extends HttpServlet {
+@Controller
+@RequestMapping("/dashboard")
+public class DashboardController {
 
 	@Autowired
 	private ComputerService computerService;
 
-	private static final long serialVersionUID = 1L;
-
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
-	}
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@GetMapping
+	protected ModelAndView doGet(@RequestParam Map<String, String> parameters) {
+		
+		ModelAndView modelAndView = new ModelAndView("/WEB-INF/views/dashboard");
 
 		int page = 1;
 		int size = 50;
 
-		if (StringUtils.isNotBlank(req.getParameter("page"))) {
-			page = Integer.parseInt(req.getParameter("page"));
+		if (StringUtils.isNotBlank(parameters.get("page"))) {
+			page = Integer.parseInt(parameters.get("page"));
 		}
 
-		if (StringUtils.isNotBlank(req.getParameter("size"))) {
-			size = Integer.parseInt(req.getParameter("size"));
+		if (StringUtils.isNotBlank(parameters.get("size"))) {
+			size = Integer.parseInt(parameters.get("size"));
 		}
 
 		List<ComputerDTO> computersList;
@@ -54,18 +48,18 @@ public class DashboardServlet extends HttpServlet {
 		String search = "";
 		String order = "";
 
-		if (StringUtils.isNotBlank(req.getParameter("search"))) {
-			search = req.getParameter("search").trim();
+		if (StringUtils.isNotBlank(parameters.get("search"))) {
+			search = parameters.get("search").trim();
 		}
 
-		if (StringUtils.isNotBlank(req.getParameter("order"))) {
-			order = req.getParameter("order").trim();
+		if (StringUtils.isNotBlank(parameters.get("order"))) {
+			order = parameters.get("order").trim();
 		}
 
-		req.setAttribute("page", page);
-		req.setAttribute("size", size);
-		req.setAttribute("search", search);
-		req.setAttribute("order", order);
+		modelAndView.addObject("page", page);
+		modelAndView.addObject("size", size);
+		modelAndView.addObject("search", search);
+		modelAndView.addObject("order", order);
 
 		OrderColumn orderColumn = OrderColumn.NULL;
 		OrderWay orderWay = OrderWay.ASC;
@@ -94,31 +88,30 @@ public class DashboardServlet extends HttpServlet {
 		computersList = ComputerDTOMapper
 				.createDTO(computerService.getComputers(page, size, search, orderColumn, orderWay).getObjectsList());
 
-		req.setAttribute("computersDTO", computersList);
-
+		modelAndView.addObject("computersDTO", computersList);
+		
 		int computersCount = computerService.countComputers(search);
-		req.setAttribute("computersCount", computersCount);
+		
+		modelAndView.addObject("computersCount", computersCount);
 
 		int numberOfPages = countPages(computersCount, size);
 
-		req.setAttribute("numberOfPages", numberOfPages);
-		req.setAttribute("numberOfPagesArray", storePagesNumbers(page, numberOfPages));
-
-		this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
-
+		modelAndView.addObject("numberOfPages", numberOfPages);
+		modelAndView.addObject("numberOfPagesArray", storePagesNumbers(page, numberOfPages));
+		
+		return modelAndView;
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@PostMapping
+	protected String doPost(@RequestParam String selection) {
 
-		String selectedComputersList = req.getParameter("selection");
+		String selectedComputersList = selection;
 
 		for (String id : selectedComputersList.split(",")) {
 			computerService.removeComputer(Integer.parseInt(id));
 		}
-
-		resp.sendRedirect(this.getServletContext().getContextPath() + "/dashboard");
-
+		
+		return "redirect:/dashboard";
 	}
 
 	private int countPages(int computersCount, int size) {
