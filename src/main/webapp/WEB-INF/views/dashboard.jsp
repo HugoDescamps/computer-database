@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <html>
 <head>
 <title>Computer Database</title>
@@ -22,21 +23,25 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${computersCount} computers found</h1>
+			<h1 id="homeTitle">${computersCount}
+				<spring:message code="dashboard.computersCount" />
+			</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="Search name" value="${search}" />
-						<input type="submit" id="searchsubmit" value="Filter by name"
+							class="form-control"
+							placeholder="<spring:message code="dashboard.searchPlaceholder"/>"
+							value="${search}" /> <input type="submit" id="searchsubmit"
+							value="<spring:message code="dashboard.searchButton"/>"
 							class="btn btn-primary" />
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addComputer">Add
-						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-						onclick="$.fn.toggleEditMode();">Edit</a>
+					<a class="btn btn-success" id="addComputer" href="addComputer"><spring:message
+							code="dashboard.addButton" /></a> <a class="btn btn-default"
+						id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
 				</div>
 			</div>
 		</div>
@@ -64,21 +69,25 @@
 								<c:choose>
 									<c:when test="${empty search && empty size}">
 										<th><a href="dashboard?order=computerAsc"
-											title="Order by computer name">Computer name</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.computerColumn" /></a></th>
 									</c:when>
 									<c:when test="${empty search && !empty size}">
 										<th><a href="dashboard?order=computerAsc&size=${size}"
-											title="Order by computer name">Computer name</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.computerColumn" /></a></th>
 									</c:when>
 									<c:when test="${!empty search && empty size}">
 										<th><a
 											href="dashboard?order=computerAsc&search=${search}"
-											title="Order by computer name">Computer name</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.computerColumn" /></a></th>
 									</c:when>
 									<c:otherwise>
 										<th><a
 											href="dashboard?order=computerAsc&size=${size}&search=${search}"
-											title="Order by computer name">Computer name</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.computerColumn" /></a></th>
 									</c:otherwise>
 								</c:choose>
 							</c:when>
@@ -86,49 +95,57 @@
 								<c:choose>
 									<c:when test="${empty search && empty size}">
 										<th><a href="dashboard?order=computerDesc"
-											title="Order by computer name">Computer name</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.computerColumn" /></a></th>
 									</c:when>
 									<c:when test="${empty search && !empty size}">
 										<th><a href="dashboard?order=computerDesc&size=${size}"
-											title="Order by computer name">Computer name</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.computerColumn" /></a></th>
 									</c:when>
 									<c:when test="${!empty search && empty size}">
 										<th><a
 											href="dashboard?order=computerDesc&search=${search}"
-											title="Order by computer name">Computer name</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.computerColumn" /></a></th>
 									</c:when>
 									<c:otherwise>
 										<th><a
 											href="dashboard?order=computerDesc&size=${size}&search=${search}"
-											title="Order by computer name">Computer name</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.computerColumn" /></a></th>
 									</c:otherwise>
 								</c:choose>
 
 							</c:otherwise>
 						</c:choose>
-						<th>Introduced date</th>
+						<th><spring:message code="dashboard.introducedColumn" /></th>
 						<!-- Table header for Discontinued Date -->
-						<th>Discontinued date</th>
+						<th><spring:message code="dashboard.discontinuedColumn" /></th>
 						<!-- Table header for Company -->
 						<c:choose>
 							<c:when test="${order != 'companyAsc'}">
 								<c:choose>
 									<c:when test="${empty search && empty size}">
 										<th><a href="dashboard?order=companyAsc"
-											title="Order by company">Company</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.companyColumn" /></a></th>
 									</c:when>
 									<c:when test="${empty search && !empty size}">
 										<th><a href="dashboard?order=companyAsc&size=${size}"
-											title="Order by company">Company</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.companyColumn" /></a></th>
 									</c:when>
 									<c:when test="${!empty search && empty size}">
 										<th><a href="dashboard?order=companyAsc&search=${search}"
-											title="Order by company">Company</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.companyColumn" /></a></th>
 									</c:when>
 									<c:otherwise>
 										<th><a
 											href="dashboard?order=companyAsc&size=${size}&search=${search}"
-											title="Order by company">Company</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.companyColumn" /></a></th>
 									</c:otherwise>
 								</c:choose>
 							</c:when>
@@ -136,21 +153,25 @@
 								<c:choose>
 									<c:when test="${empty search && empty size}">
 										<th><a href="dashboard?order=companyDesc"
-											title="Order by company">Company</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.companyColumn" /></a></th>
 									</c:when>
 									<c:when test="${empty search && !empty size}">
 										<th><a href="dashboard?order=companyDesc&size=${size}"
-											title="Order by company">Company</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.companyColumn" /></a></th>
 									</c:when>
 									<c:when test="${!empty search && empty size}">
 										<th><a
 											href="dashboard?order=companyDesc&search=${search}"
-											title="Order by company">Company</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.companyColumn" /></a></th>
 									</c:when>
 									<c:otherwise>
 										<th><a
 											href="dashboard?order=companyDesc&size=${size}&search=${search}"
-											title="Order by company">Company</a></th>
+											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
+													code="dashboard.companyColumn" /></a></th>
 									</c:otherwise>
 								</c:choose>
 

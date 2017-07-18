@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <html>
 <head>
 	<title>Computer Database</title>
@@ -18,7 +19,7 @@
 	<section id="main">
 		<div class="container">	
 			<div class="alert alert-danger">
-				Error 500: An error has occured!
+				<spring:message code="error500.message"/>
 				<br/>
 				<!-- stacktrace -->
 			</div>

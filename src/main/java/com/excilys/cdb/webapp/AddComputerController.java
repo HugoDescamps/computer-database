@@ -71,9 +71,9 @@ public class AddComputerController {
 			modelAndView.addObject("companiesList", CompanyDTOMapper.createDTO(companyService.getCompanies()));
 
 			if (!nameValidator) {
-				modelAndView.addObject("inputError", "You must enter a valid name");
+				modelAndView.addObject("inputError", "forms.nameError");
 			} else {
-				modelAndView.addObject("inputError", "Discontinued date must be after introduced date");
+				modelAndView.addObject("inputError", "forms.dateError");
 			}
 
 			modelAndView.setViewName("/WEB-INF/views/addComputer");
