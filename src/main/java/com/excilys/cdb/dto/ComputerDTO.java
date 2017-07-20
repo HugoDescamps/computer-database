@@ -3,9 +3,13 @@ package com.excilys.cdb.dto;
 public class ComputerDTO {
 
 	private long id;
+
 	private String name;
+
 	private String introduced;
+
 	private String discontinued;
+
 	private CompanyDTO company;
 
 	public ComputerDTO() {

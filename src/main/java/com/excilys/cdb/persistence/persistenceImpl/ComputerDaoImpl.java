@@ -1,19 +1,17 @@
 package com.excilys.cdb.persistence.persistenceImpl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.model.Computer;
@@ -26,113 +24,67 @@ import com.zaxxer.hikari.HikariDataSource;
 @Repository("computerDao")
 public class ComputerDaoImpl implements ComputerDao {
 
-	@Autowired
-	private HikariDataSource dataBaseConnection;
+	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	private static final Logger logger = LoggerFactory.getLogger(ComputerDaoImpl.class);
 
 	private ComputerDaoImpl() {
 	}
 
+	@Autowired
+	public void setDataSource(HikariDataSource dataSource) {
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+	}
+
 	@Override
 	public Page<Computer> listComputers(int pageNumber, int pageSize, String search, OrderColumn column, OrderWay way) {
 
-		Page<Computer> computersPage = new Page<Computer>();
+		String requestColumn = "";
 
-		List<Computer> computersList = new ArrayList<Computer>();
-
-		PreparedStatement listComputersStatement = null;
-		ResultSet listComputersResult = null;
-
-		try (Connection connection = dataBaseConnection.getConnection();) {
-
-			String requestColumn = "";
-
-			switch (column) {
-			case COMPUTER:
-				requestColumn = "computer.name";
-				break;
-			case COMPANY:
-				requestColumn = "company.name";
-				break;
-			default:
-				requestColumn = "computer.id";
-				break;
-			}
-
-			listComputersStatement = connection.prepareStatement(
-					"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY "
-							+ requestColumn + " " + way + " LIMIT ?,?;");
-
-			listComputersStatement.setString(1, "%" + search + "%");
-
-			listComputersStatement.setString(2, "%" + search + "%");
-
-			listComputersStatement.setInt(3, (pageNumber - 1) * pageSize);
-
-			listComputersStatement.setInt(4, pageSize);
-
-			listComputersResult = listComputersStatement.executeQuery();
-
-			computersList = ComputerMapper.getComputers(listComputersResult);
-
-			computersPage.setObjectsList(computersList);
-			computersPage.setNumber(pageNumber);
-			computersPage.setSize(pageSize);
-
-		} catch (SQLException e) {
-			throw new DaoException("Computer DAO error in listComputersSearch method " + e.getMessage());
+		switch (column) {
+		case COMPUTER:
+			requestColumn = "computer.name";
+			break;
+		case COMPANY:
+			requestColumn = "company.name";
+			break;
+		default:
+			requestColumn = "computer.id";
+			break;
 		}
+
+		List<Computer> computersList = jdbcTemplate.query(
+				"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY "
+						+ requestColumn + " " + way + " LIMIT ?,?;",
+				new ComputerMapper(), "%" + search + "%", "%" + search + "%", (pageNumber - 1) * pageSize, pageSize);
+
+		Page<Computer> computersPage = new Page<Computer>(computersList, pageSize, pageNumber);
+
 		logger.info("Computers list retrieved");
+
 		return computersPage;
+
 	}
 
 	@Override
 	public int countComputers(String search) {
 
-		int computersCount = 0;
+		int rowCount = jdbcTemplate.queryForObject(
+				"SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;",
+				Integer.class, "%" + search + "%", "%" + search + "%");
 
-		ResultSet countComputersResultset = null;
-
-		try (Connection connection = dataBaseConnection.getConnection();
-				PreparedStatement computersCountStatement = connection.prepareStatement(
-						"SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;");) {
-
-			computersCountStatement.setString(1, "%" + search + "%");
-
-			computersCountStatement.setString(2, "%" + search + "%");
-
-			countComputersResultset = computersCountStatement.executeQuery();
-
-			computersCount = ComputerMapper.countComputers(countComputersResultset);
-
-		} catch (SQLException e) {
-			throw new DaoException("Computer DAO error in countComputers method " + e.getMessage());
-		}
 		logger.info("Computers count retrieved");
-		return computersCount;
+		return rowCount;
 	}
 
 	@Override
 	public Computer getComputer(long id) {
 
-		Computer computer = null;
-
-		ResultSet getComputerResult = null;
-
-		try (Connection connection = dataBaseConnection.getConnection();
-				PreparedStatement getComputerStatement = connection.prepareStatement(
-						"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;");) {
-
-			getComputerStatement.setLong(1, id);
-
-			getComputerResult = getComputerStatement.executeQuery();
-
-			computer = ComputerMapper.getComputer(getComputerResult);
-
-		} catch (SQLException e) {
-			throw new DaoException("Computer DAO error in getComputer method " + e.getMessage());
-		}
+		Computer computer = jdbcTemplate.queryForObject(
+				"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;",
+				new ComputerMapper(), id);
 
 		logger.info("Computer retrieved");
 		return computer;
@@ -141,92 +93,80 @@ public class ComputerDaoImpl implements ComputerDao {
 	@Override
 	public Computer addComputer(Computer computer) {
 
-		ResultSet addComputerResult = null;
-
-		try (Connection connection = dataBaseConnection.getConnection();
-				PreparedStatement addComputerStatement = connection.prepareStatement(
-						"INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);",
-						Statement.RETURN_GENERATED_KEYS);) {
-
-			if (computer != null && StringUtils.isNotBlank(computer.getName())) {
-				addComputerStatement.setString(1, computer.getName());
-			} else {
-				throw new DaoException("Computer DAO error in addComputer method, name is mandatory");
-			}
+		if (computer == null || StringUtils.isBlank(computer.getName())) {
+			throw new DaoException("Computer DAO error in addComputer method, name is mandatory");
+		} else {
 
 			Timestamp introducedDate = null;
 			Timestamp discontinuedDate = null;
+			Long company_id = null;
 
 			if (computer.getIntroduced() != null) {
 				introducedDate = Timestamp.valueOf(computer.getIntroduced().atStartOfDay());
 			}
-			addComputerStatement.setTimestamp(2, introducedDate);
 
 			if (computer.getDiscontinued() != null) {
 				discontinuedDate = Timestamp.valueOf(computer.getDiscontinued().atStartOfDay());
 			}
-			addComputerStatement.setTimestamp(3, discontinuedDate);
 
 			if (computer.getCompany() != null) {
-				addComputerStatement.setLong(4, computer.getCompany().getId());
-			} else {
-				addComputerStatement.setNull(4, Types.BIGINT);
+				company_id = computer.getCompany().getId();
 			}
 
-			addComputerStatement.executeUpdate();
+			KeyHolder keyHolder = new GeneratedKeyHolder();
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			parameters.addValue("name", computer.getName());
+			parameters.addValue("introduced", introducedDate);
+			parameters.addValue("discontinued", discontinuedDate);
+			parameters.addValue("company_id", company_id);
 
-			addComputerResult = addComputerStatement.getGeneratedKeys();
+			namedParameterJdbcTemplate.update(
+					"INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (:name, :introduced, :discontinued, :company_id);",
+					parameters, keyHolder);
 
-			if (addComputerResult.next()) {
-				computer.setId(addComputerResult.getLong(1));
-			}
-
-		} catch (SQLException e) {
-			throw new DaoException("Computer DAO error in addComputer method " + e.getMessage());
+			computer.setId(keyHolder.getKey().longValue());
 		}
+
 		logger.info("Computer successfully added");
 		return computer;
+
 	}
 
 	@Override
 	public boolean updateComputer(Computer computer) {
 
-		try (Connection connection = dataBaseConnection.getConnection();
-				PreparedStatement updateComputerStatement = connection.prepareStatement(
-						"UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?;");) {
-
-			if (computer != null && StringUtils.isNotBlank(computer.getName())) {
-				updateComputerStatement.setString(1, computer.getName());
-			} else {
-				throw new DaoException("Computer DAO error in addComputer method, name is mandatory");
-			}
+		if (computer == null || StringUtils.isBlank(computer.getName())) {
+			throw new DaoException("Computer DAO error in addComputer method, name is mandatory");
+		} else {
 
 			Timestamp introducedDate = null;
 			Timestamp discontinuedDate = null;
+			Long company_id = null;
 
 			if (computer.getIntroduced() != null) {
 				introducedDate = Timestamp.valueOf(computer.getIntroduced().atStartOfDay());
 			}
-			updateComputerStatement.setTimestamp(2, introducedDate);
 
 			if (computer.getDiscontinued() != null) {
 				discontinuedDate = Timestamp.valueOf(computer.getDiscontinued().atStartOfDay());
 			}
-			updateComputerStatement.setTimestamp(3, discontinuedDate);
 
 			if (computer.getCompany() != null) {
-				updateComputerStatement.setLong(4, computer.getCompany().getId());
-			} else {
-				updateComputerStatement.setNull(4, Types.BIGINT);
+				company_id = computer.getCompany().getId();
 			}
 
-			updateComputerStatement.setLong(5, computer.getId());
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			parameters.addValue("name", computer.getName());
+			parameters.addValue("introduced", introducedDate);
+			parameters.addValue("discontinued", discontinuedDate);
+			parameters.addValue("company_id", company_id);
+			parameters.addValue("id", computer.getId());
 
-			updateComputerStatement.executeUpdate();
-
-		} catch (SQLException e) {
-			throw new DaoException("Computer DAO error in updateComputer method " + e.getMessage());
+			namedParameterJdbcTemplate.update(
+					"UPDATE computer SET name = :name, introduced = :introduced, discontinued = :discontinued, company_id = :company_id WHERE id = :id;",
+					parameters);
 		}
+
 		logger.info("Computer successfully updated");
 		return true;
 	}
@@ -234,36 +174,16 @@ public class ComputerDaoImpl implements ComputerDao {
 	@Override
 	public void removeComputer(long id) {
 
-		try (Connection connection = dataBaseConnection.getConnection();
-				PreparedStatement removeComputerStatement = connection
-						.prepareStatement("DELETE FROM computer WHERE id = ?;");) {
-
-			removeComputerStatement.setLong(1, id);
-
-			removeComputerStatement.executeUpdate();
-
-		} catch (SQLException e) {
-			throw new DaoException("Computer DAO error in removeComputer method " + e.getMessage());
-
-		}
+		jdbcTemplate.update("DELETE FROM computer WHERE id = ?;", id);
+		
 		logger.info("Computer successfully removed");
 	}
 
 	@Override
 	public void removeComputers(long company_id) {
 
-		try (Connection connection = dataBaseConnection.getConnection();
-				PreparedStatement removeComputersStatement = connection
-						.prepareStatement("DELETE FROM computer WHERE company_id = ?;");) {
+		jdbcTemplate.update("DELETE FROM computer WHERE company_id = ?;", company_id);
 
-			removeComputersStatement.setLong(1, company_id);
-
-			removeComputersStatement.executeUpdate();
-
-		} catch (SQLException e) {
-
-			throw new DaoException("Computer DAO error in removeComputers method " + e.getMessage());
-		}
 		logger.info("Company's computers removed");
 	}
 

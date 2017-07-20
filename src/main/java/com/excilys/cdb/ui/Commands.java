@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
@@ -20,13 +19,11 @@ public class Commands {
 	Scanner scanner;
 
 	@Autowired
-	@Qualifier("computerService")
 	private ComputerService computerService;
 
 	@Autowired
-	@Qualifier("companyService")
 	private CompanyService companyService;
-	
+
 	public ComputerService getComputerService() {
 		return computerService;
 	}

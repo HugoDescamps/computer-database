@@ -10,14 +10,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.excilys.cdb.config.WebAppConfig;
+import com.excilys.cdb.config.CLIConfig;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.persistence.CompanyDao;
 import com.excilys.cdb.persistence.DaoException;
 
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { WebAppConfig.class })
+@ContextConfiguration(classes = { CLIConfig.class })
 
 public class CompanyDaoImplTest {
 
@@ -65,7 +65,6 @@ public class CompanyDaoImplTest {
 		Company company = companyDao.addCompany(new Company(1, "test"));
 
 		companyDao.removeCompany(company.getId());
-
 	}
 
 }

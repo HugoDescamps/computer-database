@@ -15,7 +15,7 @@ public class Main {
 		context.refresh();
 
 		Commands commands = new Commands();
-		
+
 		commands.setCompanyService(context.getBean(CompanyService.class));
 		commands.setComputerService(context.getBean(ComputerService.class));
 
