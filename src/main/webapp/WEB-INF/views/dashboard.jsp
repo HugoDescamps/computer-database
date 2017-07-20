@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <html>
 <head>
 <title>Computer Database</title>
@@ -18,7 +19,15 @@
 		<div class="container">
 			<a class="navbar-brand" href="dashboard"> Application - Computer
 				Database </a>
+			<div class="btn-group btn-group-sm pull-right" role="group"
+				style="padding: 15px 15px">
+				<a href="dashboard?locale=fr"><button type="button"
+						class="btn btn-default" style="padding : 1px 2px">FR</button></a> <a
+					href="dashboard?locale=en"><button type="button"
+						class="btn btn-default" style="padding : 1px 2px">EN</button></a>
+			</div>
 		</div>
+
 	</header>
 
 	<section id="main">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <html>
 <head>
@@ -74,14 +74,14 @@
 								class="btn btn-default"><spring:message
 									code="forms.cancelButton" /></a>
 						</div>
+						<div class="col-xs-8 box">
+							<c:if test="${!empty inputError}">
+								 <h1>
+									<spring:message code="${inputError}" />
+								</h1>
+							</c:if>
+						</div>
 					</form>
-					<div class="col-xs-8 box">
-						<c:if test="${!empty inputError}">
-							<h1>
-								<spring:message code="${inputError}" />
-							</h1>
-						</c:if>
-					</div>
 				</div>
 			</div>
 		</div>

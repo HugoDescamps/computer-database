@@ -10,9 +10,7 @@ import com.excilys.cdb.model.Computer;
 
 public class ComputerDTOMapper {
 
-	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-	public static ComputerDTO createDTO(Computer computer) {
+	public static ComputerDTO createDTO(Computer computer, DateTimeFormatter formatter) {
 
 		ComputerDTO computerDTO = new ComputerDTO();
 
@@ -34,11 +32,11 @@ public class ComputerDTOMapper {
 		return computerDTO;
 	}
 
-	public static List<ComputerDTO> createDTO(List<Computer> computers) {
+	public static List<ComputerDTO> createDTO(List<Computer> computers, DateTimeFormatter formatter) {
 		List<ComputerDTO> computerDTOList = new ArrayList<ComputerDTO>();
 
 		for (Computer computer : computers) {
-			computerDTOList.add(createDTO(computer));
+			computerDTOList.add(createDTO(computer, formatter));
 		}
 		return computerDTOList;
 

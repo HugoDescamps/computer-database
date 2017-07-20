@@ -25,6 +25,8 @@
 		<mavenCheckstyleVersion>2.17</mavenCheckstyleVersion>
 		<hikariCPVersion>2.6.1</hikariCPVersion>
 		<springVersion>4.3.9.RELEASE</springVersion>
+		<javaxValidationVersion>1.1.0.Final</javaxValidationVersion>
+		<hibernateValidatorVersion>5.4.1.Final</hibernateValidatorVersion>
 	</properties>
 
 	<dependencies>
@@ -175,6 +177,18 @@
 					<groupId>commons-logging</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${javaxValidationVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernateValidatorVersion}</version>
 		</dependency>
 
 	</dependencies>

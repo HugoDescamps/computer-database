@@ -3,6 +3,7 @@ package com.excilys.cdb.dto;
 public class CompanyDTO {
 
 	private long id;
+
 	private String name;
 
 	public CompanyDTO() {

@@ -1,9 +1,10 @@
 package com.excilys.cdb.webapp;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,11 @@ public class DashboardController {
 	@Autowired
 	private ComputerService computerService;
 
+	private static DateTimeFormatter formatter;
+
 	@GetMapping
-	protected ModelAndView doGet(@RequestParam Map<String, String> parameters) {
-		
+	protected ModelAndView doGet(@RequestParam Map<String, String> parameters, Locale locale) {
+
 		ModelAndView modelAndView = new ModelAndView("/WEB-INF/views/dashboard");
 
 		int page = 1;
@@ -84,21 +87,30 @@ public class DashboardController {
 		default:
 			break;
 		}
+		
+		switch(locale.toString()) {
+		case "fr" :
+			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			break;
+		default :
+			formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+			break;
+		}
 
-		computersList = ComputerDTOMapper
-				.createDTO(computerService.getComputers(page, size, search, orderColumn, orderWay).getObjectsList());
+		computersList = ComputerDTOMapper.createDTO(
+				computerService.getComputers(page, size, search, orderColumn, orderWay).getObjectsList(), formatter);
 
 		modelAndView.addObject("computersDTO", computersList);
-		
+
 		int computersCount = computerService.countComputers(search);
-		
+
 		modelAndView.addObject("computersCount", computersCount);
 
 		int numberOfPages = countPages(computersCount, size);
 
 		modelAndView.addObject("numberOfPages", numberOfPages);
 		modelAndView.addObject("numberOfPagesArray", storePagesNumbers(page, numberOfPages));
-		
+
 		return modelAndView;
 	}
 
@@ -110,7 +122,7 @@ public class DashboardController {
 		for (String id : selectedComputersList.split(",")) {
 			computerService.removeComputer(Integer.parseInt(id));
 		}
-		
+
 		return "redirect:/dashboard";
 	}
 

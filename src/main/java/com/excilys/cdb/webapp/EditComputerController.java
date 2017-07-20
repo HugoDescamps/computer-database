@@ -1,6 +1,8 @@
 package com.excilys.cdb.webapp;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +18,7 @@ import com.excilys.cdb.dto.mapper.CompanyDTOMapper;
 import com.excilys.cdb.dto.mapper.ComputerDTOMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.persistence.DaoException;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 import com.excilys.cdb.webapp.validator.Validator;
@@ -31,7 +34,7 @@ public class EditComputerController {
 	private CompanyService companyService;
 
 	@GetMapping
-	protected ModelAndView doGet(@RequestParam Map<String, String> parameters) {
+	protected ModelAndView doGet(@RequestParam Map<String, String> parameters, Locale locale) {
 
 		ModelAndView modelAndView = new ModelAndView("/WEB-INF/views/editComputer");
 
@@ -39,7 +42,8 @@ public class EditComputerController {
 
 		if (StringUtils.isNotBlank(parameters.get("id"))) {
 			modelAndView.addObject("computer",
-					ComputerDTOMapper.createDTO(computerService.getComputer(Integer.parseInt(parameters.get("id")))));
+					ComputerDTOMapper.createDTO(computerService.getComputer(Integer.parseInt(parameters.get("id"))),
+							DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 		}
 
 		return modelAndView;
@@ -72,8 +76,10 @@ public class EditComputerController {
 		if (!datesValidator || !nameValidator) {
 
 			modelAndView.addObject("companiesList", CompanyDTOMapper.createDTO(companyService.getCompanies()));
-			modelAndView.addObject("computer", ComputerDTOMapper
-					.createDTO(computerService.getComputer(Integer.parseInt(parameters.get("computerId")))));
+			modelAndView.addObject("computer",
+					ComputerDTOMapper.createDTO(
+							computerService.getComputer(Integer.parseInt(parameters.get("computerId"))),
+							DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
 			if (!nameValidator) {
 				modelAndView.addObject("inputError", "forms.nameError");
@@ -103,7 +109,15 @@ public class EditComputerController {
 				computer.setCompany(new Company(companyId, null));
 			}
 
-			computerService.updateComputer(computer);
+			try {
+				computerService.updateComputer(computer);
+			} catch (DaoException e) {
+				modelAndView.addObject("inputError", "forms.exception");
+
+				modelAndView.setViewName("/WEB-INF/views/editComputer");
+
+				return modelAndView;
+			}
 
 			modelAndView.setViewName("redirect:/dashboard");
 		}

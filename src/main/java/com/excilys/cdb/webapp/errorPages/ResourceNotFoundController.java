@@ -1,4 +1,4 @@
-package com.excilys.cdb.webapp.errors;
+package com.excilys.cdb.webapp.errorPages;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

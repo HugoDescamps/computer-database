@@ -3,17 +3,22 @@ package com.excilys.cdb.webapp;
 import java.time.LocalDate;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.dto.mapper.CompanyDTOMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.persistence.DaoException;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 import com.excilys.cdb.webapp.validator.Validator;
@@ -40,7 +45,8 @@ public class AddComputerController {
 	}
 
 	@PostMapping
-	protected ModelAndView doPost(@RequestParam Map<String, String> parameters) {
+	protected ModelAndView doPost(@RequestParam Map<String, String> parameters,
+			@ModelAttribute @Valid ComputerDTO computerDTO) {
 
 		ModelAndView modelAndView = new ModelAndView();
 
@@ -96,7 +102,15 @@ public class AddComputerController {
 				computer.setCompany(new Company(companyId, null));
 			}
 
-			computerService.addComputer(computer);
+			try {
+				computerService.addComputer(computer);
+			} catch (DaoException e) {
+				modelAndView.addObject("inputError", "forms.exception");
+
+				modelAndView.setViewName("/WEB-INF/views/addComputer");
+
+				return modelAndView;
+			}
 
 			modelAndView.setViewName("redirect:/dashboard");
 		}
