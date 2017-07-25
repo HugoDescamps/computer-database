@@ -2,6 +2,8 @@ package com.excilys.cdb.persistence;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
 import com.excilys.cdb.core.Company;
 import com.excilys.cdb.core.Page;
 
@@ -15,7 +17,7 @@ public interface CompanyDao {
 
 	public Company addCompany(Company company);
 
-	public void removeCompany(long id);
+	public void removeCompany(long id, Session session);
 
 	public String toString();
 

@@ -1,5 +1,6 @@
 package com.excilys.cdb.service.serviceImpl;
 
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +52,8 @@ public class ComputerServiceImpl implements ComputerService {
 	}
 
 	@Override
-	public void removeComputers(long company_id) {
-		computerDao.removeComputers(company_id);
+	public void removeComputers(long company_id, Session session) {
+		computerDao.removeComputers(company_id, session);
 	}
 
 }

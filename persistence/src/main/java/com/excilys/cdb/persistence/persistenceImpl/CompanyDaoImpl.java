@@ -39,7 +39,7 @@ public class CompanyDaoImpl implements CompanyDao {
 			companiesPage.setSize(pageSize);
 			companiesPage.setNumber(pageNumber);
 		}
-		
+
 		logger.info("Companies list retrieved");
 		return companiesPage;
 	}
@@ -92,17 +92,12 @@ public class CompanyDaoImpl implements CompanyDao {
 	}
 
 	@Override
-	public void removeCompany(long id) {
+	public void removeCompany(long id, Session session) {
 
-		try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+		Query<?> removeCompanyQuery = session.createQuery("DELETE FROM Company WHERE id = :id");
+		removeCompanyQuery.setParameter("id", id);
 
-			Query<?> removeCompanyQuery = session.createQuery("DELETE FROM Company WHERE id = :id");
-			removeCompanyQuery.setParameter("id", id);
-
-			session.beginTransaction();
-			removeCompanyQuery.executeUpdate();
-			session.getTransaction().commit();
-		}
+		removeCompanyQuery.executeUpdate();
 
 		logger.info("Company successfully removed");
 	}

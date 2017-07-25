@@ -38,8 +38,6 @@ public class ComputerDaoImplTest {
 
 		assertEquals(3, computerDao.listComputers(3, 5, "", OrderColumn.NULL, OrderWay.ASC).getNumber());
 		assertEquals(5, computerDao.listComputers(3, 5, "", OrderColumn.NULL, OrderWay.ASC).getSize());
-		assertEquals(0, computerDao.listComputers(1, 0, "", OrderColumn.NULL, OrderWay.ASC).getObjectsList().size());
-
 	}
 
 	@Test

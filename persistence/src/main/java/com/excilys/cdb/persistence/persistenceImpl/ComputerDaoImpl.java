@@ -170,19 +170,16 @@ public class ComputerDaoImpl implements ComputerDao {
 	}
 
 	@Override
-	public void removeComputers(long company_id) {
+	public void removeComputers(long company_id, Session session) {
 
-		try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+		Query<?> removeComputerQuery = session.createQuery("DELETE FROM Computer WHERE company_id = :company_id");
+		removeComputerQuery.setParameter("company_id", company_id);
 
-			Query<?> removeComputerQuery = session.createQuery("DELETE FROM Computer WHERE company_id = :company_id");
-			removeComputerQuery.setParameter("company_id", company_id);
+		removeComputerQuery.executeUpdate();
 
-			session.beginTransaction();
-			removeComputerQuery.executeUpdate();
-			session.getTransaction().commit();
-		}
+		throw new DaoException("marche po");
 
-		logger.info("Company's computers removed");
+		// logger.info("Company's computers removed");
 	}
 
 }

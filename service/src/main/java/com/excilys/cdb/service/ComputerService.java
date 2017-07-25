@@ -1,5 +1,7 @@
 package com.excilys.cdb.service;
 
+import org.hibernate.Session;
+
 import com.excilys.cdb.core.Computer;
 import com.excilys.cdb.core.Page;
 import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
@@ -19,5 +21,5 @@ public interface ComputerService {
 
 	public void removeComputer(long id);
 
-	public void removeComputers(long company_id);
+	public void removeComputers(long company_id, Session session);
 }
