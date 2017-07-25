@@ -26,7 +26,8 @@
 		<hikariCPVersion>2.6.1</hikariCPVersion>
 		<springVersion>4.3.9.RELEASE</springVersion>
 		<javaxValidationVersion>1.1.0.Final</javaxValidationVersion>
-		<hibernateValidatorVersion>5.4.1.Final</hibernateValidatorVersion>
+		<hibernateVersion>5.2.10.Final</hibernateVersion>
+		<hibernateValidatorVersion>5.4.0.Final</hibernateValidatorVersion>
 	</properties>
 
 	<modules>
@@ -194,6 +195,12 @@
 				<groupId>javax.validation</groupId>
 				<artifactId>validation-api</artifactId>
 				<version>${javaxValidationVersion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>${hibernateVersion}</version>
 			</dependency>
 
 			<dependency>

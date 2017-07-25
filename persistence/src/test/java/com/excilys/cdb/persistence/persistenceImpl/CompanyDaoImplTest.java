@@ -28,7 +28,6 @@ public class CompanyDaoImplTest {
 
 		assertEquals(3, companyDao.listCompanies(3, 5).getNumber());
 		assertEquals(5, companyDao.listCompanies(3, 5).getSize());
-		assertEquals(0, companyDao.listCompanies(1, 0).getObjectsList().size());
 
 	}
 

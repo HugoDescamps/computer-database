@@ -1,90 +1,104 @@
 package com.excilys.cdb.persistence.persistenceImpl;
 
-import java.sql.Timestamp;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.cdb.binding.ComputerMapper;
 import com.excilys.cdb.core.Computer;
 import com.excilys.cdb.core.Page;
 import com.excilys.cdb.persistence.ComputerDao;
 import com.excilys.cdb.persistence.DaoException;
-import com.zaxxer.hikari.HikariDataSource;
+import com.excilys.cdb.persistence.config.HibernateConfig;
 
 @Repository("computerDao")
 public class ComputerDaoImpl implements ComputerDao {
-
-	private JdbcTemplate jdbcTemplate;
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	private static final Logger logger = LoggerFactory.getLogger(ComputerDaoImpl.class);
 
 	private ComputerDaoImpl() {
 	}
 
-	@Autowired
-	public void setDataSource(HikariDataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-	}
-
 	@Override
 	public Page<Computer> listComputers(int pageNumber, int pageSize, String search, OrderColumn column, OrderWay way) {
+
+		Page<Computer> computersPage = new Page<Computer>();
 
 		String requestColumn = "";
 
 		switch (column) {
 		case COMPUTER:
-			requestColumn = "computer.name";
+			requestColumn = "c.name";
 			break;
 		case COMPANY:
 			requestColumn = "company.name";
 			break;
 		default:
-			requestColumn = "computer.id";
+			requestColumn = "c.id";
 			break;
 		}
 
-		List<Computer> computersList = jdbcTemplate.query(
-				"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY "
-						+ requestColumn + " " + way + " LIMIT ?,?;",
-				new ComputerMapper(), "%" + search + "%", "%" + search + "%", (pageNumber - 1) * pageSize, pageSize);
+		try (Session session = HibernateConfig.getSessionFactory().openSession()) {
 
-		Page<Computer> computersPage = new Page<Computer>(computersList, pageSize, pageNumber);
+			String stringQuery = "SELECT c FROM Computer AS c LEFT JOIN c.company AS company WHERE c.name LIKE :search OR company.name LIKE :search";
+
+			switch (way) {
+			case DESC:
+				stringQuery += " ORDER BY " + requestColumn + " DESC";
+				break;
+			default:
+				stringQuery += " ORDER BY " + requestColumn + " ASC";
+				break;
+			}
+
+			Query<Computer> computersListQuery = session.createQuery(stringQuery, Computer.class);
+
+			computersListQuery.setParameter("search", "%" + search + "%");
+			computersListQuery.setFirstResult((pageNumber - 1) * pageSize);
+			computersListQuery.setMaxResults(pageSize - 1);
+
+			computersPage.setObjectsList(computersListQuery.list());
+			computersPage.setSize(pageSize);
+			computersPage.setNumber(pageNumber);
+		}
 
 		logger.info("Computers list retrieved");
-
 		return computersPage;
-
 	}
 
 	@Override
 	public int countComputers(String search) {
 
-		int rowCount = jdbcTemplate.queryForObject(
-				"SELECT count(*) FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;",
-				Integer.class, "%" + search + "%", "%" + search + "%");
+		int result = 0;
+
+		try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+
+			Query<Long> countComputersQuery = session.createQuery(
+					"Select COUNT(c) From Computer AS c LEFT JOIN c.company AS company WHERE c.name LIKE :search OR company.name LIKE :search",
+					Long.class);
+			countComputersQuery.setParameter("search", "%" + search + "%");
+
+			result = countComputersQuery.uniqueResult().intValue();
+		}
 
 		logger.info("Computers count retrieved");
-		return rowCount;
+		return result;
 	}
 
 	@Override
 	public Computer getComputer(long id) {
 
-		Computer computer = jdbcTemplate.queryForObject(
-				"SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;",
-				new ComputerMapper(), id);
+		Computer computer = new Computer();
+
+		try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+			Query<Computer> computerQuery = session.createQuery(
+					"SELECT c FROM Computer AS c LEFT JOIN c.company AS company WHERE c.id = :id", Computer.class);
+			computerQuery.setParameter("id", id);
+
+			computer = computerQuery.uniqueResult();
+		}
 
 		logger.info("Computer retrieved");
 		return computer;
@@ -96,35 +110,9 @@ public class ComputerDaoImpl implements ComputerDao {
 		if (computer == null || StringUtils.isBlank(computer.getName())) {
 			throw new DaoException("Computer DAO error in addComputer method, name is mandatory");
 		} else {
-
-			Timestamp introducedDate = null;
-			Timestamp discontinuedDate = null;
-			Long company_id = null;
-
-			if (computer.getIntroduced() != null) {
-				introducedDate = Timestamp.valueOf(computer.getIntroduced().atStartOfDay());
+			try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+				computer.setId((long) session.save(computer));
 			}
-
-			if (computer.getDiscontinued() != null) {
-				discontinuedDate = Timestamp.valueOf(computer.getDiscontinued().atStartOfDay());
-			}
-
-			if (computer.getCompany() != null) {
-				company_id = computer.getCompany().getId();
-			}
-
-			KeyHolder keyHolder = new GeneratedKeyHolder();
-			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			parameters.addValue("name", computer.getName());
-			parameters.addValue("introduced", introducedDate);
-			parameters.addValue("discontinued", discontinuedDate);
-			parameters.addValue("company_id", company_id);
-
-			namedParameterJdbcTemplate.update(
-					"INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (:name, :introduced, :discontinued, :company_id);",
-					parameters, keyHolder);
-
-			computer.setId(keyHolder.getKey().longValue());
 		}
 
 		logger.info("Computer successfully added");
@@ -138,33 +126,27 @@ public class ComputerDaoImpl implements ComputerDao {
 		if (computer == null || StringUtils.isBlank(computer.getName())) {
 			throw new DaoException("Computer DAO error in addComputer method, name is mandatory");
 		} else {
-
-			Timestamp introducedDate = null;
-			Timestamp discontinuedDate = null;
 			Long company_id = null;
-
-			if (computer.getIntroduced() != null) {
-				introducedDate = Timestamp.valueOf(computer.getIntroduced().atStartOfDay());
-			}
-
-			if (computer.getDiscontinued() != null) {
-				discontinuedDate = Timestamp.valueOf(computer.getDiscontinued().atStartOfDay());
-			}
 
 			if (computer.getCompany() != null) {
 				company_id = computer.getCompany().getId();
 			}
 
-			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			parameters.addValue("name", computer.getName());
-			parameters.addValue("introduced", introducedDate);
-			parameters.addValue("discontinued", discontinuedDate);
-			parameters.addValue("company_id", company_id);
-			parameters.addValue("id", computer.getId());
+			try (Session session = HibernateConfig.getSessionFactory().openSession()) {
 
-			namedParameterJdbcTemplate.update(
-					"UPDATE computer SET name = :name, introduced = :introduced, discontinued = :discontinued, company_id = :company_id WHERE id = :id;",
-					parameters);
+				Query<?> query = session.createQuery(
+						"UPDATE Computer SET name = :name, introduced = :introduced, discontinued = :discontinued, company_id = :company_id WHERE id = :id");
+
+				query.setParameter("name", computer.getName());
+				query.setParameter("introduced", computer.getIntroduced());
+				query.setParameter("discontinued", computer.getDiscontinued());
+				query.setParameter("company_id", company_id);
+				query.setParameter("id", computer.getId());
+
+				session.beginTransaction();
+				query.executeUpdate();
+				session.getTransaction().commit();
+			}
 		}
 
 		logger.info("Computer successfully updated");
@@ -174,15 +156,31 @@ public class ComputerDaoImpl implements ComputerDao {
 	@Override
 	public void removeComputer(long id) {
 
-		jdbcTemplate.update("DELETE FROM computer WHERE id = ?;", id);
-		
+		try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+
+			Query<?> removeComputerQuery = session.createQuery("DELETE FROM Computer WHERE id = :id");
+			removeComputerQuery.setParameter("id", id);
+
+			session.beginTransaction();
+			removeComputerQuery.executeUpdate();
+			session.getTransaction().commit();
+		}
+
 		logger.info("Computer successfully removed");
 	}
 
 	@Override
 	public void removeComputers(long company_id) {
 
-		jdbcTemplate.update("DELETE FROM computer WHERE company_id = ?;", company_id);
+		try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+
+			Query<?> removeComputerQuery = session.createQuery("DELETE FROM Computer WHERE company_id = :company_id");
+			removeComputerQuery.setParameter("company_id", company_id);
+
+			session.beginTransaction();
+			removeComputerQuery.executeUpdate();
+			session.getTransaction().commit();
+		}
 
 		logger.info("Company's computers removed");
 	}

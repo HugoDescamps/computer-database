@@ -2,12 +2,33 @@ package com.excilys.cdb.core;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "computer")
 public class Computer {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
 	private long id;
+
+	@Column(name = "name", nullable = false)
 	private String name;
+
+	@Column(name = "introduced")
 	private LocalDate introduced;
+
+	@Column(name = "discontinued")
 	private LocalDate discontinued;
+
+	@ManyToOne
 	private Company company;
 
 	public Computer() {
@@ -28,12 +49,12 @@ public class Computer {
 	}
 
 	public void setId(long id) {
-		if(id > 0) {
+		if (id > 0) {
 			this.id = id;
 		} else {
 			throw new IllegalArgumentException("Negative id");
 		}
-		
+
 	}
 
 	public String getName() {
@@ -87,8 +108,8 @@ public class Computer {
 			companyName = this.getCompany().getName();
 
 		}
-		return "\tComputer id : " + id + "\tComputer name : " + name + "\tIntroduced date : " + introducedDate + "\tDiscontinued date : "
-				+ discontinuedDate + "\tOwning company : " + companyName;
+		return "\tComputer id : " + id + "\tComputer name : " + name + "\tIntroduced date : " + introducedDate
+				+ "\tDiscontinued date : " + discontinuedDate + "\tOwning company : " + companyName;
 	}
 
 }
