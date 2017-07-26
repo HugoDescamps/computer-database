@@ -177,9 +177,7 @@ public class ComputerDaoImpl implements ComputerDao {
 
 		removeComputerQuery.executeUpdate();
 
-		throw new DaoException("marche po");
-
-		// logger.info("Company's computers removed");
+		logger.info("Company's computers removed");
 	}
 
 }

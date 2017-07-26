@@ -3,6 +3,7 @@ package com.excilys.cdb.persistence.persistenceImpl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.hibernate.Session;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.excilys.cdb.core.Company;
 import com.excilys.cdb.persistence.CompanyDao;
 import com.excilys.cdb.persistence.DaoException;
+import com.excilys.cdb.persistence.config.HibernateConfig;
 import com.excilys.cdb.persistence.config.PersistenceConfig;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { PersistenceConfig.class })
@@ -53,7 +54,12 @@ public class CompanyDaoImplTest {
 
 		assertNotNull(company);
 
-		companyDao.removeCompany(company.getId());
+		Session session = HibernateConfig.getSessionFactory().openSession();
+
+		session.beginTransaction();
+		companyDao.removeCompany(company.getId(), session);
+
+		session.getTransaction().commit();
 
 	}
 
@@ -62,7 +68,13 @@ public class CompanyDaoImplTest {
 
 		Company company = companyDao.addCompany(new Company(1, "test"));
 
-		companyDao.removeCompany(company.getId());
+		Session session = HibernateConfig.getSessionFactory().openSession();
+
+		session.beginTransaction();
+
+		companyDao.removeCompany(company.getId(), session);
+
+		session.getTransaction().commit();
 	}
 
 }

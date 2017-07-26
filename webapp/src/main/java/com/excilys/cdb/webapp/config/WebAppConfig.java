@@ -27,7 +27,7 @@ import com.excilys.cdb.service.config.ServiceConfig;
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.excilys.cdb.webapp")
-@Import(ServiceConfig.class)
+@Import({ ServiceConfig.class, SecurityConfig.class })
 public class WebAppConfig extends WebMvcConfigurerAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebAppConfig.class);

@@ -24,7 +24,10 @@
 				<a href="dashboard?locale=fr"><button type="button"
 						class="btn btn-default" style="padding : 1px 2px">FR</button></a> <a
 					href="dashboard?locale=en"><button type="button"
-						class="btn btn-default" style="padding : 1px 2px">EN</button></a>
+						class="btn btn-default" style="padding : 1px 2px">EN</button></a> <a
+					href="login?logout"><button type="button"
+						class="btn btn-default" style="padding : 5px 10px">LOGOUT</button></a>
+						
 			</div>
 		</div>
 

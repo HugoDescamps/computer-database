@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.time.LocalDate;
 
+import org.hibernate.Session;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import com.excilys.cdb.persistence.ComputerDao;
 import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
 import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 import com.excilys.cdb.persistence.DaoException;
+import com.excilys.cdb.persistence.config.HibernateConfig;
 import com.excilys.cdb.persistence.config.PersistenceConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -98,8 +100,14 @@ public class ComputerDaoImplTest {
 		computerDao.addComputer(new Computer(1, "test1", null, null, company));
 		computerDao.addComputer(new Computer(2, "test2", null, null, company));
 
-		computerDao.removeComputers(company.getId());
-		companyDao.removeCompany(company.getId());
+		Session session = HibernateConfig.getSessionFactory().openSession();
+
+		session.beginTransaction();
+
+		computerDao.removeComputers(company.getId(), session);
+		companyDao.removeCompany(company.getId(), session);
+
+		session.getTransaction().commit();
 
 	}
 

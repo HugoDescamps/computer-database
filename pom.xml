@@ -25,6 +25,7 @@
 		<mavenCheckstyleVersion>2.17</mavenCheckstyleVersion>
 		<hikariCPVersion>2.6.1</hikariCPVersion>
 		<springVersion>4.3.9.RELEASE</springVersion>
+		<springSecurityVersion>4.2.3.RELEASE</springSecurityVersion>
 		<javaxValidationVersion>1.1.0.Final</javaxValidationVersion>
 		<hibernateVersion>5.2.10.Final</hibernateVersion>
 		<hibernateValidatorVersion>5.4.0.Final</hibernateValidatorVersion>
@@ -40,7 +41,6 @@
 	</modules>
 
 	<dependencyManagement>
-
 		<dependencies>
 			<dependency>
 				<groupId>junit</groupId>
@@ -192,6 +192,17 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-web</artifactId>
+				<version>${springSecurityVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-config</artifactId>
+				<version>${springSecurityVersion}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>javax.validation</groupId>
 				<artifactId>validation-api</artifactId>
 				<version>${javaxValidationVersion}</version>
@@ -208,9 +219,7 @@
 				<artifactId>hibernate-validator</artifactId>
 				<version>${hibernateValidatorVersion}</version>
 			</dependency>
-
 		</dependencies>
-
 	</dependencyManagement>
 
 	<build>
