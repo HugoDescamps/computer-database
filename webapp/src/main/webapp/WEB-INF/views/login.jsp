@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page session="true"%>
 <html>
 <head>
 <title>Computer Database</title>
@@ -40,7 +41,7 @@
 
 	<div id="login-box">
 
-		<h3>Login with Username and Password</h3>
+		<h3>Enter your credentials</h3>
 
 		<c:if test="${not empty error}">
 			<div class="error">${error}</div>
@@ -49,12 +50,13 @@
 			<div class="msg">${msg}</div>
 		</c:if>
 
-		<form name='loginForm' action="<c:url value='/login' />" method='POST'>
+		<form name='loginForm'
+			action="<c:url value='/login' />" method='POST'>
 
 			<table>
 				<tr>
 					<td>User:</td>
-					<td><input type='text' name='username' value=''></td>
+					<td><input type='text' name='username'></td>
 				</tr>
 				<tr>
 					<td>Password:</td>

@@ -31,10 +31,6 @@ public class Computer {
 	@ManyToOne
 	private Company company;
 
-	public Computer() {
-		super();
-	}
-
 	public Computer(long id, String name, LocalDate introduced, LocalDate discontinued, Company company) {
 		super();
 		this.id = id;
@@ -42,6 +38,9 @@ public class Computer {
 		this.introduced = introduced;
 		this.discontinued = discontinued;
 		this.company = company;
+	}
+
+	public Computer() {
 	}
 
 	public long getId() {

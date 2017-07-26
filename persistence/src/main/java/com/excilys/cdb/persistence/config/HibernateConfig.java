@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.core.Company;
 import com.excilys.cdb.core.Computer;
+import com.excilys.cdb.core.User;
 
 public class HibernateConfig {
 
@@ -29,7 +30,7 @@ public class HibernateConfig {
 			config.configure();
 			config.addAnnotatedClass(Company.class);
 			config.addAnnotatedClass(Computer.class);
-			
+			config.addAnnotatedClass(User.class);
 			
 			ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(config.getProperties()).build();
 			
