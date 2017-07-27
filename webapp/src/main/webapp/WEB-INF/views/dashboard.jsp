@@ -48,6 +48,8 @@
 							value="${search}" /> <input type="submit" id="searchsubmit"
 							value="<spring:message code="dashboard.searchButton"/>"
 							class="btn btn-primary" />
+							<input type="hidden" name="${_csrf.parameterName}"
+							value="${_csrf.token}" />
 					</form>
 				</div>
 				<div class="pull-right">
