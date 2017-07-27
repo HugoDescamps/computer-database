@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.excilys.cdb.binding.ComputerDTOMapper;
+import com.excilys.cdb.core.OrderColumnEnum;
+import com.excilys.cdb.core.OrderWayEnum;
 import com.excilys.cdb.core.dto.ComputerDTO;
-import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
-import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 import com.excilys.cdb.service.ComputerService;
 
 @Controller
@@ -64,25 +64,25 @@ public class DashboardController {
 		modelAndView.addObject("search", search);
 		modelAndView.addObject("order", order);
 
-		OrderColumn orderColumn = OrderColumn.NULL;
-		OrderWay orderWay = OrderWay.ASC;
+		OrderColumnEnum orderColumn = OrderColumnEnum.NULL;
+		OrderWayEnum orderWay = OrderWayEnum.ASC;
 
 		switch (order) {
 		case "computerAsc":
-			orderColumn = OrderColumn.COMPUTER;
-			orderWay = OrderWay.ASC;
+			orderColumn = OrderColumnEnum.COMPUTER;
+			orderWay = OrderWayEnum.ASC;
 			break;
 		case "computerDesc":
-			orderColumn = OrderColumn.COMPUTER;
-			orderWay = OrderWay.DESC;
+			orderColumn = OrderColumnEnum.COMPUTER;
+			orderWay = OrderWayEnum.DESC;
 			break;
 		case "companyAsc":
-			orderColumn = OrderColumn.COMPANY;
-			orderWay = OrderWay.ASC;
+			orderColumn = OrderColumnEnum.COMPANY;
+			orderWay = OrderWayEnum.ASC;
 			break;
 		case "companyDesc":
-			orderColumn = OrderColumn.COMPANY;
-			orderWay = OrderWay.DESC;
+			orderColumn = OrderColumnEnum.COMPANY;
+			orderWay = OrderWayEnum.DESC;
 			break;
 		default:
 			break;

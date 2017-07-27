@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.excilys.cdb.core.Company;
 import com.excilys.cdb.core.Computer;
-import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
-import com.excilys.cdb.persistence.ComputerDao.OrderWay;
+import com.excilys.cdb.core.OrderColumnEnum;
+import com.excilys.cdb.core.OrderWayEnum;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 
@@ -202,7 +202,7 @@ public class Commands {
 					validInputComputerNumber = true;
 
 					System.out.println(computerService
-							.getComputers(pageNumber, userInputComputerNumber, "", OrderColumn.NULL, OrderWay.ASC)
+							.getComputers(pageNumber, userInputComputerNumber, "", OrderColumnEnum.NULL, OrderWayEnum.ASC)
 							.toString());
 				} else {
 					System.out.println("Wrong input : integer must be positive\n");
@@ -223,7 +223,7 @@ public class Commands {
 			if (displayNextPage.equals("n")) {
 				pageNumber++;
 				System.out.println(computerService
-						.getComputers(pageNumber, userInputComputerNumber, "", OrderColumn.NULL, OrderWay.ASC)
+						.getComputers(pageNumber, userInputComputerNumber, "", OrderColumnEnum.NULL, OrderWayEnum.ASC)
 						.toString());
 			} else if (displayNextPage.equals("p")) {
 				if (pageNumber == 1) {
@@ -231,7 +231,7 @@ public class Commands {
 				} else {
 					pageNumber--;
 					System.out.println(computerService
-							.getComputers(pageNumber, userInputComputerNumber, "", OrderColumn.NULL, OrderWay.ASC)
+							.getComputers(pageNumber, userInputComputerNumber, "", OrderColumnEnum.NULL, OrderWayEnum.ASC)
 							.toString());
 				}
 			} else if (displayNextPage.equals("q")) {

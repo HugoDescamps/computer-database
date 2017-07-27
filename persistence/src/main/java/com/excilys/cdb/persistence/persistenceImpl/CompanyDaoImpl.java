@@ -49,10 +49,7 @@ public class CompanyDaoImpl implements CompanyDao {
 		Company company = new Company();
 
 		try (Session session = HibernateConfig.getSessionFactory().openSession()) {
-			Query<Company> companyQuery = session.createQuery("FROM Company WHERE id = :id", Company.class);
-			companyQuery.setParameter("id", id);
-
-			company = companyQuery.uniqueResult();
+			company = session.get(Company.class, id);
 		}
 
 		logger.info("Company retrieved");
@@ -93,11 +90,8 @@ public class CompanyDaoImpl implements CompanyDao {
 
 	@Override
 	public void removeCompany(long id, Session session) {
-
-		Query<?> removeCompanyQuery = session.createQuery("DELETE FROM Company WHERE id = :id");
-		removeCompanyQuery.setParameter("id", id);
-
-		removeCompanyQuery.executeUpdate();
+		
+		session.delete(getCompany(id));
 
 		logger.info("Company successfully removed");
 	}

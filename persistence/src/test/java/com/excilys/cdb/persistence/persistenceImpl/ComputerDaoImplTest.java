@@ -14,10 +14,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.excilys.cdb.core.Company;
 import com.excilys.cdb.core.Computer;
+import com.excilys.cdb.core.OrderColumnEnum;
+import com.excilys.cdb.core.OrderWayEnum;
 import com.excilys.cdb.persistence.CompanyDao;
 import com.excilys.cdb.persistence.ComputerDao;
-import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
-import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 import com.excilys.cdb.persistence.DaoException;
 import com.excilys.cdb.persistence.config.HibernateConfig;
 import com.excilys.cdb.persistence.config.PersistenceConfig;
@@ -38,8 +38,8 @@ public class ComputerDaoImplTest {
 
 		System.out.println(computerDao.countComputers("") + " ordinateurs listés");
 
-		assertEquals(3, computerDao.listComputers(3, 5, "", OrderColumn.NULL, OrderWay.ASC).getNumber());
-		assertEquals(5, computerDao.listComputers(3, 5, "", OrderColumn.NULL, OrderWay.ASC).getSize());
+		assertEquals(3, computerDao.listComputers(3, 5, "", OrderColumnEnum.NULL, OrderWayEnum.ASC).getNumber());
+		assertEquals(5, computerDao.listComputers(3, 5, "", OrderColumnEnum.NULL, OrderWayEnum.ASC).getSize());
 	}
 
 	@Test

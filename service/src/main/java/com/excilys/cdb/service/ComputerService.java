@@ -3,13 +3,13 @@ package com.excilys.cdb.service;
 import org.hibernate.Session;
 
 import com.excilys.cdb.core.Computer;
+import com.excilys.cdb.core.OrderColumnEnum;
+import com.excilys.cdb.core.OrderWayEnum;
 import com.excilys.cdb.core.Page;
-import com.excilys.cdb.persistence.ComputerDao.OrderColumn;
-import com.excilys.cdb.persistence.ComputerDao.OrderWay;
 
 public interface ComputerService {
 
-	public Page<Computer> getComputers(int pageNumber, int pageSize, String search, OrderColumn column, OrderWay way);
+	public Page<Computer> getComputers(int pageNumber, int pageSize, String search, OrderColumnEnum column, OrderWayEnum way);
 
 	public int countComputers(String search);
 

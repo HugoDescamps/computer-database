@@ -4,6 +4,7 @@
         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
+		<property name="hibernateconnection.provider_class">com.zaxxer.hikari.hibernate.HikariConnectionProvider</property>
 		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
 		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/dev-computer-database-db?zeroDateTimeBehavior=convertToNull</property>
 		<property name="hibernate.connection.username">admincdb</property>
