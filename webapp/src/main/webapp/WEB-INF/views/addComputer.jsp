@@ -66,22 +66,22 @@
 
 								</select>
 							</div>
-						</fieldset>
-						<div class="actions pull-right">
+							<div class="actions pull-right">
 							<input type="submit"
 								value="<spring:message code="forms.addButton"/>"
 								class="btn btn-primary"> <a href="dashboard"
 								class="btn btn-default"><spring:message
 									code="forms.cancelButton" /></a>
 						</div>
-						<div class="col-xs-8 box">
-							<c:if test="${!empty inputError}">
-								 <h1>
-									<spring:message code="${inputError}" />
-								</h1>
-							</c:if>
-						</div>
+						</fieldset>
+						<input type="hidden" name="${_csrf.parameterName}"
+							value="${_csrf.token}" />
 					</form>
+					<div class="form-group" style = "margin-top : 15px">
+						<c:if test="${!empty inputError}">
+							<div class="error"><spring:message code="${inputError}"/></div>
+						</c:if>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -11,37 +11,6 @@
 <link href="resources/css/font-awesome.css" rel="stylesheet"
 	media="screen">
 <link href="resources/css/main.css" rel="stylesheet" media="screen">
-<style>
-.error {
-	padding: 15px;
-	margin-bottom: 20px;
-	border: 1px solid transparent;
-	border-radius: 4px;
-	color: #a94442;
-	background-color: #f2dede;
-	border-color: #ebccd1;
-}
-
-.msg {
-	padding: 15px;
-	margin-bottom: 20px;
-	border: 1px solid transparent;
-	border-radius: 4px;
-	color: #31708f;
-	background-color: #d9edf7;
-	border-color: #bce8f1;
-}
-
-#login-box {
-	width: 300px;
-	padding: 20px;
-	margin: 100px auto;
-	background: #fff;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border: 1px solid #000;
-}
-</style>
 </head>
 <body onload='document.loginForm.username.focus();'>
 	<header class="navbar navbar-inverse navbar-fixed-top">
@@ -49,13 +18,12 @@
 			<a class="navbar-brand" href="dashboard"> Application - Computer
 				Database </a>
 		</div>
-
 	</header>
 
 	<section id="main">
 		<div class="container">
-			<h1>Welcome to Computer Database</h1>
 			<div class="col-xs-8 col-xs-offset-2 box">
+			<h1>Welcome to Computer Database</h1>
 				<form name='loginForm' action="<c:url value='/login' />"
 					method='POST'>
 					<fieldset>
