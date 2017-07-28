@@ -29,6 +29,7 @@
 		<javaxValidationVersion>1.1.0.Final</javaxValidationVersion>
 		<hibernateVersion>5.2.10.Final</hibernateVersion>
 		<hibernateValidatorVersion>5.4.0.Final</hibernateValidatorVersion>
+		<jacksonVersion>2.9.0.pr4</jacksonVersion>
 	</properties>
 
 	<modules>
@@ -38,6 +39,7 @@
 		<module>persistence</module>
 		<module>service</module>
 		<module>webapp</module>
+		<module>webservice</module>
 	</modules>
 
 	<dependencyManagement>
@@ -203,6 +205,12 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-core</artifactId>
+				<version>${springSecurityVersion}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>javax.validation</groupId>
 				<artifactId>validation-api</artifactId>
 				<version>${javaxValidationVersion}</version>
@@ -218,6 +226,12 @@
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-validator</artifactId>
 				<version>${hibernateValidatorVersion}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>${jacksonVersion}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -21,7 +21,8 @@ public class ComputerServiceImpl implements ComputerService {
 	}
 
 	@Override
-	public Page<Computer> getComputers(int pageNumber, int pageSize, String search, OrderColumnEnum column, OrderWayEnum way) {
+	public Page<Computer> getComputers(int pageNumber, int pageSize, String search, OrderColumnEnum column,
+			OrderWayEnum way) {
 		return computerDao.listComputers(pageNumber, pageSize, search, column, way);
 	}
 

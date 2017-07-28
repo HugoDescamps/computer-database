@@ -31,10 +31,10 @@ public class ComputerDaoImpl implements ComputerDao {
 
 		try (Session session = HibernateConfig.getSessionFactory().openSession()) {
 
-			String stringQuery = "SELECT c FROM Computer AS c LEFT JOIN c.company AS company WHERE c.name LIKE :search OR company.name LIKE :search ORDER BY "
+			String listComputersQuery = "SELECT c FROM Computer AS c LEFT JOIN c.company AS company WHERE c.name LIKE :search OR company.name LIKE :search ORDER BY "
 					+ column.toString() + " " + way.toString();
 
-			Query<Computer> computersListQuery = session.createQuery(stringQuery, Computer.class);
+			Query<Computer> computersListQuery = session.createQuery(listComputersQuery, Computer.class);
 
 			computersListQuery.setParameter("search", "%" + search + "%");
 			computersListQuery.setFirstResult((pageNumber - 1) * pageSize);

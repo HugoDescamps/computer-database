@@ -24,5 +24,6 @@ public class Main {
 		commands.waitForInput();
 
 		context.close();
+
 	}
 }
