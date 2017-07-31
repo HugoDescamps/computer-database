@@ -38,7 +38,7 @@ public class ComputerDaoImpl implements ComputerDao {
 
 			computersListQuery.setParameter("search", "%" + search + "%");
 			computersListQuery.setFirstResult((pageNumber - 1) * pageSize);
-			computersListQuery.setMaxResults(pageSize - 1);
+			computersListQuery.setMaxResults(pageSize);
 
 			computersPage.setObjectsList(computersListQuery.list());
 			computersPage.setSize(pageSize);

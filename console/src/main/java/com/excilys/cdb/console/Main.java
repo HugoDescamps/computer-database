@@ -1,8 +1,8 @@
-package com.excilys.cdb.console.console;
+package com.excilys.cdb.console;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.excilys.cdb.console.console.config.CLIConfig;
+import com.excilys.cdb.console.config.CLIConfig;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 

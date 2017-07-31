@@ -40,6 +40,17 @@ public class CompanyController {
 
 	}
 
+	@GetMapping(value = "/get/{pageNumber}/{pageSize}")
+	@ResponseBody
+	public List<CompanyDTO> getCompanies(@PathVariable int pageNumber, @PathVariable int pageSize) {
+
+		List<CompanyDTO> companyDTOList = CompanyDTOMapper
+				.createDTO(companyService.getCompanies(pageNumber, pageSize).getObjectsList());
+
+		logger.info("Companies successfully retrieved");
+		return companyDTOList;
+	}
+
 	@GetMapping(value = "/get")
 	@ResponseBody
 	public List<CompanyDTO> getCompanies() {
@@ -62,7 +73,7 @@ public class CompanyController {
 		logger.info("Company successfully added");
 		return CompanyDTOMapper.createDTO(company);
 	}
-	
+
 	@PutMapping(value = "/update")
 	@ResponseBody
 	public CompanyDTO updateCompany(@RequestBody CompanyDTO companyDTO) {

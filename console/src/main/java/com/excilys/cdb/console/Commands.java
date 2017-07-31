@@ -1,4 +1,4 @@
-package com.excilys.cdb.console.console;
+package com.excilys.cdb.console;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -7,10 +7,11 @@ import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.excilys.cdb.binding.ComputerDTOMapper;
+import com.excilys.cdb.console.webservices.CompanyClient;
+import com.excilys.cdb.console.webservices.ComputerClient;
 import com.excilys.cdb.core.Company;
 import com.excilys.cdb.core.Computer;
-import com.excilys.cdb.core.OrderColumnEnum;
-import com.excilys.cdb.core.OrderWayEnum;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 
@@ -145,7 +146,7 @@ public class Commands {
 				if (userInputCompanyNumber >= 0) {
 					validInputCompanyNumber = true;
 
-					System.out.println(companyService.getCompanies(pageNumber, userInputCompanyNumber).toString());
+					CompanyClient.getCompanies(pageNumber, userInputCompanyNumber);
 				} else {
 					System.out.println("Wrong input : integer must be positive\n");
 				}
@@ -164,13 +165,13 @@ public class Commands {
 
 			if (displayNextPage.equals("n")) {
 				pageNumber++;
-				System.out.println(companyService.getCompanies(pageNumber, userInputCompanyNumber).toString());
+				CompanyClient.getCompanies(pageNumber, userInputCompanyNumber);
 			} else if (displayNextPage.equals("p")) {
 				if (pageNumber == 1) {
 					System.out.println("Error : this is already the first page");
 				} else {
 					pageNumber--;
-					System.out.println(companyService.getCompanies(pageNumber, userInputCompanyNumber).toString());
+					CompanyClient.getCompanies(pageNumber, userInputCompanyNumber);
 				}
 			} else if (displayNextPage.equals("q")) {
 				endOfCommand = true;
@@ -201,9 +202,7 @@ public class Commands {
 				if (userInputComputerNumber >= 0) {
 					validInputComputerNumber = true;
 
-					System.out.println(computerService
-							.getComputers(pageNumber, userInputComputerNumber, "", OrderColumnEnum.NULL, OrderWayEnum.ASC)
-							.toString());
+					ComputerClient.getComputers(pageNumber, userInputComputerNumber, "");
 				} else {
 					System.out.println("Wrong input : integer must be positive\n");
 				}
@@ -222,17 +221,12 @@ public class Commands {
 
 			if (displayNextPage.equals("n")) {
 				pageNumber++;
-				System.out.println(computerService
-						.getComputers(pageNumber, userInputComputerNumber, "", OrderColumnEnum.NULL, OrderWayEnum.ASC)
-						.toString());
+				ComputerClient.getComputers(pageNumber, userInputComputerNumber, "");
 			} else if (displayNextPage.equals("p")) {
 				if (pageNumber == 1) {
 					System.out.println("Error : this is already the first page");
 				} else {
-					pageNumber--;
-					System.out.println(computerService
-							.getComputers(pageNumber, userInputComputerNumber, "", OrderColumnEnum.NULL, OrderWayEnum.ASC)
-							.toString());
+					ComputerClient.getComputers(pageNumber, userInputComputerNumber, "");
 				}
 			} else if (displayNextPage.equals("q")) {
 				endOfCommand = true;
@@ -257,7 +251,7 @@ public class Commands {
 
 				if (userInputComputerId >= 1) {
 					validInputComputerId = true;
-					System.out.println(computerService.getComputer(userInputComputerId).toString());
+					ComputerClient.getComputer(userInputComputerId);
 				} else {
 					System.out.println("Wrong input : integer must be greater than 0\n");
 				}
@@ -397,7 +391,8 @@ public class Commands {
 			computer.setCompany(company);
 		}
 
-		System.out.println(computerService.addComputer(computer).toString());
+		ComputerClient.addComputer(ComputerDTOMapper.createDTO(computer, formatter));
+		//System.out.println(computerService.addComputer(computer).toString());
 
 		this.waitForInput();
 

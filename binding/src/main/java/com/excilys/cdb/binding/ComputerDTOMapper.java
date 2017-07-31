@@ -52,8 +52,9 @@ public class ComputerDTOMapper {
 
 		computer.setId(computerDTO.getId());
 		computer.setName(computerDTO.getName());
-
+		
 		if (StringUtils.isNotBlank(computerDTO.getIntroduced())) {
+			
 			computer.setIntroduced(LocalDate.parse(computerDTO.getIntroduced()));
 		}
 

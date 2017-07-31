@@ -33,7 +33,7 @@ public class CompanyDaoImpl implements CompanyDao {
 
 			Query<Company> companiesListQuery = session.createQuery("FROM Company", Company.class);
 			companiesListQuery.setFirstResult((pageNumber - 1) * pageSize);
-			companiesListQuery.setMaxResults(pageSize - 1);
+			companiesListQuery.setMaxResults(pageSize);
 
 			companiesPage.setObjectsList(companiesListQuery.list());
 			companiesPage.setSize(pageSize);

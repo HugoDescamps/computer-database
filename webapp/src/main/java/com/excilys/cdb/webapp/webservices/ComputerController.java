@@ -29,7 +29,7 @@ public class ComputerController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ComputerController.class);
 
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@Autowired
 	private ComputerService computerService;
