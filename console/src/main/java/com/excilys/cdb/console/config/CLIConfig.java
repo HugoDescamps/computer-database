@@ -1,4 +1,4 @@
-package com.excilys.cdb.console.console.config;
+package com.excilys.cdb.console.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

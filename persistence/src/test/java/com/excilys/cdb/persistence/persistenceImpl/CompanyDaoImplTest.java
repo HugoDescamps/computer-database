@@ -64,6 +64,26 @@ public class CompanyDaoImplTest {
 	}
 
 	@Test
+	public void testUpdateComputer() {
+
+		Company company = new Company(1, "test");
+		company = companyDao.addCompany(company);
+
+		company.setName("updateTest");
+
+		companyDao.updateCompany(company);
+
+		Session session = HibernateConfig.getSessionFactory().openSession();
+
+		session.beginTransaction();
+
+		companyDao.removeCompany(company.getId(), session);
+
+		session.getTransaction().commit();
+
+	}
+
+	@Test
 	public void testRemoveCompanyNormalBehaviour() {
 
 		Company company = companyDao.addCompany(new Company(1, "test"));

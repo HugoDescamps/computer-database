@@ -21,12 +21,12 @@
 				Database </a>
 			<div class="btn-group btn-group-sm pull-right" role="group"
 				style="padding: 15px 15px">
-				<a href="dashboard?locale=fr"><button type="button"
+				<a href="dashboard?locale=fr"><button type="button" title="Switch to French"
 						class="btn btn-default" style="padding : 1px 2px">FR</button></a> <a
-					href="dashboard?locale=en"><button type="button"
+					href="dashboard?locale=en"><button type="button" title="Switch to English"
 						class="btn btn-default" style="padding : 1px 2px">EN</button></a> <a
-					href="login?logout"><button type="button"
-						class="btn btn-default" style="padding : 1px 2px">LOGOUT</button></a>
+					href="login?logout"><button type="button" title="Disconnect"
+						class="btn btn-default" style="padding : 1px 2px">SIGN OUT</button></a>
 						
 			</div>
 		</div>
@@ -66,6 +66,8 @@
 
 		<form id="deleteForm" action="#" method="POST">
 			<input type="hidden" name="selection" value="">
+			<input type="hidden" name="${_csrf.parameterName}"
+							value="${_csrf.token}" />
 		</form>
 
 		<div class="container" style="margin-top: 10px;">

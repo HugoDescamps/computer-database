@@ -15,6 +15,8 @@ public interface CompanyService {
 	public Company getCompany(long id);
 
 	public Company addCompany(Company company);
+	
+	public Company updateCompany(Company company);
 
 	public void removeCompany(long id);
 

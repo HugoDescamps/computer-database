@@ -12,7 +12,7 @@ import javax.persistence.Table;
 public class User {
 	
 	public enum Role {
-		admin, user;
+		ROLE_ADMIN, ROLE_USER;
 	}
 	
 	@Id
@@ -20,23 +20,27 @@ public class User {
 	@Column(name = "id", unique = true, nullable = false)
 	private long id;
 	
-	@Column(name = "name", nullable = false)
+	@Column(name = "username", nullable = false)
 	private String name;
 	
 	@Column(name = "password", nullable = false)
 	private String password;
 	
+	@Column(name = "enabled", nullable = false)
+	private boolean enabled;
+	
 	@Column(name = "role", nullable = false)
 	private Role role;
-	
-	public User(long id, String login, String password, Role role) {
+		
+	public User(long id, String name, String password, boolean enabled, Role role) {
 		super();
 		this.id = id;
-		this.name = login;
+		this.name = name;
 		this.password = password;
+		this.enabled = enabled;
 		this.role = role;
 	}
-	
+
 	public User() {
 		
 	}
@@ -49,12 +53,12 @@ public class User {
 		this.id = id;
 	}
 
-	public String getLogin() {
+	public String getName() {
 		return name;
 	}
 
-	public void setLogin(String login) {
-		this.name = login;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getPassword() {
@@ -63,6 +67,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public Role getRole() {

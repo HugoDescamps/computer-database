@@ -26,5 +26,11 @@ public class CompanyDTOMapper {
 		}
 		return companyDTOList;
 	}
+	
+	public static Company createCompany(CompanyDTO companyDTO) {
+		
+		return new Company(companyDTO.getId(), companyDTO.getName());
+
+	}
 
 }

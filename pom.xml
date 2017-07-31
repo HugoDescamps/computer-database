@@ -4,7 +4,7 @@
 
 	<groupId>com.excilys</groupId>
 	<artifactId>cdb</artifactId>
-	<version>1.1.5-SNAPSHOT</version>
+	<version>1.2.1-RELEASE</version>
 	<packaging>pom</packaging>
 
 	<name>cdb</name>
@@ -29,6 +29,8 @@
 		<javaxValidationVersion>1.1.0.Final</javaxValidationVersion>
 		<hibernateVersion>5.2.10.Final</hibernateVersion>
 		<hibernateValidatorVersion>5.4.0.Final</hibernateValidatorVersion>
+		<jacksonVersion>2.9.0.pr4</jacksonVersion>
+		<jaxRsVersion>3.1.4.Final</jaxRsVersion>
 	</properties>
 
 	<modules>
@@ -38,6 +40,7 @@
 		<module>persistence</module>
 		<module>service</module>
 		<module>webapp</module>
+		<module>webservice</module>
 	</modules>
 
 	<dependencyManagement>
@@ -203,6 +206,12 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-core</artifactId>
+				<version>${springSecurityVersion}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>javax.validation</groupId>
 				<artifactId>validation-api</artifactId>
 				<version>${javaxValidationVersion}</version>
@@ -219,6 +228,24 @@
 				<artifactId>hibernate-validator</artifactId>
 				<version>${hibernateValidatorVersion}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jacksonVersion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-jaxrs</artifactId>
+				<version>${jaxRsVersion}</version>
+			</dependency>
+			
+			<dependency>
+ 				<groupId>org.jboss.resteasy</groupId>
+ 				<artifactId>resteasy-client</artifactId>
+ 				<version>${jaxRsVersion}</version>
+ 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
