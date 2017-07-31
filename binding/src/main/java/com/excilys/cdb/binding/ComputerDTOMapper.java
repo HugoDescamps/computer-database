@@ -1,8 +1,11 @@
 package com.excilys.cdb.binding;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.excilys.cdb.core.Company;
 import com.excilys.cdb.core.Computer;
@@ -41,6 +44,28 @@ public class ComputerDTOMapper {
 		}
 		return computerDTOList;
 
+	}
+
+	public static Computer createComputer(ComputerDTO computerDTO) {
+
+		Computer computer = new Computer();
+
+		computer.setId(computerDTO.getId());
+		computer.setName(computerDTO.getName());
+
+		if (StringUtils.isNotBlank(computerDTO.getIntroduced())) {
+			computer.setIntroduced(LocalDate.parse(computerDTO.getIntroduced()));
+		}
+
+		if (StringUtils.isNotBlank(computerDTO.getDiscontinued())) {
+			computer.setDiscontinued(LocalDate.parse(computerDTO.getDiscontinued()));
+		}
+
+		if (computerDTO.getCompany() != null) {
+			computer.setCompany(CompanyDTOMapper.createCompany(computerDTO.getCompany()));
+		}
+
+		return computer;
 	}
 
 }

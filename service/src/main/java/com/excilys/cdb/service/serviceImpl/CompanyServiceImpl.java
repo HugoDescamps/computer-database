@@ -63,4 +63,9 @@ public class CompanyServiceImpl implements CompanyService {
 		session.getTransaction().commit();
 	}
 
+	@Override
+	public Company updateCompany(Company company) {
+		return companyDao.updateCompany(company);
+	}
+
 }

@@ -96,4 +96,22 @@ public class CompanyDaoImpl implements CompanyDao {
 		logger.info("Company successfully removed");
 	}
 
+	@Override
+	public Company updateCompany(Company company) {
+		
+		if (company == null || StringUtils.isBlank(company.getName())) {
+			throw new DaoException("Computer DAO error in addComputer method, name is mandatory");
+		} else {
+
+			try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+				session.beginTransaction();
+				session.update(company);
+				session.getTransaction().commit();
+			}
+		}
+
+		logger.info("Computer successfully updated");
+		return company;
+	}
+
 }
