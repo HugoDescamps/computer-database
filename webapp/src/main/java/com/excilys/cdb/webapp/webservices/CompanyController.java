@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.excilys.cdb.binding.CompanyDTOMapper;
@@ -30,7 +29,6 @@ public class CompanyController {
 	private CompanyService companyService;
 
 	@GetMapping(value = "/get/{id}")
-	@ResponseBody
 	public CompanyDTO getCompany(@PathVariable long id) {
 
 		CompanyDTO companyDTO = CompanyDTOMapper.createDTO(companyService.getCompany(id));
@@ -41,7 +39,6 @@ public class CompanyController {
 	}
 
 	@GetMapping(value = "/get/{pageNumber}/{pageSize}")
-	@ResponseBody
 	public List<CompanyDTO> getCompanies(@PathVariable int pageNumber, @PathVariable int pageSize) {
 
 		List<CompanyDTO> companyDTOList = CompanyDTOMapper
@@ -52,7 +49,6 @@ public class CompanyController {
 	}
 
 	@GetMapping(value = "/get")
-	@ResponseBody
 	public List<CompanyDTO> getCompanies() {
 
 		List<CompanyDTO> companyDTOList = CompanyDTOMapper.createDTO(companyService.getCompanies());
@@ -63,7 +59,6 @@ public class CompanyController {
 	}
 
 	@PostMapping(value = "/add")
-	@ResponseBody
 	public CompanyDTO addCompany(@RequestBody CompanyDTO companyDTO) {
 
 		Company company = CompanyDTOMapper.createCompany(companyDTO);
@@ -75,7 +70,6 @@ public class CompanyController {
 	}
 
 	@PutMapping(value = "/update")
-	@ResponseBody
 	public CompanyDTO updateCompany(@RequestBody CompanyDTO companyDTO) {
 
 		Company company = CompanyDTOMapper.createCompany(companyDTO);

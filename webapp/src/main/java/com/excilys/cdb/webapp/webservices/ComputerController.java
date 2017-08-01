@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.excilys.cdb.binding.ComputerDTOMapper;
@@ -35,7 +34,6 @@ public class ComputerController {
 	private ComputerService computerService;
 
 	@GetMapping(value = "/get/{id}")
-	@ResponseBody
 	public ComputerDTO getComputer(@PathVariable long id) {
 
 		ComputerDTO computerDTO = ComputerDTOMapper.createDTO(computerService.getComputer(id), formatter);
@@ -46,7 +44,6 @@ public class ComputerController {
 	}
 
 	@GetMapping(value = "/get/{pageNumber}/{pageSize}")
-	@ResponseBody
 	public List<ComputerDTO> getComputers(@PathVariable int pageNumber, @PathVariable int pageSize) {
 
 		List<ComputerDTO> computerDTOList = ComputerDTOMapper.createDTO(computerService
@@ -58,7 +55,6 @@ public class ComputerController {
 	}
 
 	@GetMapping(value = "/get/{pageNumber}/{pageSize}/{search}")
-	@ResponseBody
 	public List<ComputerDTO> getComputers(@PathVariable int pageNumber, @PathVariable int pageSize,
 			@PathVariable String search) {
 
@@ -71,7 +67,6 @@ public class ComputerController {
 	}
 
 	@PostMapping(value = "/add")
-	@ResponseBody
 	public ComputerDTO addComputer(@RequestBody ComputerDTO computerDTO) {
 
 		Computer computer = ComputerDTOMapper.createComputer(computerDTO);
@@ -83,7 +78,6 @@ public class ComputerController {
 	}
 
 	@PutMapping(value = "/update")
-	@ResponseBody
 	public ComputerDTO updateComputer(@RequestBody ComputerDTO computerDTO) {
 
 		Computer computer = ComputerDTOMapper.createComputer(computerDTO);
