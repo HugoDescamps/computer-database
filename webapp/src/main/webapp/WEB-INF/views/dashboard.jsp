@@ -13,7 +13,9 @@
 <link href="resources/css/font-awesome.css" rel="stylesheet"
 	media="screen">
 <link href="resources/css/main.css" rel="stylesheet" media="screen">
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<link
+	href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
+	rel="stylesheet">
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
@@ -22,13 +24,14 @@
 				Database </a>
 			<div class="btn-group btn-group-sm pull-right" role="group"
 				style="padding: 15px 15px">
-				<a href="dashboard?locale=fr"><button type="button" title="Switch to French"
-						class="btn btn-default" style="padding : 1px 2px">FR</button></a> <a
-					href="dashboard?locale=en"><button type="button" title="Switch to English"
-						class="btn btn-default" style="padding : 1px 2px">EN</button></a> <a
-					href="login?logout"><button type="button" title="Disconnect"
-						class="btn btn-default" style="padding : 1px 2px">SIGN OUT</button></a>
-						
+				<a href="dashboard?locale=fr"><button type="button"
+						title="Switch to French" class="btn btn-default"
+						style="padding: 1px 2px">FR</button></a> <a href="dashboard?locale=en"><button
+						type="button" title="Switch to English" class="btn btn-default"
+						style="padding: 1px 2px">EN</button></a> <a href="login?logout"><button
+						type="button" title="Disconnect" class="btn btn-default"
+						style="padding: 1px 2px">SIGN OUT</button></a>
+
 			</div>
 		</div>
 
@@ -48,9 +51,8 @@
 							placeholder="<spring:message code="dashboard.searchPlaceholder"/>"
 							value="${search}" /> <input type="submit" id="searchsubmit"
 							value="<spring:message code="dashboard.searchButton"/>"
-							class="btn btn-primary" />
-							<input type="hidden" name="${_csrf.parameterName}"
-							value="${_csrf.token}" />
+							class="btn btn-primary" /> <input type="hidden"
+							name="${_csrf.parameterName}" value="${_csrf.token}" />
 					</form>
 				</div>
 				<div class="pull-right">
@@ -66,9 +68,8 @@
 		</div>
 
 		<form id="deleteForm" action="#" method="POST">
-			<input type="hidden" name="selection" value="">
-			<input type="hidden" name="${_csrf.parameterName}"
-							value="${_csrf.token}" />
+			<input type="hidden" name="selection" value=""> <input
+				type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		</form>
 
 		<div class="container" style="margin-top: 10px;">
@@ -86,7 +87,56 @@
 									<i class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>#</th>
+						<c:choose>
+							<c:when test="${empty order}">
+								<c:choose>
+									<c:when test="${empty search && empty size}">
+										<th><a href="dashboard"
+											title="<spring:message code="dashboard.idColumnTitle"/>">#<i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
+									</c:when>
+									<c:when test="${empty search && !empty size}">
+										<th><a href="dashboard?size=${size}"
+											title="<spring:message code="dashboard.idColumnTitle"/>">#<i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
+									</c:when>
+									<c:when test="${!empty search && empty size}">
+										<th><a href="dashboard?search=${search}"
+											title="<spring:message code="dashboard.idColumnTitle"/>">#<i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
+									</c:when>
+									<c:otherwise>
+										<th><a href="dashboard?size=${size}&search=${search}"
+											title="<spring:message code="dashboard.idColumnTitle"/>">#<i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
+									</c:otherwise>
+								</c:choose>
+							</c:when>
+							<c:otherwise>
+								<c:choose>
+									<c:when test="${empty search && empty size}">
+										<th><a href="dashboard"
+											title="<spring:message code="dashboard.idColumnTitle"/>">#<i
+												class="fa fa-fw fa-sort"></i></a></th>
+									</c:when>
+									<c:when test="${empty search && !empty size}">
+										<th><a href="dashboard?size=${size}"
+											title="<spring:message code="dashboard.idColumnTitle"/>">#<i
+												class="fa fa-fw fa-sort"></i></a></th>
+									</c:when>
+									<c:when test="${!empty search && empty size}">
+										<th><a href="dashboard?search=${search}"
+											title="<spring:message code="dashboard.idColumnTitle"/>">#<i
+												class="fa fa-fw fa-sort"></i></a></th>
+									</c:when>
+									<c:otherwise>
+										<th><a href="dashboard?size=${size}&search=${search}"
+											title="<spring:message code="dashboard.idColumnTitle"/>">#<i
+												class="fa fa-fw fa-sort"></i></a></th>
+									</c:otherwise>
+								</c:choose>
+							</c:otherwise>
+						</c:choose>
 						<c:choose>
 							<c:when test="${order != 'computerAsc'}">
 								<c:choose>
@@ -95,50 +145,58 @@
 											<c:when test="${empty search && empty size}">
 												<th><a href="dashboard?order=computerAsc"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort-desc"></i></a></th>
+															code="dashboard.computerColumn" /><i
+														class="fa fa-fw fa-sort-desc"></i></a></th>
 											</c:when>
 											<c:when test="${empty search && !empty size}">
 												<th><a href="dashboard?order=computerAsc&size=${size}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort-desc"></i></a></th>
+															code="dashboard.computerColumn" /><i
+														class="fa fa-fw fa-sort-desc"></i></a></th>
 											</c:when>
 											<c:when test="${!empty search && empty size}">
 												<th><a
 													href="dashboard?order=computerAsc&search=${search}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort-desc"></i></a></th>
+															code="dashboard.computerColumn" /><i
+														class="fa fa-fw fa-sort-desc"></i></a></th>
 											</c:when>
 											<c:otherwise>
 												<th><a
 													href="dashboard?order=computerAsc&size=${size}&search=${search}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort-desc"></i></a></th>
+															code="dashboard.computerColumn" /><i
+														class="fa fa-fw fa-sort-desc"></i></a></th>
 											</c:otherwise>
-										</c:choose>									
+										</c:choose>
 									</c:when>
 									<c:otherwise>
 										<c:choose>
 											<c:when test="${empty search && empty size}">
 												<th><a href="dashboard?order=computerAsc"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort"></i></a></th>
+															code="dashboard.computerColumn" /><i
+														class="fa fa-fw fa-sort"></i></a></th>
 											</c:when>
 											<c:when test="${empty search && !empty size}">
 												<th><a href="dashboard?order=computerAsc&size=${size}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort"></i></a></th>
+															code="dashboard.computerColumn" /><i
+														class="fa fa-fw fa-sort"></i></a></th>
 											</c:when>
 											<c:when test="${!empty search && empty size}">
 												<th><a
 													href="dashboard?order=computerAsc&search=${search}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort"></i></a></th>
+															code="dashboard.computerColumn" /><i
+														class="fa fa-fw fa-sort"></i></a></th>
 											</c:when>
 											<c:otherwise>
 												<th><a
 													href="dashboard?order=computerAsc&size=${size}&search=${search}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort"></i></a></th>
+															code="dashboard.computerColumn" /><i
+														class="fa fa-fw fa-sort"></i></a></th>
 											</c:otherwise>
 										</c:choose>
 									</c:otherwise>
@@ -149,32 +207,36 @@
 									<c:when test="${empty search && empty size}">
 										<th><a href="dashboard?order=computerDesc"
 											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-													code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort-asc"></i></a></th>
+													code="dashboard.computerColumn" /><i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
 									</c:when>
 									<c:when test="${empty search && !empty size}">
 										<th><a href="dashboard?order=computerDesc&size=${size}"
 											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-													code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort-asc"></i></a></th>
+													code="dashboard.computerColumn" /><i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
 									</c:when>
 									<c:when test="${!empty search && empty size}">
 										<th><a
 											href="dashboard?order=computerDesc&search=${search}"
 											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-													code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort-asc"></i></a></th>
+													code="dashboard.computerColumn" /><i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
 									</c:when>
 									<c:otherwise>
 										<th><a
 											href="dashboard?order=computerDesc&size=${size}&search=${search}"
 											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-													code="dashboard.computerColumn"/><i class="fa fa-fw fa-sort-asc"></i></a></th>
+													code="dashboard.computerColumn" /><i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
 									</c:otherwise>
 								</c:choose>
 
 							</c:otherwise>
 						</c:choose>
-						<th><spring:message code="dashboard.introducedColumn"/></th>
+						<th><spring:message code="dashboard.introducedColumn" /></th>
 						<!-- Table header for Discontinued Date -->
-						<th><spring:message code="dashboard.discontinuedColumn"/></th>
+						<th><spring:message code="dashboard.discontinuedColumn" /></th>
 						<!-- Table header for Company -->
 						<c:choose>
 							<c:when test="${order != 'companyAsc'}">
@@ -184,23 +246,28 @@
 											<c:when test="${empty search && empty size}">
 												<th><a href="dashboard?order=companyAsc"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort-desc"></i></a></th>
+															code="dashboard.companyColumn" /><i
+														class="fa fa-fw fa-sort-desc"></i></a></th>
 											</c:when>
 											<c:when test="${empty search && !empty size}">
 												<th><a href="dashboard?order=companyAsc&size=${size}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort-desc"></i></a></th>
+															code="dashboard.companyColumn" /><i
+														class="fa fa-fw fa-sort-desc"></i></a></th>
 											</c:when>
 											<c:when test="${!empty search && empty size}">
-												<th><a href="dashboard?order=companyAsc&search=${search}"
+												<th><a
+													href="dashboard?order=companyAsc&search=${search}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort-desc"></i></a></th>
+															code="dashboard.companyColumn" /><i
+														class="fa fa-fw fa-sort-desc"></i></a></th>
 											</c:when>
 											<c:otherwise>
 												<th><a
 													href="dashboard?order=companyAsc&size=${size}&search=${search}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort-desc"></i></a></th>
+															code="dashboard.companyColumn" /><i
+														class="fa fa-fw fa-sort-desc"></i></a></th>
 											</c:otherwise>
 										</c:choose>
 									</c:when>
@@ -209,23 +276,28 @@
 											<c:when test="${empty search && empty size}">
 												<th><a href="dashboard?order=companyAsc"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort"></i></a></th>
+															code="dashboard.companyColumn" /><i
+														class="fa fa-fw fa-sort"></i></a></th>
 											</c:when>
 											<c:when test="${empty search && !empty size}">
 												<th><a href="dashboard?order=companyAsc&size=${size}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort"></i></a></th>
+															code="dashboard.companyColumn" /><i
+														class="fa fa-fw fa-sort"></i></a></th>
 											</c:when>
 											<c:when test="${!empty search && empty size}">
-												<th><a href="dashboard?order=companyAsc&search=${search}"
+												<th><a
+													href="dashboard?order=companyAsc&search=${search}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort"></i></a></th>
+															code="dashboard.companyColumn" /><i
+														class="fa fa-fw fa-sort"></i></a></th>
 											</c:when>
 											<c:otherwise>
 												<th><a
 													href="dashboard?order=companyAsc&size=${size}&search=${search}"
 													title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-															code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort"></i></a></th>
+															code="dashboard.companyColumn" /><i
+														class="fa fa-fw fa-sort"></i></a></th>
 											</c:otherwise>
 										</c:choose>
 									</c:otherwise>
@@ -236,24 +308,28 @@
 									<c:when test="${empty search && empty size}">
 										<th><a href="dashboard?order=companyDesc"
 											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-													code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort-asc"></i></a></th>
+													code="dashboard.companyColumn" /><i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
 									</c:when>
 									<c:when test="${empty search && !empty size}">
 										<th><a href="dashboard?order=companyDesc&size=${size}"
 											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-													code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort-asc"></i></a></th>
+													code="dashboard.companyColumn" /><i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
 									</c:when>
 									<c:when test="${!empty search && empty size}">
 										<th><a
 											href="dashboard?order=companyDesc&search=${search}"
 											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-													code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort-asc"></i></a></th>
+													code="dashboard.companyColumn" /><i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
 									</c:when>
 									<c:otherwise>
 										<th><a
 											href="dashboard?order=companyDesc&size=${size}&search=${search}"
 											title="<spring:message code="dashboard.computerColumnTitle"/>"><spring:message
-													code="dashboard.companyColumn"/><i class="fa fa-fw fa-sort-asc"></i></a></th>
+													code="dashboard.companyColumn" /><i
+												class="fa fa-fw fa-sort-asc"></i></a></th>
 									</c:otherwise>
 								</c:choose>
 
@@ -265,7 +341,7 @@
 				<tbody id="results">
 					<c:forEach items="${computersDTO}" var="computerDTO">
 						<tr>
-							
+
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="${computerDTO.id}"></td>
 							<td>${computerDTO.id}</td>
