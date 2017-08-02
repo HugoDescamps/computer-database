@@ -94,9 +94,6 @@ $(document).keydown(function(e) {
 
 if(document.getElementById("role").value === "ROLE_USER") {
 	
-	document.getElementById("addComputerBtn").setAttribute('disabled','disabled');
-	document.getElementById("editComputerBtn").setAttribute('disabled','disabled');
-	
 	var editComputerLinks = document.getElementsByClassName("editComputerLink");
 	
 	for(var i = 0; i < editComputerLinks.length; i++)

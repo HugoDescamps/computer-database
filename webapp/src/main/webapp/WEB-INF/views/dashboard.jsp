@@ -40,7 +40,6 @@
 		</div>
 
 	</header>
-
 	<section id="main">
 		<div class="container">
 			<h1 id="homeTitle">${computersCount}
@@ -59,15 +58,17 @@
 							name="${_csrf.parameterName}" value="${_csrf.token}" />
 					</form>
 				</div>
-				<div class="pull-right">
-					<a class="btn btn-success" id="addComputerBtn" href="addComputer"><spring:message
-							code="dashboard.addButton" /></a> <a class="btn btn-default"
-						id="editComputerBtn" href="#"
-						onclick="$.fn.toggleEditMode('<spring:message
-							code="dashboard.editButton"/>', '<spring:message
-							code="dashboard.viewButton"/>');"><spring:message
-							code="dashboard.editButton" /></a>
-				</div>
+				<c:if test="${role == 'ROLE_ADMIN'}">
+					<div class="pull-right">
+						<a class="btn btn-success" id="addComputerBtn" href="addComputer"><spring:message
+								code="dashboard.addButton" /></a> <a class="btn btn-default"
+							id="editComputerBtn" href="#"
+							onclick="$.fn.toggleEditMode('<spring:message
+								code="dashboard.editButton"/>', '<spring:message
+								code="dashboard.viewButton"/>');"><spring:message
+								code="dashboard.editButton" /></a>
+					</div>
+				</c:if>
 			</div>
 		</div>
 
