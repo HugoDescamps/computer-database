@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ public class DashboardController {
 	private static DateTimeFormatter formatter;
 
 	@GetMapping
-	protected ModelAndView doGet(@RequestParam Map<String, String> parameters, Locale locale) {
+	protected ModelAndView doGet(@RequestParam Map<String, String> parameters, Locale locale, Authentication authentication) {
 
 		ModelAndView modelAndView = new ModelAndView("/WEB-INF/views/dashboard");
 
@@ -59,6 +60,7 @@ public class DashboardController {
 			order = parameters.get("order").trim();
 		}
 
+		modelAndView.addObject("role", authentication.getAuthorities().iterator().next());
 		modelAndView.addObject("page", page);
 		modelAndView.addObject("size", size);
 		modelAndView.addObject("search", search);

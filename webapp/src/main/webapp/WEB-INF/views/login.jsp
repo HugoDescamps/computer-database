@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@page session="true"%>
 <html>
 <head>
@@ -23,23 +24,23 @@
 	<section id="main">
 		<div class="container">
 			<div class="col-xs-8 col-xs-offset-2 box">
-			<h1>Welcome to Computer Database</h1>
+			<h1><spring:message code="login.welcome"/></h1>
 				<form name='loginForm' action="<c:url value='/login' />"
 					method='POST'>
 					<fieldset>
 						<div class="form-group">
-							<label for="username">User</label> <input type="text"
+							<label for="username"><spring:message code="login.user"/></label> <input type="text"
 								class="form-control" id="username" name="username"
-								placeholder="User" required>
+								placeholder="<spring:message code="login.user"/>" required>
 						</div>
 						<div class="form-group">
-							<label for="password">Password</label> <input type="password"
+							<label for="password"><spring:message code="login.password"/></label> <input type="password"
 								class="form-control" id="password" name="password"
-								placeholder="Password" required>
+								placeholder="<spring:message code="login.password"/>" required>
 						</div>
 						<div class="actions pull-right">
 							<input name="submit" type="submit" class="btn btn-primary"
-								value="Sign in" />
+								value="<spring:message code="login.signIn"/>" />
 						</div>
 						<input type="hidden" name="${_csrf.parameterName}"
 							value="${_csrf.token}" />
@@ -47,10 +48,10 @@
 				</form>
 				<div class="form-group" style = "margin-top : 15px">
 						<c:if test="${!empty error}">
-							<div class="error">${error}</div>
+							<div class="error"><spring:message code="${error}"/></div>
 						</c:if>
 						<c:if test="${!empty msg}">
-							<div class="msg">${msg}</div>
+							<div class="msg"><spring:message code="${msg}"/></div>
 						</c:if>
 				</div>
 			</div>

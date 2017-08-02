@@ -25,12 +25,16 @@
 			<div class="btn-group btn-group-sm pull-right" role="group"
 				style="padding: 15px 15px">
 				<a href="dashboard?locale=fr"><button type="button"
-						title="Switch to French" class="btn btn-default"
-						style="padding: 1px 2px">FR</button></a> <a href="dashboard?locale=en"><button
-						type="button" title="Switch to English" class="btn btn-default"
-						style="padding: 1px 2px">EN</button></a> <a href="login?logout"><button
-						type="button" title="Disconnect" class="btn btn-default"
-						style="padding: 1px 2px">SIGN OUT</button></a>
+						title="<spring:message code="dashboard.switchToFrenchButtonTitle"/>"
+						class="btn btn-default" style="padding: 1px 2px">FR</button></a> <a
+					href="dashboard?locale=en"><button type="button"
+						title="<spring:message code="dashboard.switchToEnglishButtonTitle"/>"
+						class="btn btn-default" style="padding: 1px 2px">EN</button></a> <a
+					href="login?logout"><button type="button"
+						title="<spring:message code="dashboard.signOutButtonTitle"/>"
+						class="btn btn-default" style="padding: 1px 2px">
+						<spring:message code="dashboard.signOutButton"/>
+					</button></a>
 
 			</div>
 		</div>
@@ -56,9 +60,9 @@
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addComputer"><spring:message
+					<a class="btn btn-success" id="addComputerBtn" href="addComputer"><spring:message
 							code="dashboard.addButton" /></a> <a class="btn btn-default"
-						id="editComputer" href="#"
+						id="editComputerBtn" href="#"
 						onclick="$.fn.toggleEditMode('<spring:message
 							code="dashboard.editButton"/>', '<spring:message
 							code="dashboard.viewButton"/>');"><spring:message
@@ -345,7 +349,8 @@
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="${computerDTO.id}"></td>
 							<td>${computerDTO.id}</td>
-							<td><a href="editComputer?id=${computerDTO.id}" onclick="">${computerDTO.name}</a></td>
+							<td><a class="editComputerLink"
+								href="editComputer?id=${computerDTO.id}" title="<spring:message code="dashboard.editComputerTitle"/>" onclick="">${computerDTO.name}</a></td>
 							<td>${computerDTO.introduced}</td>
 							<td>${computerDTO.discontinued}</td>
 							<td>${computerDTO.company.name}</td>
@@ -512,7 +517,7 @@
 			</c:choose>
 
 		</div>
-
+		<input type="hidden" name="role" value="${role}" id="role" />
 	</footer>
 	<script src="resources/js/jquery.min.js"></script>
 	<script src="resources/js/bootstrap.min.js"></script>

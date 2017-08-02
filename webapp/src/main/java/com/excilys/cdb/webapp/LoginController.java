@@ -17,11 +17,11 @@ public class LoginController {
 		ModelAndView modelAndView = new ModelAndView();
 
 		if (error != null) {
-			modelAndView.addObject("error", "Wrong credentials");
+			modelAndView.addObject("error", "login.credentialsError");
 		}
 
 		if (logout != null) {
-			modelAndView.addObject("msg", "You've been logged out successfully.");
+			modelAndView.addObject("msg", "login.logout");
 		}
 
 		modelAndView.setViewName("/WEB-INF/views/login");
