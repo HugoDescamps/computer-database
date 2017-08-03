@@ -392,7 +392,6 @@ public class Commands {
 		}
 
 		ComputerClient.addComputer(ComputerDTOMapper.createDTO(computer, formatter));
-		//System.out.println(computerService.addComputer(computer).toString());
 
 		this.waitForInput();
 

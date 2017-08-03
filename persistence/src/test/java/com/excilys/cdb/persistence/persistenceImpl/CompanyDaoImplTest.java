@@ -25,26 +25,23 @@ public class CompanyDaoImplTest {
 	CompanyDao companyDao;
 
 	@Test
-	public void testListCompaniesNormalBehaviour() {
-
+	public void testListCompaniesNormalBehaviourNumber() {
 		assertEquals(3, companyDao.listCompanies(3, 5).getNumber());
-		assertEquals(5, companyDao.listCompanies(3, 5).getSize());
+	}
 
+	@Test
+	public void testListCompaniesNormalBehaviourSize() {
+		assertEquals(5, companyDao.listCompanies(3, 5).getSize());
 	}
 
 	@Test
 	public void testGetCompaniesNormalBehaviour() {
-
 		assertNotNull(companyDao.getCompany(1));
 	}
 
 	@Test(expected = DaoException.class)
 	public void testAddCompanyIncorrectInput() {
-
-		Company company = new Company();
-
-		companyDao.addCompany(company);
-
+		companyDao.addCompany(new Company());
 	}
 
 	@Test

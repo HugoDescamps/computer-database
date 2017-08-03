@@ -12,6 +12,13 @@ import com.excilys.cdb.core.Computer;
 import com.excilys.cdb.core.dto.ComputerDTO;
 
 public class ComputerDTOMapper {
+	
+	/**
+	 * Returns a ComputerDTO object corresponding to the given Computer & DateTimeFormatter arguments
+	 * @param computer Computer object
+	 * @param formatter DateTimeFormatter used to create the computer's introducedDate & discontinuedDate fields
+	 * @return corresponding ComputerDTO object
+	 */
 
 	public static ComputerDTO createDTO(Computer computer, DateTimeFormatter formatter) {
 
@@ -35,6 +42,13 @@ public class ComputerDTOMapper {
 
 		return computerDTO;
 	}
+	
+	/**
+	 * Returns a list of ComputerDTO object corresponding to the given list of Computer & DateTimeFormatter arguments
+	 * @param computers list of Computer object
+	 * @param formatter DateTimeFormatter used to create the computers' introducedDate & discontinuedDate fields
+	 * @return corresponding list of ComputerDTO objects
+	 */
 
 	public static List<ComputerDTO> createDTO(List<Computer> computers, DateTimeFormatter formatter) {
 		List<ComputerDTO> computerDTOList = new ArrayList<ComputerDTO>();
@@ -45,6 +59,12 @@ public class ComputerDTOMapper {
 		return computerDTOList;
 
 	}
+	
+	/**
+	 * Returns a Computer corresponding to the given computerDTO argument
+	 * @param computerDTO ComputerDTO object
+	 * @return corresponding Computer object
+	 */
 
 	public static Computer createComputer(ComputerDTO computerDTO) {
 

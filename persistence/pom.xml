@@ -10,12 +10,7 @@
 	</parent>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.excilys</groupId>
-			<artifactId>binding</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		
+			
 		<dependency>
 			<groupId>com.excilys</groupId>
 			<artifactId>core</artifactId>
