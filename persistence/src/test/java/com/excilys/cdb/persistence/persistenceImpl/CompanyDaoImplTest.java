@@ -44,6 +44,10 @@ public class CompanyDaoImplTest {
 		companyDao.addCompany(new Company());
 	}
 
+	/**
+	 * Adds a company, then removes it to keep the database clean
+	 */
+	
 	@Test
 	public void testAddCompanyNormalBehaviour() {
 
@@ -59,7 +63,11 @@ public class CompanyDaoImplTest {
 		session.getTransaction().commit();
 
 	}
-
+	
+	/**
+	 * Adds a company, updates its properties, then removes it to keep the database clean
+	 */
+	
 	@Test
 	public void testUpdateComputer() {
 
@@ -79,7 +87,11 @@ public class CompanyDaoImplTest {
 		session.getTransaction().commit();
 
 	}
-
+	
+	/**
+	 * Adds a company, then removes it
+	 */
+	
 	@Test
 	public void testRemoveCompanyNormalBehaviour() {
 

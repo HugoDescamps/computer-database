@@ -33,6 +33,12 @@ public class ComputerController {
 	@Autowired
 	private ComputerService computerService;
 
+	/**
+	 * WebService used to retrieve a single computer's informations
+	 * @param id Computer's id we want to retrieve
+	 * @return corresponding ComputerDTO object
+	 */
+	
 	@GetMapping(value = "/get/{id}")
 	public ComputerDTO getComputer(@PathVariable long id) {
 
@@ -42,6 +48,13 @@ public class ComputerController {
 		return computerDTO;
 
 	}
+	
+	/**
+	 * WebService used to retrieve a single computer's informations according to the given page & its size in arguments
+	 * @param pageNumber Number of the page (1 is minimum)
+	 * @param pageSize Number of computers to be displayed in the page
+	 * @return corresponding list of ComputerDTO objects
+	 */
 
 	@GetMapping(value = "/get/{pageNumber}/{pageSize}")
 	public List<ComputerDTO> getComputers(@PathVariable int pageNumber, @PathVariable int pageSize) {
@@ -53,6 +66,14 @@ public class ComputerController {
 		logger.info("Computers successfully retrieved");
 		return computerDTOList;
 	}
+	
+	/**
+	 * WebService used to retrieve a single computer's informations according to the given page & its size in arguments
+	 * @param pageNumber Number of the page (1 is minimum)
+	 * @param pageSize Number of computers to be displayed in the page
+	 * @param search Piece of string searched for on the computer's name and in their company's name
+	 * @return corresponding list of ComputerDTO objects
+	 */
 
 	@GetMapping(value = "/get/{pageNumber}/{pageSize}/{search}")
 	public List<ComputerDTO> getComputers(@PathVariable int pageNumber, @PathVariable int pageSize,
@@ -65,6 +86,12 @@ public class ComputerController {
 		logger.info("Computers successfully retrieved");
 		return computerDTOList;
 	}
+	
+	/**
+	 * WebService used to add a computer
+	 * @param computerDTO ComputerDTO object to be added
+	 * @return added ComputerDTO object
+	 */
 
 	@PostMapping(value = "/add")
 	public ComputerDTO addComputer(@RequestBody ComputerDTO computerDTO) {
@@ -76,6 +103,12 @@ public class ComputerController {
 		logger.info("Computer successfully added");
 		return ComputerDTOMapper.createDTO(computer, formatter);
 	}
+	
+	/**
+	 * WebService used to update a computer
+	 * @param computerDTO ComputerDTO object to be updated
+	 * @return added ComputerDTO object
+	 */
 
 	@PutMapping(value = "/update")
 	public ComputerDTO updateComputer(@RequestBody ComputerDTO computerDTO) {
@@ -87,6 +120,12 @@ public class ComputerController {
 		logger.info("Computer successfully updated");
 		return ComputerDTOMapper.createDTO(computer, formatter);
 	}
+	
+	/**
+	 * WebService used to delete a computer
+	 * @param id Computer's id we want to delete 
+	 * @return confirmation message
+	 */
 
 	@DeleteMapping(value = "/delete/{id}")
 	public String delete(@PathVariable long id) {

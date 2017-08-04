@@ -27,6 +27,12 @@ public class CompanyController {
 
 	@Autowired
 	private CompanyService companyService;
+	
+	/**
+	 * WebService used to retrieve a single company's informations
+	 * @param id Company's id we want to retrieve
+	 * @return corresponding CompanyDTO object
+	 */
 
 	@GetMapping(value = "/get/{id}")
 	public CompanyDTO getCompany(@PathVariable long id) {
@@ -38,6 +44,13 @@ public class CompanyController {
 
 	}
 
+	/**
+	 * WebService used to retrieve a single company's informations according to the given page & its size in arguments
+	 * @param pageNumber Number of the page (1 is minimum)
+	 * @param pageSize Number of companies to be displayed in the page
+	 * @return corresponding list of CompanyDTO objects
+	 */
+	
 	@GetMapping(value = "/get/{pageNumber}/{pageSize}")
 	public List<CompanyDTO> getCompanies(@PathVariable int pageNumber, @PathVariable int pageSize) {
 
@@ -47,6 +60,11 @@ public class CompanyController {
 		logger.info("Companies successfully retrieved");
 		return companyDTOList;
 	}
+	
+	/**
+	 * WebService used to retrieve all the companies' informations
+	 * @return corresponding list of CompanyDTO objects
+	 */
 
 	@GetMapping(value = "/get")
 	public List<CompanyDTO> getCompanies() {
@@ -55,8 +73,13 @@ public class CompanyController {
 
 		logger.info("Companies successfully retrieved");
 		return companyDTOList;
-
 	}
+	
+	/**
+	 * WebService used to add a company
+	 * @param companyDTO CompanyDTO object to be added
+	 * @return added CompanyDTO object
+	 */
 
 	@PostMapping(value = "/add")
 	public CompanyDTO addCompany(@RequestBody CompanyDTO companyDTO) {
@@ -68,6 +91,12 @@ public class CompanyController {
 		logger.info("Company successfully added");
 		return CompanyDTOMapper.createDTO(company);
 	}
+	
+	/**
+	 * WebService used to update a company
+	 * @param companyDTO CompanyDTO object to be updated
+	 * @return added CompanyDTO object
+	 */
 
 	@PutMapping(value = "/update")
 	public CompanyDTO updateCompany(@RequestBody CompanyDTO companyDTO) {
@@ -80,6 +109,12 @@ public class CompanyController {
 		return CompanyDTOMapper.createDTO(company);
 	}
 
+	/**
+	 * WebService used to delete a company
+	 * @param id Company's id we want to delete 
+	 * @return confirmation message
+	 */
+	
 	@DeleteMapping(value = "/delete/{id}")
 	public String delete(@PathVariable long id) {
 

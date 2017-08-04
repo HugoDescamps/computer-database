@@ -49,6 +49,10 @@ public class CompanyServiceImpl implements CompanyService {
 		return companyDao.addCompany(company);
 	}
 
+	/**
+	 * Ensures the removeComputers and removeCompany methods are transactional
+	 */
+	
 	@Override
 	@Transactional
 	public void removeCompany(long id) {

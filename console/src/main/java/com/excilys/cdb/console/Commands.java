@@ -46,6 +46,9 @@ public class Commands {
 		scanner = new Scanner(System.in);
 	}
 
+	/**
+	 * Set of available commands
+	 */
 	public void displayCommands() {
 
 		System.out.println("Available commands :\n");
@@ -62,6 +65,10 @@ public class Commands {
 
 		boolean validInput = false;
 		int userInput = 0;
+		
+		/**
+		 * Waiting for the user to input a command (between 1 & 7 + h for help & q for quit)
+		 */
 
 		do {
 			System.out.println("\nTo display all the available commands, enter h");
@@ -126,6 +133,11 @@ public class Commands {
 		}
 
 	}
+	
+	/**
+	 * Displaying companies according to the user's input userInputCompanyNumber (number of companies displayed)
+	 * n & p are used to display the next/previous page, q to quit the command
+	 */
 
 	public void command1() {
 
@@ -182,6 +194,11 @@ public class Commands {
 		} while (!endOfCommand);
 
 	}
+	
+	/**
+	 * Displaying computers according to the user's input userInputComputerNumber (number of computers displayed)
+	 * n & p are used to display the next/previous page, q to quit the command
+	 */
 
 	public void command2() {
 
@@ -236,6 +253,10 @@ public class Commands {
 			}
 		} while (!endOfCommand);
 	}
+	
+	/**
+	 * Displaying a single computer according to the user's input userInputComputerId (computer's id to be displayed)
+	 */
 
 	public void command3() {
 
@@ -266,6 +287,12 @@ public class Commands {
 		this.waitForInput();
 
 	}
+	
+	/**
+	 * Creating a computer from the user's input userInputComputerName (computer's name), userInputComputerIntroducedDate (computer's introduced date)
+	 * userInputComputerDiscontinuedDate (computer's discontinued date) & userInputCompanyId (computer's company)
+	 * '' is dates null value & 0 is company's id null value
+	 */
 
 	public void command4() {
 
@@ -396,6 +423,13 @@ public class Commands {
 		this.waitForInput();
 
 	}
+	
+	/**
+	 * Updating a computer from the user's input userInputComputerId (computer's database id), userInputComputerName (computer's name)
+	 * userInputComputerIntroducedDate (computer's introduced date), userInputComputerDiscontinuedDate (computer's discontinued date)
+	 * & userInputCompanyId (computer's company)
+	 * '' is dates null value & 0 is company's id null value
+	 */
 
 	public void command5() {
 
@@ -562,6 +596,10 @@ public class Commands {
 		this.waitForInput();
 
 	}
+	
+	/**
+	 * Remove a computer from the user's input userInputComputerId (computer's database id)
+	 */
 
 	public void command6() {
 
@@ -601,6 +639,10 @@ public class Commands {
 
 	}
 
+	/**
+	 * Remove a company and its attached computers from the user's input userInputCompanyId (company's database id)
+	 */
+	
 	public void command7() {
 
 		Company company;

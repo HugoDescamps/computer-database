@@ -31,6 +31,15 @@ public class DashboardController {
 
 	private static DateTimeFormatter formatter;
 
+	/**
+	 * Retrieves all the optional parameters (page, size, search & order), role allows to display or not administrator features
+	 * A DateTimeFormatter is chosen according to the locale
+	 * @param parameters optional page, size, search & order parameters
+	 * @param locale define how dates are to be displayed
+	 * @param authentication defines if administrator features are to be displayed
+	 * @return dashboard ModelAndView
+	 */
+	
 	@GetMapping
 	protected ModelAndView doGet(@RequestParam Map<String, String> parameters, Locale locale, Authentication authentication) {
 

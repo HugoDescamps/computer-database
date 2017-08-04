@@ -1,5 +1,11 @@
 package com.excilys.cdb.core;
 
+/**
+ * Enum used in computers queries (column used for ordering)
+ * @author Hugo Descamps
+ *
+ */
+
 public enum OrderColumnEnum {
 
 	COMPUTER, COMPANY, NULL;

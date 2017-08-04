@@ -11,6 +11,13 @@ import com.excilys.cdb.core.Company;
 import com.excilys.cdb.core.Computer;
 import com.excilys.cdb.core.User;
 
+/**
+ * Configuration class for Hibernate
+ * It uses the 3 annotated class Company, Computer & User to access their beans
+ * @author Hugo Descamps
+ *
+ */
+
 public class HibernateConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(HibernateConfig.class);

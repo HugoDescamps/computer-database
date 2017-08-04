@@ -19,7 +19,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CompanyClient {
 
 	private static final Logger logger = LoggerFactory.getLogger(CompanyClient.class);
-
+	
+	/**
+	 * CLI WebService used to retrieve all the companies' informations
+	 */
+	
 	public static void getCompanies() {
 
 		ResteasyClient client = new ResteasyClientBuilder().build();
@@ -42,6 +46,12 @@ public class CompanyClient {
 
 		response.close();
 	}
+	
+	/**
+	 * CLI WebService used to retrieve companies' informations according to the given page and its size in argument
+	 * @param pageNumber Number of the page (1 is minimum)
+	 * @param pageSize Number of companies to be displayed in the page
+	 */
 
 	public static void getCompanies(int pageNumber, int pageSize) {
 
@@ -66,6 +76,11 @@ public class CompanyClient {
 
 		response.close();
 	}
+	
+	/**
+	 * CLI WebService used to retrieve a single company's informations
+	 * @param id Computer's id we want to retrieve
+	 */
 
 	public static void getCompany(long id) {
 

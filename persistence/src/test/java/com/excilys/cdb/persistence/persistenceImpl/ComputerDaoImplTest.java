@@ -57,6 +57,10 @@ public class ComputerDaoImplTest {
 		computerDao.addComputer(computer);
 
 	}
+	
+	/**
+	 * Adds a computer, then removes it to keep the database clean
+	 */
 
 	@Test
 	public void testAddComputerNormalBehaviour() {
@@ -68,6 +72,10 @@ public class ComputerDaoImplTest {
 		computerDao.removeComputer(computer.getId());
 
 	}
+	
+	/**
+	 * Adds a computer, then updates its properties and removes it to keep the database clean
+	 */
 
 	@Test
 	public void testUpdateComputer() {
@@ -84,6 +92,10 @@ public class ComputerDaoImplTest {
 
 		computerDao.removeComputer(computer.getId());
 	}
+	
+	/**
+	 * Adds a computer, then removes it to keep the database clean
+	 */
 
 	@Test
 	public void testRemoveComputer() {
@@ -91,6 +103,10 @@ public class ComputerDaoImplTest {
 		computerDao.removeComputer(computerDao.addComputer(new Computer(1, "test", null, null, null)).getId());
 
 	}
+	
+	/**
+	 * Adds a company a computers to this company, then removes the computers and the company
+	 */
 
 	@Test
 	public void testRemoveComputersNormalBehaviour() {
