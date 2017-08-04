@@ -53,3 +53,13 @@ input[type='checkbox'] {
 	background-color: #d9edf7;
 	border-color: #bce8f1;
 }
+
+.disabledLink {
+	pointer-events:none;
+	color:inherit;
+	
+}
+
+.disabledLink:hover {
+	text-decoration:none;
+}

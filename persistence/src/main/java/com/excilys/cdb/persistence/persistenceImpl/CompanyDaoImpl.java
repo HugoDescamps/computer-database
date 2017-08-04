@@ -16,6 +16,11 @@ import com.excilys.cdb.persistence.CompanyDao;
 import com.excilys.cdb.persistence.DaoException;
 import com.excilys.cdb.persistence.config.HibernateConfig;
 
+/**
+ * HQL is used in Hibernate's queries
+ * @author excilys
+ *
+ */
 @Repository("companyDao")
 public class CompanyDaoImpl implements CompanyDao {
 

@@ -13,6 +13,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Spring Security configuration class
+ * Retrieves users & their rights, sets allowed rights for each controller, failed login page, error 403 page, etc.
+ * @author Hugo Descamps
+ */
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -38,6 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.POST, "/dashboard").hasAnyRole("ADMIN")
 			.antMatchers("/editComputer").hasAnyRole("ADMIN")
 			.antMatchers("/addComputer").hasAnyRole("ADMIN")
+			.antMatchers("/computer/get**", "/company/get**").hasAnyRole("ADMIN", "USER")
+			.antMatchers("/computer/add**", "/computer/update**", "/computer/delete**", "/company/add**", "/company/update**", "/company/delete**").hasAnyRole("ADMIN")
 			.and()
 			.formLogin()
 			.loginPage("/login").failureUrl("/login?error")

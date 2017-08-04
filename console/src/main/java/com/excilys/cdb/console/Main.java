@@ -6,6 +6,12 @@ import com.excilys.cdb.console.config.CLIConfig;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 
+/**
+ * Creating Application Context from the CLIConfig class, setting Service beans & displaying commands
+ * @author Hugo Descamps
+ *
+ */
+
 public class Main {
 
 	public static void main(String[] args) {

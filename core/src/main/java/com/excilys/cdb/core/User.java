@@ -7,6 +7,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Class used to check the user and its rights
+ * enabled property allows you to disable an account
+ * Role enum property corresponds to the user's rights : ROLE_ADMIN for an administrator, ROLE_USER for a simple user
+ * @author Hugo Descamps
+ */
+
 @Entity
 @Table(name = "user")
 public class User {

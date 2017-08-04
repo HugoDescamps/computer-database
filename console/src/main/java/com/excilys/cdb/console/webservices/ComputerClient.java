@@ -20,6 +20,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ComputerClient {
 
 	private static final Logger logger = LoggerFactory.getLogger(ComputerClient.class);
+	
+	/**
+	 * CLI WebService used to retrieve computers' informations according to the given page, its size and the search in argument
+	 * @param pageNumber Number of the page (1 is minimum)
+	 * @param pageSize Number of computers to be displayed in the page
+	 * @param search Piece of string to be found in the computer's name or its company's name
+	 */
 
 	public static void getComputers(int pageNumber, int pageSize, String search) {
 
@@ -44,6 +51,11 @@ public class ComputerClient {
 
 		response.close();
 	}
+	
+	/**
+	 * CLI WebService used to retrieve a single computer' informations
+	 * @param id Computer's id we want to retrieve
+	 */
 
 	public static void getComputer(long id) {
 
@@ -64,6 +76,11 @@ public class ComputerClient {
 
 		response.close();
 	}
+	
+	/**
+	 * CLI WebService used to add a computer
+	 * @param computerDTO ComputerDTO object to be added
+	 */
 	
 	public static void addComputer(ComputerDTO computerDTO) {
 

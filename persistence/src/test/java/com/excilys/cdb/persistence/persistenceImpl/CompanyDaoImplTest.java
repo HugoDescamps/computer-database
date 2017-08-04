@@ -25,28 +25,29 @@ public class CompanyDaoImplTest {
 	CompanyDao companyDao;
 
 	@Test
-	public void testListCompaniesNormalBehaviour() {
-
+	public void testListCompaniesNormalBehaviourNumber() {
 		assertEquals(3, companyDao.listCompanies(3, 5).getNumber());
-		assertEquals(5, companyDao.listCompanies(3, 5).getSize());
+	}
 
+	@Test
+	public void testListCompaniesNormalBehaviourSize() {
+		assertEquals(5, companyDao.listCompanies(3, 5).getSize());
 	}
 
 	@Test
 	public void testGetCompaniesNormalBehaviour() {
-
 		assertNotNull(companyDao.getCompany(1));
 	}
 
 	@Test(expected = DaoException.class)
 	public void testAddCompanyIncorrectInput() {
-
-		Company company = new Company();
-
-		companyDao.addCompany(company);
-
+		companyDao.addCompany(new Company());
 	}
 
+	/**
+	 * Adds a company, then removes it to keep the database clean
+	 */
+	
 	@Test
 	public void testAddCompanyNormalBehaviour() {
 
@@ -62,7 +63,11 @@ public class CompanyDaoImplTest {
 		session.getTransaction().commit();
 
 	}
-
+	
+	/**
+	 * Adds a company, updates its properties, then removes it to keep the database clean
+	 */
+	
 	@Test
 	public void testUpdateComputer() {
 
@@ -82,7 +87,11 @@ public class CompanyDaoImplTest {
 		session.getTransaction().commit();
 
 	}
-
+	
+	/**
+	 * Adds a company, then removes it
+	 */
+	
 	@Test
 	public void testRemoveCompanyNormalBehaviour() {
 

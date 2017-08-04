@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.excilys.cdb.binding.CompanyDTOMapper;
@@ -28,9 +27,14 @@ public class CompanyController {
 
 	@Autowired
 	private CompanyService companyService;
+	
+	/**
+	 * WebService used to retrieve a single company's informations
+	 * @param id Company's id we want to retrieve
+	 * @return corresponding CompanyDTO object
+	 */
 
 	@GetMapping(value = "/get/{id}")
-	@ResponseBody
 	public CompanyDTO getCompany(@PathVariable long id) {
 
 		CompanyDTO companyDTO = CompanyDTOMapper.createDTO(companyService.getCompany(id));
@@ -40,8 +44,14 @@ public class CompanyController {
 
 	}
 
+	/**
+	 * WebService used to retrieve a single company's informations according to the given page & its size in arguments
+	 * @param pageNumber Number of the page (1 is minimum)
+	 * @param pageSize Number of companies to be displayed in the page
+	 * @return corresponding list of CompanyDTO objects
+	 */
+	
 	@GetMapping(value = "/get/{pageNumber}/{pageSize}")
-	@ResponseBody
 	public List<CompanyDTO> getCompanies(@PathVariable int pageNumber, @PathVariable int pageSize) {
 
 		List<CompanyDTO> companyDTOList = CompanyDTOMapper
@@ -50,20 +60,28 @@ public class CompanyController {
 		logger.info("Companies successfully retrieved");
 		return companyDTOList;
 	}
+	
+	/**
+	 * WebService used to retrieve all the companies' informations
+	 * @return corresponding list of CompanyDTO objects
+	 */
 
 	@GetMapping(value = "/get")
-	@ResponseBody
 	public List<CompanyDTO> getCompanies() {
 
 		List<CompanyDTO> companyDTOList = CompanyDTOMapper.createDTO(companyService.getCompanies());
 
 		logger.info("Companies successfully retrieved");
 		return companyDTOList;
-
 	}
+	
+	/**
+	 * WebService used to add a company
+	 * @param companyDTO CompanyDTO object to be added
+	 * @return added CompanyDTO object
+	 */
 
 	@PostMapping(value = "/add")
-	@ResponseBody
 	public CompanyDTO addCompany(@RequestBody CompanyDTO companyDTO) {
 
 		Company company = CompanyDTOMapper.createCompany(companyDTO);
@@ -73,9 +91,14 @@ public class CompanyController {
 		logger.info("Company successfully added");
 		return CompanyDTOMapper.createDTO(company);
 	}
+	
+	/**
+	 * WebService used to update a company
+	 * @param companyDTO CompanyDTO object to be updated
+	 * @return added CompanyDTO object
+	 */
 
 	@PutMapping(value = "/update")
-	@ResponseBody
 	public CompanyDTO updateCompany(@RequestBody CompanyDTO companyDTO) {
 
 		Company company = CompanyDTOMapper.createCompany(companyDTO);
@@ -86,6 +109,12 @@ public class CompanyController {
 		return CompanyDTOMapper.createDTO(company);
 	}
 
+	/**
+	 * WebService used to delete a company
+	 * @param id Company's id we want to delete 
+	 * @return confirmation message
+	 */
+	
 	@DeleteMapping(value = "/delete/{id}")
 	public String delete(@PathVariable long id) {
 

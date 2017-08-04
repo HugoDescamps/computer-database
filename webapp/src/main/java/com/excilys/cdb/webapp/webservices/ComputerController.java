@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.excilys.cdb.binding.ComputerDTOMapper;
@@ -34,8 +33,13 @@ public class ComputerController {
 	@Autowired
 	private ComputerService computerService;
 
+	/**
+	 * WebService used to retrieve a single computer's informations
+	 * @param id Computer's id we want to retrieve
+	 * @return corresponding ComputerDTO object
+	 */
+	
 	@GetMapping(value = "/get/{id}")
-	@ResponseBody
 	public ComputerDTO getComputer(@PathVariable long id) {
 
 		ComputerDTO computerDTO = ComputerDTOMapper.createDTO(computerService.getComputer(id), formatter);
@@ -44,9 +48,15 @@ public class ComputerController {
 		return computerDTO;
 
 	}
+	
+	/**
+	 * WebService used to retrieve a single computer's informations according to the given page & its size in arguments
+	 * @param pageNumber Number of the page (1 is minimum)
+	 * @param pageSize Number of computers to be displayed in the page
+	 * @return corresponding list of ComputerDTO objects
+	 */
 
 	@GetMapping(value = "/get/{pageNumber}/{pageSize}")
-	@ResponseBody
 	public List<ComputerDTO> getComputers(@PathVariable int pageNumber, @PathVariable int pageSize) {
 
 		List<ComputerDTO> computerDTOList = ComputerDTOMapper.createDTO(computerService
@@ -56,9 +66,16 @@ public class ComputerController {
 		logger.info("Computers successfully retrieved");
 		return computerDTOList;
 	}
+	
+	/**
+	 * WebService used to retrieve a single computer's informations according to the given page & its size in arguments
+	 * @param pageNumber Number of the page (1 is minimum)
+	 * @param pageSize Number of computers to be displayed in the page
+	 * @param search Piece of string searched for on the computer's name and in their company's name
+	 * @return corresponding list of ComputerDTO objects
+	 */
 
 	@GetMapping(value = "/get/{pageNumber}/{pageSize}/{search}")
-	@ResponseBody
 	public List<ComputerDTO> getComputers(@PathVariable int pageNumber, @PathVariable int pageSize,
 			@PathVariable String search) {
 
@@ -69,9 +86,14 @@ public class ComputerController {
 		logger.info("Computers successfully retrieved");
 		return computerDTOList;
 	}
+	
+	/**
+	 * WebService used to add a computer
+	 * @param computerDTO ComputerDTO object to be added
+	 * @return added ComputerDTO object
+	 */
 
 	@PostMapping(value = "/add")
-	@ResponseBody
 	public ComputerDTO addComputer(@RequestBody ComputerDTO computerDTO) {
 
 		Computer computer = ComputerDTOMapper.createComputer(computerDTO);
@@ -81,9 +103,14 @@ public class ComputerController {
 		logger.info("Computer successfully added");
 		return ComputerDTOMapper.createDTO(computer, formatter);
 	}
+	
+	/**
+	 * WebService used to update a computer
+	 * @param computerDTO ComputerDTO object to be updated
+	 * @return added ComputerDTO object
+	 */
 
 	@PutMapping(value = "/update")
-	@ResponseBody
 	public ComputerDTO updateComputer(@RequestBody ComputerDTO computerDTO) {
 
 		Computer computer = ComputerDTOMapper.createComputer(computerDTO);
@@ -93,6 +120,12 @@ public class ComputerController {
 		logger.info("Computer successfully updated");
 		return ComputerDTOMapper.createDTO(computer, formatter);
 	}
+	
+	/**
+	 * WebService used to delete a computer
+	 * @param id Computer's id we want to delete 
+	 * @return confirmation message
+	 */
 
 	@DeleteMapping(value = "/delete/{id}")
 	public String delete(@PathVariable long id) {

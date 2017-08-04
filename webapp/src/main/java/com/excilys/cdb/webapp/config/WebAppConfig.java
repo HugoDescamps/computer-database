@@ -24,6 +24,12 @@ import org.springframework.web.servlet.view.JstlView;
 
 import com.excilys.cdb.service.config.ServiceConfig;
 
+/**
+ * Scanning necessary package & importing necessary configuration classes for Spring COnfiguration
+ * @author Hugo Descamps
+ *
+ */
+
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.excilys.cdb.webapp")

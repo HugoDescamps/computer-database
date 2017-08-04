@@ -91,3 +91,15 @@ $(document).keydown(function(e) {
     }
 });
 
+
+if(document.getElementById("role").value === "ROLE_USER") {
+	
+	var editComputerLinks = document.getElementsByClassName("editComputerLink");
+	
+	for(var i = 0; i < editComputerLinks.length; i++)
+	{
+		editComputerLinks.item(i).href = "javascript: void(0)";
+		editComputerLinks.item(i).title = "Disabled";
+		editComputerLinks.item(i).className += " disabledLink";
+	}
+}

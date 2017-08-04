@@ -39,6 +39,13 @@ public class AddComputerController {
 		return modelAndView;
 
 	}
+	
+	/**
+	 * Retrieves the inputs from the form, validates them then adds the corresponding Computer if no error was encountered
+	 * Values are kept in case of error to reload the page with the form already filled up
+	 * @param parameters inputs from form
+	 * @return next page's ModelAndView (dashboard if succeeds, addComputer if fails)
+	 */
 
 	@PostMapping
 	protected ModelAndView doPost(@RequestParam Map<String, String> parameters) {
